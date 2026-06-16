@@ -16,12 +16,12 @@ export default function AppLayout() {
         role={user?.rol}
       />
 
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-screen bg-transparent">
         <Topbar
           onMenuClick={() => setSidebarOpen(true)}
         />
-        <main className="flex-1 min-h-screen overflow-y-auto flex flex-col items-center bg-transparent w-full">
-          <div className="w-full max-w-7xl px-4 md:px-8 py-6 flex flex-col gap-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 w-full max-w-7xl mx-auto pb-20">
+          <div className="w-full flex flex-col gap-6">
             <Outlet />
           </div>
         </main>

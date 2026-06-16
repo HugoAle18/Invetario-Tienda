@@ -96,7 +96,7 @@ export default function StockPage() {
 
       {!loading && !error && productos.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md">
+          <div className="w-full bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md mb-10 flex flex-col justify-between overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
@@ -127,13 +127,13 @@ export default function StockPage() {
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-white/60">
+            <div className="mt-6 flex items-center justify-between border-t border-slate-100 dark:border-slate-900 pt-4 w-full text-sm text-gray-600 dark:text-white/60">
               <span>Página {page} de {totalPages} ({total} registros)</span>
               <div className="flex gap-2">
                 <button disabled={page <= 1} onClick={() => setPage(p => p - 1)}
-                  className="px-3 py-1.5 glass-btn-secondary disabled:opacity-40">Anterior</button>
+                  className="px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 rounded-lg transition-all shadow-sm border border-slate-200/50 dark:border-slate-800 disabled:opacity-40 disabled:hover:bg-slate-100 disabled:hover:text-slate-400">Anterior</button>
                 <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}
-                  className="px-3 py-1.5 glass-btn-secondary disabled:opacity-40">Siguiente</button>
+                  className="px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 rounded-lg transition-all shadow-sm border border-slate-200/50 dark:border-slate-800 disabled:opacity-40 disabled:hover:bg-slate-100 disabled:hover:text-slate-400">Siguiente</button>
               </div>
             </div>
           )}
