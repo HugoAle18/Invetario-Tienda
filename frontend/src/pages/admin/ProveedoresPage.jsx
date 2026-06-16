@@ -122,7 +122,7 @@ export default function ProveedoresPage() {
       {!loading && !error && proveedores.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
           {proveedores.map((prov) => (
-            <div key={prov.id} className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
+            <div key={prov.id} className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600">
               <div className="flex items-start justify-between mb-2">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{prov.nombre}</h4>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">

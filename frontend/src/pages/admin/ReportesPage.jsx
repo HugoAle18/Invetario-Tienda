@@ -267,7 +267,7 @@ export default function ReportesPage() {
       </div>
 
       {/* Sticky filter bar */}
-      <div className="sticky top-0 z-10 bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-wrap items-end gap-3">
+      <div className="sticky top-0 z-10 bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl p-4 shadow-sm transition-all duration-300 hover:shadow-md flex flex-wrap items-end gap-3">
         <div>
           <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Desde</label>
           <input type="date" value={desde} onChange={(e) => setDesde(e.target.value)}
@@ -297,7 +297,7 @@ export default function ReportesPage() {
       {/* Dashboard Analítico */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {/* CHART 1: Balance de Movimientos */}
-        <div id="grafico-balance" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+        <div id="grafico-balance" className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Balance de Movimientos (Entradas vs Salidas)</h3>
           {movsFiltrados.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -320,7 +320,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 2: Distribución de Stock por Categoría */}
-        <div id="grafico-categorias" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+        <div id="grafico-categorias" className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Distribución del Inventario por Categoría</h3>
           {dataCategoria.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -339,7 +339,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 3: Top 5 Productos Stock Bajo */}
-        <div id="grafico-stock-bajo" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+        <div id="grafico-stock-bajo" className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Top 5 Productos Próximos a Agotarse</h3>
           {topFaltantes.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin alertas</div>
@@ -357,7 +357,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 4: Capital Invertido por Proveedor */}
-        <div id="grafico-proveedores" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+        <div id="grafico-proveedores" className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Capital Invertido por Proveedor (S/.)</h3>
           {dataProveedor.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -406,7 +406,7 @@ export default function ReportesPage() {
       </div>
 
       {/* Tab content area */}
-      <div className="bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl rounded-tl-none shadow-sm">
+      <div className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl rounded-tl-none shadow-sm transition-all duration-300 hover:shadow-md">
         {/* Export buttons */}
         <div className="flex items-center justify-end gap-2 p-4 pb-0">
           <button
@@ -457,7 +457,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
+                      <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
                         <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Fecha/Hora</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
@@ -525,7 +525,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
+                      <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
                         <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Código</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
                         <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden md:table-cell">Categoría</th>
@@ -609,7 +609,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
+                      <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
                         <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Código</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
                         <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden md:table-cell">Categoría</th>
@@ -652,7 +652,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-blue-50/80 dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-text-muted label-mono">
+                      <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
                         <th className="text-left py-3 px-2 font-medium w-8" />
                         <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Proveedor</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Productos</th>

@@ -42,7 +42,7 @@ export default function SalidaPage() {
         <ArrowUpFromLine size={22} className="text-danger" />
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Registrar Salida</h2>
       </div>
-      <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl p-6 hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
+      <div className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-500 dark:hover:border-blue-600">
         {success ? (
           <div className="flex flex-col items-center py-8 text-gray-400 dark:text-white/40">
             <CheckCircle size={48} className="text-success mb-3" />

@@ -126,7 +126,7 @@ export default function ConfigPage() {
       </div>
 
       {/* Profile */}
-      <div className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+      <div className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md">
         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700/50">
           <User size={18} className="text-brand" />
           <h3 className="font-display font-semibold text-gray-900 dark:text-white">Mi Perfil</h3>
@@ -155,7 +155,7 @@ export default function ConfigPage() {
       </div>
 
       {/* Password */}
-      <div className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+      <div className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md">
         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700/50">
           <Lock size={18} className="text-brand" />
           <h3 className="font-display font-semibold text-gray-900 dark:text-white">Cambiar Contraseña</h3>

@@ -104,7 +104,7 @@ export default function CategoriasPage() {
       {!loading && !error && categorias.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
           {categorias.map((cat) => (
-            <div key={cat.id} className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
+            <div key={cat.id} className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md flex items-center justify-center shrink-0">

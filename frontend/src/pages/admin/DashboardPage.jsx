@@ -110,7 +110,7 @@ export default function DashboardPage() {
           return (
             <div
               key={key}
-              className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl glass-hover p-4"
+              className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-4 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-2 rounded-lg ${color}`}>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
       {/* Charts & Alerts — row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto mb-8 items-stretch">
         {/* Movimientos por día */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between">
           <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
             <ArrowUpDown size={18} className="text-gray-700 dark:text-gray-300" />
             Movimientos por día
@@ -177,7 +177,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Alertas de Stock */}
-        <div className="lg:col-span-1 bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col">
+        <div className="lg:col-span-1 bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col">
           <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <AlertTriangle size={18} className="text-red-500" />
             Alertas de Stock
@@ -211,7 +211,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Movimientos Recientes */}
-      <div className="w-full max-w-6xl mx-auto bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm transition-all duration-300 hover:shadow-md overflow-hidden">
         <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <ArrowUpDown size={18} className="text-gray-700 dark:text-gray-300" />
           Movimientos Recientes
@@ -226,12 +226,12 @@ export default function DashboardPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  <th className="px-4 py-3 bg-slate-50 dark:bg-slate-900 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">Producto</th>
-                  <th className="px-4 py-3 bg-slate-50 dark:bg-slate-900 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">Tipo</th>
-                  <th className="px-4 py-3 bg-slate-50 dark:bg-slate-900 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">Cantidad</th>
-                  <th className="px-4 py-3 bg-slate-50 dark:bg-slate-900 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-slate-800 hidden md:table-cell">Motivo</th>
-                  <th className="px-4 py-3 bg-slate-50 dark:bg-slate-900 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-slate-800 hidden sm:table-cell">Usuario</th>
-                  <th className="px-4 py-3 bg-slate-50 dark:bg-slate-900 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-slate-800 hidden lg:table-cell">Fecha</th>
+                  <th className="px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">Producto</th>
+                  <th className="px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">Tipo</th>
+                  <th className="px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">Cantidad</th>
+                  <th className="px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800 hidden md:table-cell">Motivo</th>
+                  <th className="px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800 hidden sm:table-cell">Usuario</th>
+                  <th className="px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800 hidden lg:table-cell">Fecha</th>
                 </tr>
               </thead>
               <tbody>

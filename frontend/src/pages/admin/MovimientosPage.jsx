@@ -148,16 +148,16 @@ export default function MovimientosPage() {
 
       {!loading && !error && movimientos.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm">
+          <div className="overflow-x-auto bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
-                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
-                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
-                  <th className="text-right py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Cantidad</th>
-                  <th className="text-left py-3 px-4 font-medium hidden md:table-cell text-blue-900 dark:text-text-primary font-bold">Motivo</th>
-                  <th className="text-left py-3 px-4 font-medium hidden sm:table-cell text-blue-900 dark:text-text-primary font-bold">Usuario</th>
-                  <th className="text-right py-3 px-4 font-medium hidden lg:table-cell text-blue-900 dark:text-text-primary font-bold">Fecha</th>
+                <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
+                  <th className="text-left py-3 px-4 font-bold">Producto</th>
+                  <th className="text-left py-3 px-4 font-bold">Tipo</th>
+                  <th className="text-right py-3 px-4 font-bold">Cantidad</th>
+                  <th className="text-left py-3 px-4 font-bold hidden md:table-cell">Motivo</th>
+                  <th className="text-left py-3 px-4 font-bold hidden sm:table-cell">Usuario</th>
+                  <th className="text-right py-3 px-4 font-bold hidden lg:table-cell">Fecha</th>
                 </tr>
               </thead>
               <tbody>
