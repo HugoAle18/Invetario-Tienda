@@ -11,7 +11,7 @@ export async function productosPorCategoria() {
 
   if (error) throw error
 
-  return data.map((cat) => ({
+  return (data || []).map((cat) => ({
     nombre: cat.nombre,
     total: (cat.productos || []).filter((p) => p.id).length,
   })).filter((c) => c.total > 0)
@@ -20,7 +20,7 @@ export async function productosPorCategoria() {
 export async function movimientosPorPeriodo(desde, hasta) {
   const { data, error } = await supabase
     .from('movimientos')
-    .select('tipo, created_at::date as fecha', { count: 'exact' })
+    .select('tipo, created_at')
     .gte('created_at', desde)
     .lte('created_at', hasta)
     .order('created_at', { ascending: true })
@@ -28,8 +28,9 @@ export async function movimientosPorPeriodo(desde, hasta) {
   if (error) throw error
 
   const grouped = {}
-  for (const row of data) {
-    const key = row.fecha
+  for (const row of data || []) {
+    const key = row.created_at?.split('T')[0]
+    if (!key) continue
     if (!grouped[key]) grouped[key] = { fecha: key, entrada: 0, salida: 0 }
     grouped[key][row.tipo]++
   }
@@ -48,7 +49,7 @@ export async function productosMasMovidos(limite = 10) {
   if (error) throw error
 
   const grouped = {}
-  for (const row of data) {
+  for (const row of data || []) {
     const key = row.productos?.nombre || 'Desconocido'
     if (!grouped[key]) {
       grouped[key] = {
@@ -78,14 +79,14 @@ export async function valorInventarioPorCategoria() {
 
   if (error) throw error
 
-  return data.map((cat) => {
+  return (data || []).map((cat) => {
     const activos = (cat.productos || []).filter((p) => p.activo)
     return {
       nombre: cat.nombre,
       productos: activos.length,
       total_stock: activos.reduce((s, p) => s + (p.stock_actual || 0), 0),
-      valor_compra: activos.reduce((s, p) => s + (p.precio_compra || 0) * (p.stock_actual || 0), 0),
-      valor_venta: activos.reduce((s, p) => s + (p.precio_venta || 0) * (p.stock_actual || 0), 0),
+      valor_compra: activos.reduce((s, p) => s + (Number(p.precio_compra) || 0) * (p.stock_actual || 0), 0),
+      valor_venta: activos.reduce((s, p) => s + (Number(p.precio_venta) || 0) * (p.stock_actual || 0), 0),
     }
   }).filter((c) => c.productos > 0)
 }

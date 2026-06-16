@@ -5,6 +5,7 @@ export async function getProductosPorCategoria(req, res) {
     const data = await reporteModel.productosPorCategoria()
     res.json(data)
   } catch (error) {
+    console.error('[REPORTE] getProductosPorCategoria error:', error.message || error)
     res.status(500).json({ error: 'Error al obtener productos por categoría' })
   }
 }
@@ -16,6 +17,7 @@ export async function getMovimientosPorPeriodo(req, res) {
     const data = await reporteModel.movimientosPorPeriodo(desde, hasta)
     res.json(data)
   } catch (error) {
+    console.error('[REPORTE] getMovimientosPorPeriodo error:', error.message || error)
     res.status(500).json({ error: 'Error al obtener movimientos por período' })
   }
 }
@@ -26,6 +28,7 @@ export async function getProductosMasMovidos(req, res) {
     const data = await reporteModel.productosMasMovidos(limite)
     res.json(data)
   } catch (error) {
+    console.error('[REPORTE] getProductosMasMovidos error:', error.message || error)
     res.status(500).json({ error: 'Error al obtener productos más movidos' })
   }
 }
@@ -35,6 +38,7 @@ export async function getValorInventario(req, res) {
     const data = await reporteModel.valorInventarioPorCategoria()
     res.json(data)
   } catch (error) {
+    console.error('[REPORTE] getValorInventario error:', error.message || error)
     res.status(500).json({ error: 'Error al obtener valor de inventario' })
   }
 }
