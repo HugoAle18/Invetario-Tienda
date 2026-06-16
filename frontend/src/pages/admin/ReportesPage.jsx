@@ -63,8 +63,8 @@ export default function ReportesPage() {
         proveedoresApi.listar(),
         categoriasApi.listar(),
       ])
-      setMovimientos(movRes.data || [])
-      setProductos(prodRes.data || [])
+      setMovimientos(movRes.data?.data || movRes.data || [])
+      setProductos(prodRes.data?.data || prodRes.data || [])
       setProveedores(provRes.data || [])
       setCategorias(catRes.data || [])
     } catch {
@@ -98,7 +98,8 @@ export default function ReportesPage() {
   const handleExportMovimientos = async () => {
     setExportando('movimientos')
     try {
-      const { data } = await movimientosApi.listar({ limit: 10000, fecha_desde: desde, fecha_hasta: hasta })
+      const res = await movimientosApi.listar({ limit: 10000, fecha_desde: desde, fecha_hasta: hasta })
+      const data = res.data?.data || res.data || []
       if (!data || data.length === 0) { toast.error('No hay movimientos para exportar'); setExportando(null); return }
       exportarMovimientos(data, { desde })
       toast.success('✅ Excel generado correctamente')
