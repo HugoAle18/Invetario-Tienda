@@ -32,12 +32,12 @@ export default function EmpleadoMovimientosPage() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <ArrowUpDown size={22} className="text-brand" />
-        <h2 className="text-xl font-bold text-white">Mis Movimientos</h2>
-        {!loading && <span className="text-sm text-white/40 bg-white/[0.06] px-2 py-0.5 rounded-full text-white/50">{total}</span>}
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Mis Movimientos</h2>
+        {!loading && <span className="text-sm text-gray-400 dark:text-white/40 bg-gray-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full text-gray-500 dark:text-white/50">{total}</span>}
       </div>
 
       {error && (
-        <div className="flex flex-col items-center py-16 text-white/60">
+        <div className="flex flex-col items-center py-16 text-gray-600 dark:text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
           <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
@@ -49,14 +49,14 @@ export default function EmpleadoMovimientosPage() {
       {loading && !error && (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-14 bg-white/[0.04] rounded-lg animate-pulse" />
+            <div key={i} className="h-14 bg-gray-100 dark:bg-white/[0.04] rounded-lg animate-pulse" />
           ))}
         </div>
       )}
 
       {!loading && !error && movimientos.length === 0 && (
-        <div className="flex flex-col items-center py-16 text-white/40">
-          <ArrowUpDown size={48} className="mb-3" />
+        <div className="flex flex-col items-center py-16 text-gray-400 dark:text-white/40">
+          <ArrowUpDown size={48} className="mb-3 text-gray-400 dark:text-white/40" />
           <p className="text-base font-medium">Sin movimientos</p>
           <p className="text-sm mt-1">Aún no has registrado movimientos</p>
         </div>
@@ -67,26 +67,26 @@ export default function EmpleadoMovimientosPage() {
           <div className="overflow-x-auto glass">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.06] label-mono">
-                  <th className="text-left py-3 px-4 font-medium">Producto</th>
-                  <th className="text-left py-3 px-4 font-medium">Tipo</th>
-                  <th className="text-right py-3 px-4 font-medium">Cantidad</th>
-                  <th className="text-left py-3 px-4 font-medium hidden md:table-cell">Motivo</th>
-                  <th className="text-right py-3 px-4 font-medium hidden lg:table-cell">Fecha</th>
+                <tr className="border-b border-gray-200 dark:border-white/[0.06] label-mono">
+                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-white/60">Producto</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-white/60">Tipo</th>
+                  <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-white/60">Cantidad</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-white/60 hidden md:table-cell">Motivo</th>
+                  <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-white/60 hidden lg:table-cell">Fecha</th>
                 </tr>
               </thead>
               <tbody>
                 {movimientos.map((m) => (
-                  <tr key={m.id} className="border-b border-white/[0.06] hover:bg-white/[0.05] transition-colors">
-                    <td className="py-3 px-4 text-white font-medium">{m.productos?.nombre}</td>
+                  <tr key={m.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors">
+                    <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">{m.productos?.nombre}</td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
                         {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right font-semibold text-white">{m.cantidad}</td>
-                    <td className="py-3 px-4 text-white/60 hidden md:table-cell max-w-[200px] truncate">{m.motivo}</td>
-                    <td className="py-3 px-4 text-white/60 text-right hidden lg:table-cell whitespace-nowrap">
+                    <td className="py-3 px-4 text-right font-semibold text-gray-900 dark:text-white">{m.cantidad}</td>
+                    <td className="py-3 px-4 text-gray-600 dark:text-white/60 hidden md:table-cell max-w-[200px] truncate">{m.motivo}</td>
+                    <td className="py-3 px-4 text-gray-600 dark:text-white/60 text-right hidden lg:table-cell whitespace-nowrap">
                       {new Date(m.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
@@ -96,7 +96,7 @@ export default function EmpleadoMovimientosPage() {
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm text-white/60">
+            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-white/60">
               <span>Página {page} de {totalPages} ({total} registros)</span>
               <div className="flex gap-2">
                 <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 glass-btn-secondary disabled:opacity-40">Anterior</button>
