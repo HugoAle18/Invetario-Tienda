@@ -1,13 +1,34 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
-import AiAgentWidget from '@/components/ai/AiAgentWidget'
+import { AiAgentWidget } from '@/components/ai/AiAgentWidget'
 import { useAuth } from '@/context/AuthContext'
+import { productosApi } from '@/api/productos'
+import { movimientosApi } from '@/api/movimientos'
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [productos, setProductos] = useState([])
+  const [movimientos, setMovimientos] = useState([])
   const { user } = useAuth()
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [prodRes, movRes] = await Promise.all([
+        productosApi.listar({ limit: 200 }),
+        movimientosApi.listar({ limit: 200 }),
+      ])
+      setProductos(prodRes.data.data || [])
+      setMovimientos(movRes.data.data || [])
+    } catch {
+      console.error('Error cargando datos para el agente IA')
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   return (
     <div className="min-h-screen w-full flex bg-gradient-to-br from-slate-50 via-slate-100 to-blue-100/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-all duration-500">
@@ -28,7 +49,7 @@ export default function AppLayout() {
         </main>
       </div>
 
-      <AiAgentWidget />
+      <AiAgentWidget productos={productos} movimientos={movimientos} />
     </div>
   )
 }
