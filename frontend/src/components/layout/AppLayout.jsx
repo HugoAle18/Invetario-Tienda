@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
+import AiAgentWidget from '@/components/ai/AiAgentWidget'
 import { useAuth } from '@/context/AuthContext'
 
 export default function AppLayout() {
@@ -26,6 +27,7 @@ export default function AppLayout() {
           </div>
         </main>
       </div>
+      <AiAgentWidget />
     </div>
   )
 }

@@ -10,6 +10,7 @@ import reporteRoutes from './reporteRoutes.js'
 import configRoutes from './configRoutes.js'
 import empleadoRoutes from './empleadoRoutes.js'
 import notificacionRoutes from './notificacionRoutes.js'
+import aiRoutes from './aiRoutes.js'
 
 const router = Router()
 
@@ -28,5 +29,6 @@ router.use('/proveedores', proveedorRoutes)
 router.use('/movimientos', movimientoRoutes)
 router.use('/notificaciones', notificacionRoutes)
 router.use('/usuarios', usuarioRoutes)
+router.use('/ai', aiRoutes)
 
 export default router

@@ -1,0 +1,784 @@
+# INVENTEX — Documentación Técnica para Informe Académico
+
+---
+
+## SECCIÓN 1 — ARQUITECTURA DEL SISTEMA
+
+### 1.1 Estructura del Proyecto
+
+```
+inventex/
+├── backend/
+│   ├── src/
+│   │   ├── app.js                         # Configuración Express (cors, helmet, morgan, rutas)
+│   │   ├── server.js                      # Punto de entrada que inicia el servidor HTTP
+│   │   ├── config/
+│   │   │   └── supabase.js                # Cliente Supabase (conexión a PostgreSQL)
+│   │   ├── controllers/
+│   │   │   ├── authController.js          # Login, refresh, logout, me
+│   │   │   ├── categoriaController.js     # CRUD categorías
+│   │   │   ├── configController.js        # Perfil y cambio de contraseña
+│   │   │   ├── dashboardController.js     # KPIs del dashboard admin
+│   │   │   ├── empleadoController.js      # KPIs del panel empleado
+│   │   │   ├── movimientoController.js    # Listar/registrar entrada/salida
+│   │   │   ├── notificacionController.js  # Listar/crear/marcar notificaciones
+│   │   │   ├── productoController.js      # CRUD productos
+│   │   │   ├── proveedorController.js     # CRUD proveedores
+│   │   │   ├── reporteController.js       # Datos para reportes analíticos
+│   │   │   └── usuarioController.js       # CRUD usuarios
+│   │   ├── middlewares/
+│   │   │   ├── authMiddleware.js          # authenticate (JWT) + authorize (roles)
+│   │   │   └── validationMiddleware.js    # handleValidation para express-validator
+│   │   ├── models/
+│   │   │   ├── categoriaModel.js          # Queries SQL a tabla categorias
+│   │   │   ├── configModel.js             # Queries para perfil de usuario
+│   │   │   ├── dashboardModel.js          # Queries para KPIs del admin
+│   │   │   ├── empleadoModel.js           # Queries para KPIs del empleado
+│   │   │   ├── movimientoModel.js         # RPC registrar_entrada/registrar_salida
+│   │   │   ├── notificacionModel.js       # CRUD notificaciones
+│   │   │   ├── productoModel.js           # Queries SQL a tabla productos
+│   │   │   ├── proveedorModel.js          # Queries SQL a tabla proveedores
+│   │   │   ├── reporteModel.js            # Queries para los 4 reportes
+│   │   │   └── usuarioModel.js            # Queries SQL a tabla usuarios
+│   │   ├── routes/
+│   │   │   ├── index.js                   # Agrupador de rutas bajo /api/v1
+│   │   │   ├── authRoutes.js              # /auth
+│   │   │   ├── categoriaRoutes.js         # /categorias
+│   │   │   ├── configRoutes.js            # /config
+│   │   │   ├── dashboardRoutes.js         # /dashboard
+│   │   │   ├── empleadoRoutes.js          # /empleado
+│   │   │   ├── movimientoRoutes.js        # /movimientos
+│   │   │   ├── notificacionRoutes.js      # /notificaciones
+│   │   │   ├── productoRoutes.js          # /productos
+│   │   │   ├── proveedorRoutes.js         # /proveedores
+│   │   │   ├── reporteRoutes.js           # /reportes
+│   │   │   └── usuarioRoutes.js           # /usuarios
+│   │   └── validators/
+│   │       ├── authValidator.js           # Reglas login/refresh
+│   │       ├── categoriaValidator.js      # Reglas crear/actualizar categoría
+│   │       ├── movimientoValidator.js     # Reglas entrada/salida
+│   │       ├── notificacionValidator.js   # Reglas crear notificación
+│   │       ├── productoValidator.js       # Reglas crear/actualizar producto
+│   │       ├── proveedorValidator.js      # Reglas crear/actualizar proveedor
+│   │       └── usuarioValidator.js        # Reglas crear/actualizar usuario
+│   ├── database/
+│   │   ├── schema.sql                     # Esquema completo de BD + RPCs + seed
+│   │   └── migration_notificaciones.sql   # Tabla notificaciones + trigger
+│   ├── seed.js                            # Script para poblar BD con datos demo
+│   ├── vercel.json                        # Config deploy Vercel
+│   ├── .env.example                       # Variables de entorno de ejemplo
+│   └── package.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── main.jsx                       # Punto de entrada React + providers
+│   │   ├── App.jsx                        # Componente raíz
+│   │   ├── api/
+│   │   │   ├── axios.js                   # Cliente Axios con interceptors JWT + refresh
+│   │   │   ├── auth.js                    # Llamadas a /auth
+│   │   │   ├── categorias.js              # Llamadas a /categorias
+│   │   │   ├── config.js                  # Llamadas a /config
+│   │   │   ├── dashboard.js              # Llamadas a /dashboard
+│   │   │   ├── empleado.js               # Llamadas a /empleado
+│   │   │   ├── movimientos.js            # Llamadas a /movimientos
+│   │   │   ├── notificaciones.js          # Llamadas a /notificaciones
+│   │   │   ├── productos.js              # Llamadas a /productos
+│   │   │   ├── proveedores.js            # Llamadas a /proveedores
+│   │   │   ├── reportes.js               # Llamadas a /reportes
+│   │   │   └── usuarios.js               # Llamadas a /usuarios
+│   │   ├── components/
+│   │   │   ├── layout/
+│   │   │   │   ├── AppLayout.jsx          # Layout global con sidebar + topbar + contenido
+│   │   │   │   ├── ProtectedRoute.jsx     # Redirección según rol
+│   │   │   │   ├── Sidebar.jsx            # Navegación lateral con efecto glass
+│   │   │   │   └── Topbar.jsx             # Barra superior con notificaciones, tema, logout
+│   │   │   └── ui/
+│   │   │       ├── Modal.jsx              # Modal genérico con backdrop-blur
+│   │   │       ├── MovementForm.jsx       # Formulario entrada/salida
+│   │   │       ├── NotificationsPanel.jsx # Panel desplegable de notificaciones
+│   │   │       └── ProductoSearch.jsx     # Búsqueda con autocomplete + debounce
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx            # Estado de autenticación global
+│   │   │   └── ThemeContext.jsx           # Estado del tema claro/oscuro
+│   │   ├── pages/
+│   │   │   ├── auth/
+│   │   │   │   └── LoginPage.jsx          # Pantalla de inicio de sesión
+│   │   │   ├── admin/
+│   │   │   │   ├── DashboardPage.jsx      # KPIs, gráficos, alertas, movimientos recientes
+│   │   │   │   ├── ProductosPage.jsx      # Lista agrupada por categorías + CRUD
+│   │   │   │   ├── ProductoForm.jsx       # Formulario crear/editar producto
+│   │   │   │   ├── CategoriasPage.jsx     # CRUD de categorías
+│   │   │   │   ├── CategoriaForm.jsx      # Formulario categoría
+│   │   │   │   ├── ProveedoresPage.jsx    # CRUD de proveedores
+│   │   │   │   ├── ProveedorForm.jsx      # Formulario proveedor
+│   │   │   │   ├── MovimientosPage.jsx    # Historial de movimientos
+│   │   │   │   ├── UsuariosPage.jsx       # CRUD de usuarios
+│   │   │   │   ├── UsuarioForm.jsx        # Formulario usuario
+│   │   │   │   ├── ReportesPage.jsx       # 4 gráficos + exportación PDF/Excel
+│   │   │   │   └── ConfigPage.jsx         # Perfil y cambio de contraseña
+│   │   │   └── empleado/
+│   │   │       ├── PanelPage.jsx          # KPIs del empleado
+│   │   │       ├── StockPage.jsx          # Consulta de stock (solo lectura)
+│   │   │       ├── EntradaPage.jsx        # Registrar entrada
+│   │   │       ├── SalidaPage.jsx         # Registrar salida
+│   │   │       └── MovimientosPage.jsx    # Historial del empleado
+│   │   ├── routes/
+│   │   │   └── index.jsx                  # Definición de rutas React Router
+│   │   ├── services/
+│   │   │   └── notificationService.js     # Servicio centralizado de notificaciones
+│   │   └── utils/
+│   │       ├── token.js                   # Gestión de refreshToken en localStorage
+│   │       ├── exportExcel.js             # Exportación a Excel con estilos
+│   │       └── exportPDF.js               # Exportación a PDF con tablas + gráficos
+│   ├── vercel.json                        # Config deploy Vercel (SPA rewrites)
+│   ├── .env.example                       # VITE_API_URL
+│   └── package.json
+```
+
+### 1.2 Conexión entre Capas
+
+**Frontend (React + Vite)** -> **Backend (Node.js + Express)** -> **Base de Datos (Supabase PostgreSQL)**
+
+1. Frontend: React con Vite compila JSX a HTML/JS estático. Se comunica exclusivamente con el backend via HTTP (Axios). No hay cliente Supabase en frontend por seguridad.
+
+2. Backend: Express.js recibe peticiones REST en /api/v1. Cada ruta pasa por:
+   - Middleware authenticate (verifica JWT)
+   - Middleware authorize (verifica rol cuando es necesario)
+   - Validacion con express-validator
+   - Controlador que orquesta la logica
+   - Modelo que ejecuta la query contra Supabase PostgreSQL
+
+3. Base de Datos: Supabase PostgreSQL alojada en la nube. El backend se conecta con @supabase/supabase-js usando la SUPABASE_SERVICE_ROLE_KEY (rol service_role, omite RLS). Las operaciones complejas (entrada/salida con actualizacion de stock) se ejecutan como funciones RPC de PostgreSQL para garantizar atomicidad.
+
+### 1.3 Rutas del Backend
+
+| Metodo | URL | Descripcion | Auth | Admin |
+|--------|-----|-------------|------|-------|
+| GET | /api/v1/health | Health check | No | No |
+| **Auth** |
+| POST | /api/v1/auth/login | Iniciar sesion | No | No |
+| POST | /api/v1/auth/refresh | Renovar token | No | No |
+| POST | /api/v1/auth/logout | Cerrar sesion | No | No |
+| GET | /api/v1/auth/me | Obtener usuario actual | Si | No |
+| **Dashboard** |
+| GET | /api/v1/dashboard/admin | KPIs del admin | Si | No |
+| GET | /api/v1/dashboard/movimientos-recientes | Ultimos movimientos | Si | No |
+| GET | /api/v1/dashboard/alertas-stock | Alertas de stock bajo | Si | No |
+| GET | /api/v1/dashboard/movimientos-por-dia | Movimientos agrupados por dia | Si | No |
+| **Productos** |
+| GET | /api/v1/productos | Listar productos (paginado + busqueda) | Si | No |
+| GET | /api/v1/productos/:id | Obtener producto | Si | No |
+| POST | /api/v1/productos | Crear producto | Si | Si |
+| PUT | /api/v1/productos/:id | Actualizar producto | Si | Si |
+| DELETE | /api/v1/productos/:id | Eliminar producto | Si | Si |
+| **Categorias** |
+| GET | /api/v1/categorias | Listar categorias | Si | No |
+| GET | /api/v1/categorias/:id | Obtener categoria | Si | No |
+| POST | /api/v1/categorias | Crear categoria | Si | Si |
+| PUT | /api/v1/categorias/:id | Actualizar categoria | Si | Si |
+| DELETE | /api/v1/categorias/:id | Eliminar categoria | Si | Si |
+| **Proveedores** |
+| GET | /api/v1/proveedores | Listar proveedores | Si | No |
+| GET | /api/v1/proveedores/:id | Obtener proveedor | Si | No |
+| POST | /api/v1/proveedores | Crear proveedor | Si | Si |
+| PUT | /api/v1/proveedores/:id | Actualizar proveedor | Si | Si |
+| DELETE | /api/v1/proveedores/:id | Eliminar proveedor | Si | Si |
+| **Movimientos** |
+| GET | /api/v1/movimientos | Listar movimientos (filtrable) | Si | No |
+| POST | /api/v1/movimientos/entrada | Registrar entrada (RPC) | Si | No |
+| POST | /api/v1/movimientos/salida | Registrar salida (RPC) | Si | No |
+| **Notificaciones** |
+| GET | /api/v1/notificaciones | Listar notificaciones | Si | No |
+| GET | /api/v1/notificaciones/no-leidas | Obtener no leidas | Si | No |
+| GET | /api/v1/notificaciones/contar | Contar no leidas | Si | No |
+| POST | /api/v1/notificaciones | Crear notificacion | Si | No |
+| PUT | /api/v1/notificaciones/:id/leer | Marcar como leida | Si | No |
+| PUT | /api/v1/notificaciones/leer-todas | Marcar todas leidas | Si | No |
+| **Usuarios** |
+| GET | /api/v1/usuarios | Listar usuarios | Si | Si |
+| GET | /api/v1/usuarios/:id | Obtener usuario | Si | Si |
+| POST | /api/v1/usuarios | Crear usuario | Si | Si |
+| PUT | /api/v1/usuarios/:id | Actualizar usuario | Si | Si |
+| PATCH | /api/v1/usuarios/:id/toggle-activo | Activar/desactivar usuario | Si | Si |
+| **Reportes** |
+| GET | /api/v1/reportes/productos-por-categoria | Conteo por categoria | Si | Si |
+| GET | /api/v1/reportes/movimientos-por-periodo | Balance entradas/salidas | Si | Si |
+| GET | /api/v1/reportes/productos-mas-movidos | Top productos mas movidos | Si | Si |
+| GET | /api/v1/reportes/valor-inventario | Valor total del inventario | Si | Si |
+| **Config** |
+| GET | /api/v1/config/perfil | Obtener perfil propio | Si | No |
+| PUT | /api/v1/config/perfil | Actualizar perfil propio | Si | No |
+| PUT | /api/v1/config/password | Cambiar contrasena | Si | No |
+| **Empleado** |
+| GET | /api/v1/empleado/panel | KPIs del panel empleado | Si | Si (rol empleado) |
+
+### 1.4 Tablas de la Base de Datos
+
+**TABLA: usuarios**
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| nombre | TEXT | NOT NULL |
+| email | TEXT | NOT NULL, UNIQUE |
+| password | TEXT | NOT NULL (hash bcrypt) |
+| rol | TEXT | NOT NULL, CHECK (rol IN ('administrador','empleado')) |
+| activo | BOOLEAN | NOT NULL, DEFAULT TRUE |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| updated_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| Relaciones | - | - |
+| Indices | idx_usuarios_email | Busqueda por email en login |
+
+**TABLA: categorias**
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| nombre | TEXT | NOT NULL, UNIQUE |
+| descripcion | TEXT | DEFAULT '' |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| updated_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+
+**TABLA: proveedores**
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| nombre | TEXT | NOT NULL |
+| contacto | TEXT | DEFAULT '' |
+| telefono | TEXT | DEFAULT '' |
+| email | TEXT | DEFAULT '' |
+| direccion | TEXT | DEFAULT '' |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| updated_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+
+**TABLA: productos**
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| codigo | TEXT | NOT NULL, UNIQUE |
+| nombre | TEXT | NOT NULL |
+| descripcion | TEXT | DEFAULT '' |
+| categoria_id | UUID | FK -> categorias(id) ON DELETE SET NULL |
+| proveedor_id | UUID | FK -> proveedores(id) ON DELETE SET NULL |
+| precio_compra | NUMERIC(12,2) | NOT NULL, DEFAULT 0 |
+| precio_venta | NUMERIC(12,2) | NOT NULL, DEFAULT 0 |
+| stock_minimo | INTEGER | NOT NULL, DEFAULT 0 |
+| stock_actual | INTEGER | NOT NULL, DEFAULT 0 |
+| imagen_url | TEXT | DEFAULT '' |
+| activo | BOOLEAN | NOT NULL, DEFAULT TRUE |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| updated_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| Indices | idx_productos_categoria, idx_productos_proveedor, idx_productos_codigo | Busqueda y joins |
+
+**TABLA: movimientos**
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| producto_id | UUID | FK -> productos(id) ON DELETE RESTRICT |
+| tipo | TEXT | NOT NULL, CHECK (tipo IN ('entrada','salida')) |
+| cantidad | INTEGER | NOT NULL, CHECK (cantidad > 0) |
+| motivo | TEXT | NOT NULL, DEFAULT '' |
+| precio_unitario | NUMERIC(12,2) | NULL |
+| usuario_id | UUID | FK -> usuarios(id) ON DELETE RESTRICT |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| Indices | idx_movimientos_producto, idx_movimientos_usuario, idx_movimientos_tipo, idx_movimientos_creado | Filtros y joins |
+
+**TABLA: refresh_tokens**
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| usuario_id | UUID | FK -> usuarios(id) ON DELETE CASCADE |
+| token | TEXT | NOT NULL, UNIQUE |
+| expires_at | TIMESTAMPTZ | NOT NULL |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| Indices | idx_refresh_token | Busqueda por token |
+
+**TABLA: notificaciones** (migracion aparte)
+| Columna | Tipo | Restriccion |
+|---------|------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() |
+| usuario_id | UUID | FK -> usuarios(id) ON DELETE CASCADE |
+| tipo | TEXT | NOT NULL, CHECK (tipo IN ('entrada','salida','alerta','sistema')) |
+| titulo | TEXT | NOT NULL |
+| descripcion | TEXT | NOT NULL, DEFAULT '' |
+| leida | BOOLEAN | NOT NULL, DEFAULT FALSE |
+| created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |
+| Indices | idx_notificaciones_usuario, idx_notificaciones_no_leidas | Orden descendente, filtro no leidas |
+
+**Relaciones entre tablas:**
+- productos.categoria_id -> categorias.id
+- productos.proveedor_id -> proveedores.id
+- movimientos.producto_id -> productos.id (RESTRICT - no se puede eliminar producto con movimientos)
+- movimientos.usuario_id -> usuarios.id (RESTRICT)
+- refresh_tokens.usuario_id -> usuarios.id (CASCADE - se eliminan al eliminar usuario)
+- notificaciones.usuario_id -> usuarios.id (CASCADE)
+
+### 1.5 Flujo de Autenticacion
+
+Paso 1 - Login: El usuario ingresa email y contrasena en LoginPage.jsx. El formulario esta validado con Zod (email valido, password no vacio).
+
+Paso 2 - Peticion POST: AuthContext.login() llama a authApi.login({ email, password }), que envia POST a /api/v1/auth/login.
+
+Paso 3 - Validacion backend: authValidator.js valida formato con express-validator. Si falla, retorna 400.
+
+Paso 4 - Consulta a BD: authController.login() busca el usuario por email en usuarios:
+SELECT id, nombre, email, password, rol, activo FROM usuarios WHERE email = ?
+Si no encuentra el usuario o esta inactivo, retorna 401 "Credenciales invalidas".
+
+Paso 5 - Verificacion de contrasena: Compara el password ingresado con el hash almacenado usando bcrypt.compare(). Si no coincide, retorna 401.
+
+Paso 6 - Generacion de tokens: Crea un JWT (accessToken) con jsonwebtoken.sign() que contiene { id, email, rol, nombre } y expira en 1 hora. Crea un refreshToken aleatorio (40 bytes hex), lo guarda en refresh_tokens con expiracion de 7 dias.
+
+Paso 7 - Respuesta: Backend devuelve { accessToken, refreshToken, user }.
+
+Paso 8 - Almacenamiento: AuthContext.login() guarda el accessToken en memoria (variable accessToken en axios.js) y el refreshToken en localStorage mediante token.js.
+
+Paso 9 - Redireccion: LoginPage usa navigate() a /admin/dashboard o /empleado/panel segun user.rol.
+
+Paso 10 - Peticiones autenticadas: El interceptor de Axios en axios.js agrega Authorization: Bearer <accessToken> a cada request. Si recibe 401, automaticamente intenta refrescar el token llamando a /auth/refresh, y si falla, redirige a /login.
+
+---
+
+## SECCION 2 - FUNCIONALIDADES IMPLEMENTADAS
+
+### Rol Administrador
+
+| Pantalla | Funcionalidades |
+|----------|----------------|
+| Dashboard | KPIs: total productos, categorias, proveedores, movimientos (30d), usuarios, valor inventario, productos bajo stock. Grafico de movimientos por dia (barras). Alertas de stock bajo. Tabla de movimientos recientes |
+| Productos | CRUD completo. Lista agrupada por categorias en secciones colapsables con efecto glass. Buscador por codigo/nombre. Filtro por categoria. Badge de stock bajo. Precio en S/. |
+| Categorias | CRUD completo. Tarjetas glass con hover border-blue. |
+| Proveedores | CRUD completo. Tarjetas glass. Notificaciones automaticas al actualizar. |
+| Movimientos | Historial completo de entradas y salidas. Filtros por tipo, producto, fechas. Badges: entrada=emerald, salida=rose. |
+| Usuarios | CRUD de usuarios del sistema. Avatar con gradiente purple-to-indigo. Badge rol: admin=violeta, empleado=ambar. Toggle activo/inactivo. |
+| Reportes | 4 graficos Recharts: productos por categoria (barras), balance movimientos (barras apiladas), productos mas movidos (barras), valor inventario (donut). Exportacion a Excel (con resumen ejecutivo y estilos) y PDF (con graficos capturados via html2canvas). |
+| Configuracion | Editar perfil (nombre, email). Cambiar contrasena (requiere actual). Notificaciones al guardar. |
+
+**Operaciones CRUD por modulo:**
+
+| Modulo | Crear | Leer | Actualizar | Eliminar |
+|--------|-------|------|------------|----------|
+| Productos | Si | Si (paginado + busqueda) | Si | Si |
+| Categorias | Si | Si (lista completa) | Si | Si |
+| Proveedores | Si | Si (lista completa) | Si | Si |
+| Usuarios | Si | Si (paginado + busqueda) | Si | Toggle activo (no borrado fisico) |
+| Movimientos | Solo entrada/salida via formulario | Si (paginado + filtros) | No | No |
+| Notificaciones | Solo automaticas | Si | Marcar leidas | No |
+
+### Rol Empleado
+
+| Pantalla | Funcionalidades |
+|----------|----------------|
+| Panel | KPIs: total productos, movimientos del mes, alertas de stock. Tabla de movimientos recientes del empleado. |
+| Stock | Consulta de productos con stock actual (solo lectura). Badge rojo para stock bajo. Tabla con headers gradient. |
+| Entrada | Registrar entrada de producto: buscador con autocomplete (ProductoSearch), cantidad, motivo, precio unitario. Notificacion automatica. |
+| Salida | Registrar salida de producto: buscador con autocomplete, cantidad, motivo. Valida stock suficiente. Notificacion automatica. |
+| Movimientos | Historial de movimientos del empleado. Mismos filtros que admin pero solo sus propios movimientos. |
+
+**Restricciones del empleado vs admin:**
+- No ve ni edita usuarios
+- No ve precios en movimientos (backend filtra campo precio_unitario)
+- No puede crear/editar/eliminar productos, categorias, proveedores
+- Solo ve sus propios movimientos (backend filtra por usuario_id)
+- No tiene acceso a reportes analiticos
+- No tiene acceso a configuracion del sistema
+
+### Funcionalidades Generales
+
+**Modo Oscuro/Claro:**
+- Implementado con ThemeContext.jsx que persiste en localStorage (clave inventex-theme)
+- Por defecto inicia en modo oscuro (dark: true si no hay preferencia guardada)
+- Alterna clase dark en <html> mediante toggle en Topbar
+- Tailwind CSS usa clases dark: para todos los componentes
+- Animacion rotate al icono de luna al cambiar de tema
+
+**Sistema de Notificaciones:**
+- Tabla notificaciones en BD con tipos: entrada, salida, alerta, sistema
+- Trigger de BD trg_crear_notificacion_movimiento en PostgreSQL: al insertar un movimiento, crea notificaciones automaticas para el usuario que lo realizo y para todos los administradores
+- Notificaciones adicionales desde frontend (creacion de productos, actualizacion de proveedores, cambios de configuracion) usando notificationService.js que llama a POST /notificaciones y dispara evento notifications-refresh
+- Topbar con icono campana + badge de conteo de no leidas. Polling cada 10 segundos. Al recibir el evento custom, refresca inmediatamente
+- NotificationsPanel muestra lista con bullet de color segun tipo (verde=entrada, rojo=salida, ambar=alerta, azul=sistema), fecha relativa, y boton para marcar como leida/todas
+
+**Busqueda de Productos con Autocomplete:**
+- Componente ProductoSearch.jsx con debounce de 300ms
+- Busqueda por codigo o nombre contra backend (/productos?search=...)
+- Muestra hasta 8 resultados en dropdown con codigo, nombre, categoria, stock
+- En modo salida, deshabilita productos sin stock (opacidad 40%, cursor not-allowed)
+- Navegacion por teclado (ArrowUp/ArrowDown/Enter/Escape)
+- Al seleccionar, muestra tarjeta con stock actual grande y badge de estado
+
+**Paginacion:**
+- Backend: query params page (default 1) y limit (default 20)
+- Modelos: usan COUNT(*) OVER() as total en cada query para obtener conteo total sin query separada
+- Frontend: botones Anterior/Siguiente con estilos glass -> hover azul, deshabilitados con opacidad
+- Contador: "Pagina X de Y (Z registros)"
+- Implementado en todas las paginas con listas: productos, movimientos, usuarios
+
+---
+
+## SECCION 3 - INTEGRACION CON IA
+
+### Google Stitch
+
+- Uso: Diseno de la interfaz de usuario (UI/UX) completo incluyendo login, dashboard, tablas, formularios, tarjetas, sidebar y panel de notificaciones
+- Pantallas generadas: LoginPage, DashboardPage, ProductosPage, CategoriasPage, ProveedoresPage, MovimientosPage, Sidebar, Topbar
+- Exportacion: Se disenaron los layouts y componentes visuales en Stitch, luego se exportaron como codigo React + Tailwind CSS para integrarlos en el proyecto
+
+### OpenCode
+
+- Uso: Generacion de codigo backend y frontend a partir de prompts descriptivos
+- Modulos generados:
+  - Backend: modelos, controladores, rutas, middlewares, validadores
+  - Frontend: paginas completas, componentes UI, contextos, servicios, utilidades
+  - Base de datos: esquema SQL, funciones RPC, triggers
+  - Configuracion: Vercel, variables de entorno, seed scripts
+- Instrucciones (prompts): Se dieron prompts detallados describiendo la arquitectura deseada, las funcionalidades especificas y los patrones de diseno. Por ejemplo: "Crea el controlador de productos con listar, obtener, crear, actualizar, eliminar usando Supabase como ORM" o "Redisena el Dashboard con KPIs glass, tabla con headers gradient, badges solidos"
+- Modulos generados en total: Mas de 80 archivos entre backend y frontend, repartidos en aproximadamente 15-20 sesiones de trabajo
+
+### Claude (Anthropic)
+
+- Uso: Definicion de la arquitectura del sistema, diseno de la estructura de la base de datos, logica de autenticacion JWT, y solucion de problemas complejos
+- Tipo de prompts: Prompts maestros que describian la arquitectura general, prompts de correccion de errores, prompts de optimizacion de queries SQL
+- Contribucion a la arquitectura: Diseno el esquema de base de datos con 6 tablas, definio las funciones RPC de PostgreSQL para garantizar atomicidad en movimientos de stock, diseno el flujo de autenticacion con JWT + refresh tokens, definio la estructura del backend MVC
+
+### Flujo Agencico Completo
+
+Paso 1 - Arquitectura (Claude):
+Se definio la arquitectura general del sistema: stack tecnologico (React + Vite -> Express -> Supabase PostgreSQL), modelo MVC, estructura de carpetas, esquema de BD, rutas de la API, flujo de autenticacion. Claude genero prompts maestros con instrucciones precisas para cada modulo.
+
+Paso 2 - Diseno UI/UX (Google Stitch):
+Se disenaron las pantallas clave en Stitch: login, dashboard, lista de productos, formularios, sidebar. Se exporto el diseno como codigo React + Tailwind.
+
+Paso 3 - Implementacion (OpenCode):
+OpenCode ejecuto los prompts generados por Claude, produciendo archivos completos de backend (modelos, controladores, rutas, validadores) y frontend (paginas, componentes, contextos, servicios). Cada prompt generaba un modulo completo que se revisaba e integraba.
+
+Paso 4 - Correccion y mejora (Claude + OpenCode):
+A medida que surgian errores (problemas de CORS, errores de sintaxis SQL, bugs de UI, problemas de scroll), se reportaban y Claude generaba prompts de correccion que OpenCode ejecutaba. Este ciclo de retroalimentacion se repitio durante todo el desarrollo.
+
+Paso 5 - Refinamiento visual (OpenCode):
+En fases posteriores se aplicaron multiples refactors de UI: sistema de notificaciones, rediseno con glassmorphism, gradientes, alto contraste, modo oscuro, agrupacion por categorias, scroll corregido, moneda en soles.
+
+---
+
+## SECCION 4 - ERRORES Y CORRECCIONES
+
+### 4.1 Errores de Base de Datos
+
+ERROR: Consultas directas a Supabase fallaban con timeout de rate limit
+CAUSA: Las RPC de Supabase se llamaban con sintaxis incorrecta. El modelo original usaba supabase.rpc('registrar_movimiento', ...) pero la funcion no existia con ese nombre exacto.
+SOLUCION: Se reemplazaron las llamadas RPC por queries SQL directas con supabase.from('movimientos').insert(...) combinadas con supabase.rpc para registrar_entrada y registrar_salida.
+LECCION: Siempre verificar que los nombres de funciones RPC en PostgreSQL coincidan exactamente con los usados en el codigo.
+
+ERROR: Seed de contrasenas incorrecto
+CAUSA: El script seed.js insertaba contrasenas en texto plano en lugar de hash bcrypt, y las contrasenas de los usuarios por defecto no funcionaban al hacer login.
+SOLUCION: Se actualizo seed.js para generar los hashes con bcrypt antes de insertar. Se agrego un UPDATE correctivo para los usuarios ya existentes.
+LECCION: Los datos demo deben generarse con las mismas transformaciones que los datos reales (hashing de contrasenas).
+
+### 4.2 Errores de Autenticacion
+
+ERROR: CORS bloqueaba peticiones del frontend
+CAUSA: El backend no tenia configurado correctamente CORS para el origen de Vercel ni para localhost:5173. Helmet tambien bloqueaba la politica de recursos cruzados.
+SOLUCION: Se configuro CORS con lista de origenes permitidos y credentials: true. Se deshabilito crossOriginResourcePolicy en Helmet.
+LECCION: En arquitecturas desacopladas, CORS debe configurarse temprano para evitar bloqueos de depuracion.
+
+ERROR: Interceptor de Axios y refresh token en rutas de auth
+CAUSA: El interceptor de Axios intentaba refrescar token incluso en las rutas /auth/refresh y /auth/login, causando bucles infinitos.
+SOLUCION: Se agrego la funcion isAuthRoute() que excluye las rutas que contienen /auth/ del interceptor 401.
+LECCION: Los interceptores automaticos deben tener guards para evitar recursion en endpoints de autenticacion.
+
+ERROR: Rate limiter bloqueaba logins legitimos
+CAUSA: El rate limiter estaba configurado con un maximo muy bajo (10-50 peticiones) y usaba req.ip como key, pero tras un proxy (Render) todas las IPs aparecian como la misma.
+SOLUCION: Se incremento el limite a 200, se cambio la key a req.body?.email, y se agrego app.set('trust proxy', 2). Finalmente se deshabilito el rate limiter temporalmente.
+LECCION: Los rate limiters detras de proxies requieren trust proxy y una estrategia de keying adecuada.
+
+### 4.3 Errores de Despliegue
+
+ERROR: React Router fallaba en Vercel con 404 en rutas anidadas
+CAUSA: Vercel no reconoce las rutas SPA de React. Al recargar /admin/productos, devolvia 404.
+SOLUCION: Se agrego vercel.json con rewrite que mapea todas las rutas a /index.html:
+{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+LECCION: Toda SPA desplegada en Vercel necesita rewrites para funcionar correctamente.
+
+ERROR: Backend de Express fallaba en Vercel por falta de configuracion serverless
+CAUSA: Vercel espera una funcion serverless, pero el backend usaba un servidor HTTP tradicional.
+SOLUCION: Se agrego vercel.json en backend con @vercel/node como builder para convertir Express en serverless.
+LECCION: Express necesita configuracion especifica para desplegarse como serverless en Vercel.
+
+ERROR: Chunks de JS demasiado grandes (>500KB)
+CAUSA: Recharts y dependencias de graficos aumentaban el bundle size.
+SOLUCION: Se considero dynamic import, pero no se implemento (solo advertencia, no error).
+LECCION: Monitorear el tamano del bundle en produccion para evitar tiempos de carga largos.
+
+### 4.4 Errores de la IA (Alucinaciones)
+
+ERROR: OpenCode mezclo sintaxis de MySQL con PostgreSQL
+CAUSA: Al generar queries SQL para Supabase, la IA uso funciones de MySQL (como NOW() sin DEFAULT correcto, o tipos como VARCHAR en lugar de TEXT).
+SOLUCION: Se revisaron y corrigieron todas las queries para usar sintaxis PostgreSQL estandar.
+LECCION: La IA tiende a mezclar dialectos SQL. Siempre revisar las queries generadas contra la documentacion de PostgreSQL.
+
+ERROR: OpenCode genero imports de librerias inexistentes
+CAUSA: En algunos componentes, la IA importaba funciones de modulos que no existian o usaba nombres incorrectos en lucide-react.
+SOLUCION: Se corrigieron manualmente los imports y se verifico cada build.
+LECCION: Los imports generados por IA deben verificarse contra el package.json real antes de ejecutar.
+
+ERROR: La IA genero codigo de autenticacion con Supabase Auth en frontend
+CAUSA: OpenCode asumio que el frontend tendria acceso directo a Supabase (usando @supabase/supabase-js en el cliente), cuando la arquitectura definida era que todo pasara por el backend Express.
+SOLUCION: Se elimino el cliente Supabase del frontend y se reemplazo por llamadas API a traves de Axios.
+LECCION: La IA a veces ignora restricciones arquitectonicas explicitas. Los prompts deben repetir las reglas clave.
+
+ERROR: La IA genero el rate limiter con validacion (validate: X-Forwarded-For)
+CAUSA: El rate limiter de Express usaba validate: { XForwardedForHeader: false } pero la opcion correcta habia cambiado en la version instalada.
+SOLUCION: Se elimino la opcion validate y se configuro correctamente trust proxy.
+LECCION: La documentacion de librerias cambia entre versiones. La IA puede generar codigo para versiones antiguas.
+
+### 4.5 Errores de Diseno/UI
+
+ERROR: Modo claro dejaba texto invisible en paginas de empleado
+CAUSA: Los componentes de empleado solo tenian clases text-white sin equivalentes en modo claro (text-gray-900, dark:text-white).
+SOLUCION: Se agregaron clases text-gray-900 (o equivalentes) con el prefijo dark: para que el modo claro tuviera texto legible.
+LECCION: Cada vez que se usa un color de texto, debe tener su par claro/oscuro explicito.
+
+ERROR: Modales y formularios no respondian al cambio de tema
+CAUSA: Modal.jsx y los formularios (ProductoForm, UsuarioForm, etc.) usaban clases fijas sin variante dark:.
+SOLUCION: Se cambiaron todos los modales a bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950. Los inputs se cambiaron a bg-white dark:bg-slate-800 text-gray-900 dark:text-white.
+LECCION: Todos los componentes deben tener variante dark: desde el inicio. Agregarlo despues es mas costoso.
+
+ERROR: Scroll de contenido cortaba la paginacion
+CAUSA: El layout usaba h-screen en el contenedor derecho, lo que limitaba la altura y cortaba la paginacion al fondo.
+SOLUCION: Se cambio a min-h-screen, se agrego pb-20 en <main> y mb-10 en los wrappers de tabla.
+LECCION: h-screen limita el scroll vertical. Para layouts con header fijo y scroll en contenido, usar min-h-screen.
+
+ERROR: Efecto glass no se notaba contra fondos blancos
+CAUSA: El fondo del layout usaba colores solidos (bg-slate-50, bg-slate-950) que opacaban el efecto de backdrop-blur en los componentes glass.
+SOLUCION: Se cambio el fondo del layout a un gradiente (bg-gradient-to-br from-slate-50 via-slate-100 to-blue-100/50) y los componentes glass a bg-white/40 o bg-slate-950/40 con backdrop-blur-xl para que el gradiente se viera a traves de ellos.
+LECCION: El efecto glassmorphism requiere un fondo texturizado (gradiente, imagen, patron) para que el backdrop-blur sea visible.
+
+### 4.6 Errores de Logica de Negocio
+
+ERROR: Al editar un producto, la fila se desvanecio (flicker)
+CAUSA: handleSubmit llamaba a fetchProductos() despues de actualizar, lo que recargaba toda la lista desde el servidor y causaba un re-render completo con perdida de posicion visual.
+SOLUCION: Se cambio a setProductos(prev => prev.map(p => p.id === editing.id ? { ...p, ...updated } : p)) que actualiza solo el elemento editado manteniendo su posicion exacta en el array.
+LECCION: Para mutaciones individuales en listas, el estado local debe actualizarse con .map() o findIndex() en lugar de recargar todo el listado.
+
+ERROR: Productos sin stock se mostraban como seleccionables en salidas
+CAUSA: ProductoSearch.jsx permitia seleccionar productos con stock 0 en modo salida.
+SOLUCION: Se agrego la validacion if (tipo === 'salida' && item.stock_actual <= 0) return en la funcion selectItem() y se agrego clase opacity-40 cursor-not-allowed para productos sin stock.
+LECCION: Las validaciones de reglas de negocio deben implementarse tanto en frontend como en backend (la RPC registrar_salida ya valida stock).
+
+ERROR: El conteo de total de productos no se actualizaba al crear
+CAUSA: El total (usado en el badge y paginacion) solo se actualizaba con fetchProductos(). Al crear un producto sin recargar, el total quedaba desactualizado.
+SOLUCION: Se agrego setTotal(prev => prev + 1) despues de crear un producto.
+LECCION: Los contadores derivados deben actualizarse sincronizadamente con las mutaciones del listado.
+
+ERROR: Empleado veia precios de productos en movimientos
+CAUSA: El backend no filtraba el campo precio_unitario para empleados en el listado de movimientos.
+SOLUCION: Se agrego en movimientoController.listar(): si el usuario es empleado, se mapean los resultados eliminando precio_unitario.
+LECCION: La segregacion de datos por rol debe implementarse en el backend, no confiar solo en el frontend.
+
+---
+
+## SECCION 5 - TECNOLOGIAS Y DEPENDENCIAS
+
+### 5.1 Frontend (frontend/package.json)
+
+| Dependencia | Version | Uso |
+|-------------|---------|-----|
+| react | ^18.3.0 | Biblioteca principal de UI |
+| react-dom | ^18.3.0 | Renderizado DOM de React |
+| react-router-dom | ^6.26.0 | Enrutamiento SPA (rutas anidadas, ProtectedRoute) |
+| react-hook-form | ^7.53.0 | Manejo de formularios con validacion |
+| @hookform/resolvers | ^3.9.0 | Integracion de Zod con react-hook-form |
+| zod | ^3.23.0 | Validacion de esquemas (login, formularios) |
+| axios | ^1.7.0 | Cliente HTTP con interceptores (JWT, refresh automatico) |
+| lucide-react | ^0.427.0 | Iconos SVG (Package, Search, Plus, Bell, etc.) |
+| recharts | ^2.15.4 | Graficos interactivos (barras, donut) en Reportes |
+| react-hot-toast | ^2.4.1 | Notificaciones toast (exito, error) |
+| jspdf | ^4.2.1 | Generacion de PDF en cliente |
+| jspdf-autotable | ^5.0.8 | Tablas dentro de PDF con estilo |
+| file-saver | ^2.0.5 | Descarga de archivos (Excel, PDF) |
+| xlsx | ^0.18.5 | Generacion de archivos Excel con estilos |
+| html2canvas | ^1.4.1 | Captura de graficos como imagenes para PDF |
+| Dev |
+| @vitejs/plugin-react | ^4.3.0 | Plugin Vite para React |
+| vite | ^5.4.0 | Bundler y dev server ultra-rapido |
+| tailwindcss | ^3.4.0 | Framework CSS utilitario |
+| @tailwindcss/forms | ^0.5.7 | Plugin de estilos para formularios Tailwind |
+| autoprefixer | ^10.4.0 | PostCSS plugin para prefijos CSS |
+| postcss | ^8.4.0 | Procesador CSS |
+
+### 5.2 Backend (backend/package.json)
+
+| Dependencia | Version | Uso |
+|-------------|---------|-----|
+| express | ^4.21.0 | Framework HTTP (rutas, middlewares, peticiones/respuestas) |
+| @supabase/supabase-js | ^2.45.0 | Cliente Supabase (conexion a PostgreSQL, RPC) |
+| jsonwebtoken | ^9.0.2 | Generacion y verificacion de JWT |
+| bcryptjs | ^2.4.3 | Hashing y comparacion de contrasenas |
+| cors | ^2.8.5 | Middleware CORS para peticiones cross-origin |
+| helmet | ^8.0.0 | Seguridad HTTP (headers, XSS, content-type) |
+| express-validator | ^7.2.0 | Validacion de datos de entrada en requests |
+| express-rate-limit | ^7.4.0 | Limitacion de tasa de peticiones |
+| morgan | ^1.10.0 | Logging de peticiones HTTP (dev) |
+| dotenv | ^16.4.0 | Carga de variables de entorno desde .env |
+| Dev |
+| nodemon | ^3.1.0 | Auto-reload del servidor en desarrollo |
+
+### 5.3 Variables de Entorno
+
+**Backend (.env):**
+| Variable | Proposito |
+|----------|-----------|
+| PORT | Puerto del servidor Express (3001) |
+| SUPABASE_URL | URL del proyecto Supabase |
+| SUPABASE_SERVICE_ROLE_KEY | Clave service_role para operaciones de backend |
+| JWT_SECRET | Secreto para firmar access tokens |
+| JWT_REFRESH_SECRET | Secreto para firmar refresh tokens |
+| JWT_EXPIRES_IN | Duracion del access token (1h) |
+| JWT_REFRESH_EXPIRES_IN | Duracion del refresh token (7d) |
+| FRONTEND_URL | URL del frontend para CORS (localhost o Vercel) |
+| NODE_ENV | Entorno: development/production |
+
+**Frontend (.env):**
+| Variable | Proposito |
+|----------|-----------|
+| VITE_API_URL | URL base del backend (ej: /api/v1 en desarrollo con proxy, URL completa en produccion) |
+
+---
+
+## SECCION 6 - ESTRUCTURA DE BASE DE DATOS
+
+### Tablas
+
+**TABLA: usuarios**
+- Descripcion: Almacena los usuarios del sistema con sus credenciales y roles.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid() | Identificador unico
+  - nombre: TEXT | NOT NULL | Nombre completo del usuario
+  - email: TEXT | NOT NULL, UNIQUE | Correo electronico usado para login
+  - password: TEXT | NOT NULL | Hash bcrypt de la contrasena
+  - rol: TEXT | NOT NULL, CHECK (rol IN ('administrador','empleado')) | Rol del usuario
+  - activo: BOOLEAN | NOT NULL, DEFAULT TRUE | Estado del usuario
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW() | Fecha de creacion
+  - updated_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW() | Fecha de ultima actualizacion
+- Indices: idx_usuarios_email (email) - busqueda rapida en login
+
+**TABLA: categorias**
+- Descripcion: Categorias para clasificar productos.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid() | Identificador unico
+  - nombre: TEXT | NOT NULL, UNIQUE | Nombre de la categoria
+  - descripcion: TEXT | DEFAULT '' | Descripcion opcional
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+  - updated_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+- Relaciones: Productos referencian categorias.id via productos.categoria_id
+
+**TABLA: proveedores**
+- Descripcion: Proveedores de productos.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid()
+  - nombre: TEXT | NOT NULL | Nombre o razon social
+  - contacto: TEXT | DEFAULT '' | Persona de contacto
+  - telefono: TEXT | DEFAULT ''
+  - email: TEXT | DEFAULT ''
+  - direccion: TEXT | DEFAULT ''
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+  - updated_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+- Relaciones: Productos referencian proveedores.id via productos.proveedor_id
+
+**TABLA: productos**
+- Descripcion: Catalogo de productos del inventario.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid()
+  - codigo: TEXT | NOT NULL, UNIQUE | Codigo unico del producto
+  - nombre: TEXT | NOT NULL | Nombre del producto
+  - descripcion: TEXT | DEFAULT ''
+  - categoria_id: UUID | FK -> categorias(id) ON DELETE SET NULL | Categoria asociada
+  - proveedor_id: UUID | FK -> proveedores(id) ON DELETE SET NULL | Proveedor asociado
+  - precio_compra: NUMERIC(12,2) | NOT NULL, DEFAULT 0
+  - precio_venta: NUMERIC(12,2) | NOT NULL, DEFAULT 0
+  - stock_minimo: INTEGER | NOT NULL, DEFAULT 0 | Umbral para alerta de stock bajo
+  - stock_actual: INTEGER | NOT NULL, DEFAULT 0 | Cantidad disponible
+  - imagen_url: TEXT | DEFAULT ''
+  - activo: BOOLEAN | NOT NULL, DEFAULT TRUE
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+  - updated_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+- Indices:
+  - idx_productos_categoria (categoria_id) - joins con categorias
+  - idx_productos_proveedor (proveedor_id) - joins con proveedores
+  - idx_productos_codigo (codigo) - busqueda por codigo
+
+**TABLA: movimientos**
+- Descripcion: Registro de todas las entradas y salidas de inventario.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid()
+  - producto_id: UUID | FK -> productos(id) ON DELETE RESTRICT | Producto afectado
+  - tipo: TEXT | NOT NULL, CHECK (tipo IN ('entrada','salida'))
+  - cantidad: INTEGER | NOT NULL, CHECK (cantidad > 0)
+  - motivo: TEXT | NOT NULL, DEFAULT ''
+  - precio_unitario: NUMERIC(12,2) | NULL | Precio al momento del movimiento (entrada: ingresado, salida: precio_venta del producto)
+  - usuario_id: UUID | FK -> usuarios(id) ON DELETE RESTRICT | Quien realizo el movimiento
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+- Indices:
+  - idx_movimientos_producto (producto_id) - filtros por producto
+  - idx_movimientos_usuario (usuario_id) - filtros por usuario (empleado)
+  - idx_movimientos_tipo (tipo) - filtros por tipo
+  - idx_movimientos_creado (created_at DESC) - orden cronologico descendente
+
+**TABLA: refresh_tokens**
+- Descripcion: Almacena tokens de refresco para renovacion de sesion.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid()
+  - usuario_id: UUID | FK -> usuarios(id) ON DELETE CASCADE
+  - token: TEXT | NOT NULL, UNIQUE | Token aleatorio de 40 bytes hex
+  - expires_at: TIMESTAMPTZ | NOT NULL | Fecha de expiracion (7 dias)
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+- Indices: idx_refresh_token (token) - busqueda del token en renovacion
+
+**TABLA: notificaciones** (migracion)
+- Descripcion: Notificaciones automaticas del sistema.
+- Columnas:
+  - id: UUID | PK, DEFAULT gen_random_uuid()
+  - usuario_id: UUID | FK -> usuarios(id) ON DELETE CASCADE | Destinatario
+  - tipo: TEXT | NOT NULL, CHECK (tipo IN ('entrada','salida','alerta','sistema'))
+  - titulo: TEXT | NOT NULL
+  - descripcion: TEXT | NOT NULL, DEFAULT ''
+  - leida: BOOLEAN | NOT NULL, DEFAULT FALSE
+  - created_at: TIMESTAMPTZ | NOT NULL, DEFAULT NOW()
+- Indices:
+  - idx_notificaciones_usuario (usuario_id, created_at DESC) - consultas del panel
+  - idx_notificaciones_no_leidas (usuario_id, leida) WHERE leida = FALSE - conteo rapido de no leidas
+
+### 6.2 Funciones RPC de PostgreSQL
+
+#### registrar_entrada(p_producto_id, p_cantidad, p_motivo, p_precio_unitario, p_usuario_id)
+Descripcion: Registra una entrada de producto en una transaccion atomica.
+1. Valida que el producto exista y este activo (SELECT nombre FROM productos WHERE id = p_producto_id AND activo = TRUE)
+2. Valida que la cantidad sea mayor a 0
+3. Inserta registro en movimientos con tipo='entrada'
+4. Actualiza productos.stock_actual = stock_actual + p_cantidad
+5. Retorna JSONB con { exito: true, mensaje: "Entrada registrada correctamente" } o { exito: false, error: "..." }
+
+#### registrar_salida(p_producto_id, p_cantidad, p_motivo, p_usuario_id)
+Descripcion: Registra una salida de producto validando stock suficiente.
+1. Obtiene nombre y stock_actual del producto
+2. Valida que el producto exista y este activo
+3. Valida que la cantidad sea mayor a 0
+4. Valida que stock_actual >= p_cantidad; si no, retorna error con valores disponibles
+5. Obtiene precio_venta del producto y lo guarda en el movimiento
+6. Inserta registro en movimientos con tipo='salida'
+7. Actualiza productos.stock_actual = stock_actual - p_cantidad
+8. Retorna JSONB con resultado
+
+#### obtener_alertas_stock()
+Descripcion: Retorna todos los productos con stock menor o igual al minimo, ordenados por diferencia ascendente (mas criticos primero). Util para el dashboard y panel de empleado.
+
+#### obtener_dashboard_admin()
+Descripcion: Calcula y retorna en un JSONB los KPIs del dashboard: total_productos, total_categorias, total_proveedores, total_movimientos_30d, total_usuarios, valor_inventario (suma de precio_compra * stock_actual), productos_bajo_stock.
+
+#### obtener_movimientos_recientes(p_limite DEFAULT 20)
+Descripcion: Retorna los ultimos movimientos con nombres de producto y usuario, uniendo movimientos con productos y usuarios.
+
+#### crear_notificacion_movimiento() (trigger)
+Descripcion: Funcion llamada por el trigger trg_crear_notificacion_movimiento despues de cada INSERT en movimientos. Crea notificaciones para:
+- Todos los administradores (excepto quien realizo el movimiento)
+- El usuario que realizo el movimiento
+
+El titulo y descripcion varian segun el tipo (entrada/salida).
