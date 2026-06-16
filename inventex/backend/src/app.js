@@ -38,6 +38,7 @@ const authLimiter = rateLimit({
   keyGenerator: (req) => req.body?.email || req.ip,
   message: { error: 'Demasiadas solicitudes. Intenta de nuevo en 15 minutos.' },
   skip: (req) => req.method !== 'POST',
+  validate: false,
 })
 
 app.use('/api/v1/auth', authLimiter)
