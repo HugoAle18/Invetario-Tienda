@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { productosApi } from '@/api/productos'
 import { categoriasApi } from '@/api/categorias'
 import { proveedoresApi } from '@/api/proveedores'
@@ -16,8 +16,6 @@ import {
   Loader2,
   AlertCircle,
   RefreshCw,
-  ChevronDown,
-  ChevronRight,
   Tags,
 } from 'lucide-react'
 
@@ -35,7 +33,6 @@ export default function ProductosPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
   const [submitting, setSubmitting] = useState(false)
-  const [expandedCats, setExpandedCats] = useState({})
   const limit = 20
 
   const fetchProductos = useCallback(async () => {
@@ -134,25 +131,13 @@ export default function ProductosPage() {
 
   const totalPages = Math.ceil(total / limit)
 
-  const productosPorCategoria = productos.reduce((acc, p) => {
-    const cat = p.categorias?.nombre || 'Sin categoría'
-    if (!acc[cat]) acc[cat] = []
-    acc[cat].push(p)
-    return acc
-  }, {})
-
-  const toggleCat = (cat) => {
-    setExpandedCats((prev) => ({ ...prev, [cat]: !prev[cat] }))
-  }
-
-  useEffect(() => {
-    if (productos.length && Object.keys(expandedCats).length === 0) {
-      const allExpanded = Object.keys(productosPorCategoria).reduce((acc, cat) => {
-        acc[cat] = true
-        return acc
-      }, {})
-      setExpandedCats(allExpanded)
-    }
+  const productosPorCategoria = useMemo(() => {
+    return productos.reduce((acc, p) => {
+      const cat = p.categorias?.nombre || 'Sin categoría'
+      if (!acc[cat]) acc[cat] = []
+      acc[cat].push(p)
+      return acc
+    }, {})
   }, [productos])
 
   return (
@@ -234,87 +219,21 @@ export default function ProductosPage() {
         <>
           <div className="space-y-6 mb-10">
             {Object.entries(productosPorCategoria).map(([cat, prods]) => (
-              <div
-                key={cat}
-                className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md overflow-hidden"
-              >
-                {/* Category header */}
-                <button
-                  type="button"
-                  onClick={() => toggleCat(cat)}
-                  className="w-full flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-50/60 to-slate-100/60 dark:from-slate-800/60 dark:to-slate-800/30 border-b border-slate-200/50 dark:border-slate-700/50 hover:from-blue-50 dark:hover:from-slate-700/60 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600/10 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                      <Tags size={16} />
-                    </div>
-                    <span className="text-base font-bold text-gray-900 dark:text-white">{cat}</span>
-                    <span className="text-xs font-semibold text-slate-500 dark:text-white/50 bg-slate-200/60 dark:bg-slate-700/60 px-2.5 py-1 rounded-full">
-                      {prods.length} producto{prods.length !== 1 ? 's' : ''}
-                    </span>
+              <div key={cat} className="flex flex-col gap-4">
+                <div className="flex items-center gap-3 mt-4">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600/10 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <Tags size={16} />
                   </div>
-                  {expandedCats[cat] ? (
-                    <ChevronDown size={18} className="text-gray-400 dark:text-white/40" />
-                  ) : (
-                    <ChevronRight size={18} className="text-gray-400 dark:text-white/40" />
-                  )}
-                </button>
-
-                {/* Products table */}
-                {expandedCats[cat] && (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
-                          <th className="text-left py-3 px-4 font-bold">Código</th>
-                          <th className="text-left py-3 px-4 font-bold">Nombre</th>
-                          <th className="text-right py-3 px-4 font-bold">Stock</th>
-                          <th className="text-right py-3 px-4 font-bold hidden sm:table-cell">P. Venta</th>
-                          <th className="text-right py-3 px-4 font-bold">Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {prods.map((p) => (
-                          <tr key={p.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
-                            <td className="py-3 px-4 font-mono text-xs text-gray-600 dark:text-white/60">{p.codigo}</td>
-                            <td className="py-3 px-4">
-                              <p className="text-gray-900 dark:text-white font-medium">{p.nombre}</p>
-                              {p.stock_actual <= p.stock_minimo && (
-                                <span className="px-2.5 py-1 text-xs font-black rounded-full bg-red-600 text-white shadow-sm mt-1 inline-block">Stock bajo</span>
-                              )}
-                            </td>
-                            <td className={`py-3 px-4 text-right font-semibold ${
-                              p.stock_actual <= p.stock_minimo ? 'text-red-600 font-black' : 'text-gray-900 dark:text-white'
-                            }`}>
-                              {p.stock_actual}
-                            </td>
-                            <td className="py-3 px-4 text-right text-gray-900 dark:text-white hidden sm:table-cell text-sm font-bold">
-                              S/ {Number(p.precio_venta).toFixed(2)}
-                            </td>
-                            <td className="py-3 px-4 text-right">
-                              <div className="flex items-center justify-end gap-1">
-                                <button
-                                  onClick={() => openEdit(p)}
-                                  className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-brand transition-colors"
-                                  title="Editar"
-                                >
-                                  <Pencil size={15} />
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(p)}
-                                  className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-danger transition-colors"
-                                  title="Eliminar"
-                                >
-                                  <Trash2 size={15} />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">{cat}</h3>
+                  <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-blue-600 text-white shadow-sm">
+                    {prods.length} artículo{prods.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+                <TablaCategoria
+                  productos={prods}
+                  onEdit={openEdit}
+                  onDelete={handleDelete}
+                />
               </div>
             ))}
           </div>
@@ -360,6 +279,65 @@ export default function ProductosPage() {
           loading={submitting}
         />
       </Modal>
+    </div>
+  )
+}
+
+function TablaCategoria({ productos, onEdit, onDelete }) {
+  return (
+    <div className="w-full bg-white/95 dark:bg-slate-950/90 backdrop-blur-md rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm overflow-hidden mb-4">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
+              <th className="text-left py-3 px-4 font-bold uppercase text-xs tracking-wider">Código</th>
+              <th className="text-left py-3 px-4 font-bold uppercase text-xs tracking-wider">Nombre</th>
+              <th className="text-right py-3 px-4 font-bold uppercase text-xs tracking-wider">Stock</th>
+              <th className="text-right py-3 px-4 font-bold uppercase text-xs tracking-wider hidden sm:table-cell">P. Venta</th>
+              <th className="text-center py-3 px-4 font-bold uppercase text-xs tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-900">
+            {productos.map((p) => (
+              <tr key={p.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
+                <td className="py-3 px-4 font-mono text-xs text-gray-600 dark:text-white/60">{p.codigo}</td>
+                <td className="py-3 px-4">
+                  <p className="text-gray-900 dark:text-white font-medium">{p.nombre}</p>
+                  {p.stock_actual <= p.stock_minimo && (
+                    <span className="px-2.5 py-1 text-xs font-black rounded-full bg-red-600 text-white shadow-sm mt-1 inline-block">Stock bajo</span>
+                  )}
+                </td>
+                <td className={`py-3 px-4 text-right font-semibold ${
+                  p.stock_actual <= p.stock_minimo ? 'text-red-600 font-black' : 'text-gray-900 dark:text-white'
+                }`}>
+                  {p.stock_actual}
+                </td>
+                <td className="py-3 px-4 text-right text-gray-900 dark:text-white hidden sm:table-cell text-sm font-bold">
+                  S/ {Number(p.precio_venta).toFixed(2)}
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <div className="flex items-center justify-center gap-1">
+                    <button
+                      onClick={() => onEdit(p)}
+                      className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      title="Editar"
+                    >
+                      <Pencil size={15} />
+                    </button>
+                    <button
+                      onClick={() => onDelete(p)}
+                      className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                      title="Eliminar"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
