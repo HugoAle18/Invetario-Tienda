@@ -217,18 +217,18 @@ export default function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-bg-border text-gray-600 dark:text-text-secondary label-mono">
-                  <th className="text-left py-3 px-2 font-medium">Producto</th>
-                  <th className="text-left py-3 px-2 font-medium">Tipo</th>
-                  <th className="text-right py-3 px-2 font-medium">Cantidad</th>
-                  <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Motivo</th>
-                  <th className="text-left py-3 px-2 font-medium hidden sm:table-cell">Usuario</th>
-                  <th className="text-right py-3 px-2 font-medium hidden lg:table-cell">Fecha</th>
+                <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border text-gray-600 dark:text-text-secondary label-mono">
+                  <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
+                  <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
+                  <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Cantidad</th>
+                  <th className="text-left py-3 px-2 font-medium hidden md:table-cell text-blue-900 dark:text-text-primary font-bold">Motivo</th>
+                  <th className="text-left py-3 px-2 font-medium hidden sm:table-cell text-blue-900 dark:text-text-primary font-bold">Usuario</th>
+                  <th className="text-right py-3 px-2 font-medium hidden lg:table-cell text-blue-900 dark:text-text-primary font-bold">Fecha</th>
                 </tr>
               </thead>
               <tbody>
                 {movimientos.map((mov) => (
-                  <tr key={mov.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors">
+                  <tr key={mov.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
                     <td className="py-3 px-2 text-gray-900 dark:text-text-primary font-medium">{mov.producto}</td>
                     <td className="py-3 px-2">
                       <span

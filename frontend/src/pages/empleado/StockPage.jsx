@@ -99,16 +99,16 @@ export default function StockPage() {
           <div className="overflow-x-auto glass">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-white/[0.06] label-mono">
-                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-white/60">Código</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-white/60">Nombre</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-white/60 hidden md:table-cell">Categoría</th>
-                  <th className="text-right py-3 px-4 font-medium text-gray-600 dark:text-white/60">Stock</th>
+                <tr className="border-b border-gray-200 dark:border-white/[0.06] label-mono bg-blue-50/80 dark:bg-bg-secondary">
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Código</th>
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold hidden md:table-cell">Categoría</th>
+                  <th className="text-right py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Stock</th>
                 </tr>
               </thead>
               <tbody>
                 {productos.map((p) => (
-                  <tr key={p.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors">
+                  <tr key={p.id} className="border-b border-gray-200 dark:border-white/[0.06] even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover transition-colors">
                     <td className="py-3 px-4 font-mono text-xs text-gray-600 dark:text-white/60">{p.codigo}</td>
                     <td className="py-3 px-4">
                       <p className="text-gray-900 dark:text-white font-medium">{p.nombre}</p>

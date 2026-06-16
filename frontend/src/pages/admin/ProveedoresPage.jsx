@@ -104,7 +104,7 @@ export default function ProveedoresPage() {
       {!loading && !error && proveedores.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
           {proveedores.map((prov) => (
-            <div key={prov.id} className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm flex flex-col justify-between gap-4 group">
+            <div key={prov.id} className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
               <div className="flex items-start justify-between mb-2">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{prov.nombre}</h4>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">

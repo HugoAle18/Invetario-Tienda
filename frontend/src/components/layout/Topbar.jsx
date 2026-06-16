@@ -13,6 +13,11 @@ const obtenerTitulo = (path) => {
     case '/admin/usuarios': return 'Usuarios'
     case '/admin/reportes': return 'Reportes'
     case '/admin/configuracion': return 'Configuración'
+    case '/empleado/panel': return 'Panel'
+    case '/empleado/stock': return 'Stock'
+    case '/empleado/entrada': return 'Entrada'
+    case '/empleado/salida': return 'Salida'
+    case '/empleado/movimientos': return 'Movimientos'
     default: return 'INVENTEX'
   }
 }

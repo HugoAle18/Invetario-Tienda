@@ -76,8 +76,8 @@ export default function Sidebar({ open, onClose, role }) {
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                   ${isActive
-                    ? 'bg-brand text-white'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-bg-hover hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-slate-200/80 dark:hover:bg-bg-hover hover:text-blue-600 dark:hover:text-white transition-all'
                   }
                 `}
               >

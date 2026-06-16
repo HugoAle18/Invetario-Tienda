@@ -138,17 +138,17 @@ export default function UsuariosPage() {
           <div className="overflow-x-auto bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-white/[0.06] text-gray-600 dark:text-white/60 label-mono">
-                  <th className="text-left py-3 px-4 font-medium">Nombre</th>
-                  <th className="text-left py-3 px-4 font-medium">Email</th>
-                  <th className="text-left py-3 px-4 font-medium">Rol</th>
-                  <th className="text-left py-3 px-4 font-medium">Estado</th>
-                  <th className="text-right py-3 px-4 font-medium">Acciones</th>
+                <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-white/[0.06] text-gray-600 dark:text-white/60 label-mono">
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Email</th>
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Rol</th>
+                  <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Estado</th>
+                  <th className="text-right py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {usuarios.map((u) => (
-                  <tr key={u.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors">
+                  <tr key={u.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
                     <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">{u.nombre}</td>
                     <td className="py-3 px-4 text-gray-600 dark:text-white/60">{u.email}</td>
                     <td className="py-3 px-4">

@@ -70,7 +70,7 @@ export default function PanelPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="glass p-4">
+          <div key={label} className="glass p-4 hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
             <div className={`p-2 rounded-lg w-fit ${color} mb-3`}>
               <Icon size={20} />
             </div>
@@ -81,7 +81,7 @@ export default function PanelPage() {
       </div>
 
       {/* Recent movements */}
-      <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl p-6">
+      <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl p-6 hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
         <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Movimientos Recientes</h3>
         {(!data?.movimientos_recientes || data.movimientos_recientes.length === 0) ? (
           <div className="flex flex-col items-center py-10 text-gray-400 dark:text-white/40">
@@ -92,17 +92,17 @@ export default function PanelPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-white/[0.06] label-mono">
-                  <th className="text-left py-3 px-2 font-medium">Producto</th>
-                  <th className="text-left py-3 px-2 font-medium">Tipo</th>
-                  <th className="text-right py-3 px-2 font-medium">Cantidad</th>
-                  <th className="text-left py-3 px-2 font-medium hidden sm:table-cell">Motivo</th>
-                  <th className="text-left py-3 px-2 font-medium hidden sm:table-cell">Usuario</th>
+                <tr className="border-b border-gray-200 dark:border-white/[0.06] label-mono bg-blue-50/80 dark:bg-bg-secondary">
+                  <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
+                  <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
+                  <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Cantidad</th>
+                  <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold hidden sm:table-cell">Motivo</th>
+                  <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold hidden sm:table-cell">Usuario</th>
                 </tr>
               </thead>
               <tbody>
                 {data.movimientos_recientes.map((m) => (
-                  <tr key={m.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors">
+                  <tr key={m.id} className="border-b border-gray-200 dark:border-white/[0.06] even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover transition-colors">
                     <td className="py-3 px-2 text-gray-900 dark:text-white font-medium">{m.producto}</td>
                     <td className="py-3 px-2">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
