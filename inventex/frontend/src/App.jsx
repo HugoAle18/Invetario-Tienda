@@ -12,10 +12,10 @@ export default function App() {
           position="top-right"
           toastOptions={{
             style: {
-              background: 'rgba(255,255,255,0.05)',
+              background: 'var(--glass-strong-bg)',
               backdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#e1e2ec',
+              border: '1px solid var(--glass-border)',
+              color: 'var(--text-primary)',
               borderRadius: '8px',
               fontSize: '14px',
             },

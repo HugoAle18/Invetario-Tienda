@@ -1,9 +1,11 @@
 import { useAuth } from '@/context/AuthContext'
-import { Menu, LogOut, User } from 'lucide-react'
+import { useTheme } from '@/context/ThemeContext'
+import { Menu, LogOut, User, Moon, Sun } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Topbar({ onMenuClick, title }) {
   const { user, logout } = useAuth()
+  const { dark, toggleTheme } = useTheme()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -21,27 +23,36 @@ export default function Topbar({ onMenuClick, title }) {
         >
           <Menu size={20} />
         </button>
-        <h2 className="text-lg font-display font-semibold text-white truncate">
+        <h2 className="text-lg font-display font-semibold text-text-primary truncate">
           {title}
         </h2>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 pl-2 border-l border-white/[0.06]">
-          <div className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-white text-sm font-semibold">
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg text-text-secondary hover:bg-bg-hover transition-colors"
+          aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
+        >
+          <Sun size={18} className={`transition-transform duration-300 ${dark ? 'rotate-0 scale-100' : 'rotate-90 scale-0'} absolute`} />
+          <Moon size={18} className={`transition-transform duration-300 ${dark ? '-rotate-90 scale-0' : 'rotate-0 scale-100'}`} />
+        </button>
+
+        <div className="flex items-center gap-2 pl-2 border-l border-glass-border">
+          <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-semibold">
             {user?.nombre?.charAt(0).toUpperCase()}
           </div>
           <div className="hidden sm:block">
-            <p className="text-sm font-medium text-white leading-tight">
+            <p className="text-sm font-medium text-text-primary leading-tight">
               {user?.nombre}
             </p>
-            <p className="text-xs text-white/50 capitalize">{user?.rol}</p>
+            <p className="text-xs text-text-secondary capitalize">{user?.rol}</p>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="p-2 rounded-lg text-white/60 hover:bg-white/[0.10] hover:text-danger transition-colors"
+          className="p-2 rounded-lg text-text-secondary hover:bg-bg-hover hover:text-danger transition-colors"
           aria-label="Cerrar sesión"
         >
           <LogOut size={18} />

@@ -1,29 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { productosApi } from '@/api/productos'
-import { Loader2, Search } from 'lucide-react'
+import { Loader2, Package } from 'lucide-react'
+import ProductSearch from '@/components/search/ProductSearch'
 
 export default function MovementForm({ tipo, showPrecio, onSubmit, loading }) {
-  const [productos, setProductos] = useState([])
-  const [productSearch, setProductSearch] = useState('')
-  const [busy, setBusy] = useState(true)
-
-  useEffect(() => {
-    const load = async () => {
-      setBusy(true)
-      try {
-        const { data } = await productosApi.listar({ limit: 200 })
-        setProductos(data.data || [])
-      } catch {
-        // silent
-      } finally {
-        setBusy(false)
-      }
-    }
-    load()
-  }, [])
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   const schema = z.object({
     producto_id: z.string().min(1, 'Selecciona un producto'),
@@ -37,42 +20,35 @@ export default function MovementForm({ tipo, showPrecio, onSubmit, loading }) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema), defaultValues: { producto_id: '', cantidad: 1, motivo: '', precio_unitario: '' } })
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { producto_id: '', cantidad: 1, motivo: '', precio_unitario: '' },
+  })
 
-  const filtered = productos.filter(
-    (p) =>
-      p.nombre.toLowerCase().includes(productSearch.toLowerCase()) ||
-      p.codigo.toLowerCase().includes(productSearch.toLowerCase())
-  )
+  const handleProductChange = (product) => {
+    setSelectedProduct(product)
+    setValue('producto_id', product ? product.id : '', { shouldValidate: true })
+    if (product && showPrecio) {
+      setValue('precio_unitario', product.precio_compra || '')
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label className="block text-white/80 text-sm font-medium mb-1">Producto</label>
-        <div className="relative mb-2">
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
-          <input
-            type="text"
-            value={productSearch}
-            onChange={(e) => setProductSearch(e.target.value)}
-            placeholder="Buscar producto..."
-            className="glass-input w-full pl-8 pr-3 py-1.5 text-sm"
-          />
-        </div>
-        <select
-          {...register('producto_id')}
-          size={Math.min(filtered.length + 1, 6)}
-          className="glass-input w-full px-3 py-2 text-sm"
-        >
-          <option value="">-- Seleccionar --</option>
-          {filtered.map((p) => (
-            <option key={p.id} value={p.id}>
-              [{p.codigo}] {p.nombre} (stock: {p.stock_actual})
-            </option>
-          ))}
-        </select>
+        <ProductSearch value={selectedProduct} onChange={handleProductChange} />
         {errors.producto_id && <p className="text-danger text-xs mt-1">{errors.producto_id.message}</p>}
+        {selectedProduct && (
+          <div className="flex items-center gap-3 mt-2 px-3 py-2 rounded-lg bg-white/[0.04] text-xs text-white/60">
+            <Package size={14} />
+            <span>Stock actual: <strong className={selectedProduct.stock_actual <= selectedProduct.stock_minimo ? 'text-danger' : 'text-success'}>{selectedProduct.stock_actual}</strong></span>
+            <span>Precio compra: <strong>${Number(selectedProduct.precio_compra).toFixed(2)}</strong></span>
+            <span>Precio venta: <strong>${Number(selectedProduct.precio_venta).toFixed(2)}</strong></span>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -115,7 +91,7 @@ export default function MovementForm({ tipo, showPrecio, onSubmit, loading }) {
 
       <button
         type="submit"
-        disabled={loading || busy}
+        disabled={loading}
         className="glass-btn w-full py-2.5 flex items-center justify-center gap-2 text-sm"
       >
         {loading && <Loader2 size={16} className="animate-spin" />}

@@ -52,12 +52,12 @@ export default function Sidebar({ open, onClose, role }) {
           ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
       >
-        <div className="flex items-center justify-between h-16 px-5 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between h-16 px-5 border-b border-glass-border">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
               <Package size={18} className="text-white" />
             </div>
-            <span className="font-display font-bold text-lg text-white">INVENTEX</span>
+            <span className="font-display font-bold text-lg text-text-primary">INVENTEX</span>
           </div>
           <button onClick={onClose} className="md:hidden glass-btn-secondary p-1.5">
             <X size={20} />
@@ -76,8 +76,8 @@ export default function Sidebar({ open, onClose, role }) {
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                   ${isActive
-                    ? 'bg-white/[0.08] text-white'
-                    : 'text-white/60 hover:bg-white/[0.05] hover:text-white'
+                    ? 'bg-bg-hover text-text-primary'
+                    : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
                   }
                 `}
               >
@@ -88,7 +88,7 @@ export default function Sidebar({ open, onClose, role }) {
           })}
         </nav>
 
-        <div className="px-5 py-3 border-t border-white/[0.06] text-xs text-white/30 text-center">
+        <div className="px-5 py-3 border-t border-glass-border text-xs text-text-muted text-center">
           INVENTEX v1.0
         </div>
       </aside>

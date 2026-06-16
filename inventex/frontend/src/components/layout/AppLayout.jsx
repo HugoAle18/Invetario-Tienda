@@ -25,7 +25,7 @@ export default function AppLayout({ title: forcedTitle }) {
   const { user } = useAuth()
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex">
+    <div className="min-h-screen flex">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}

@@ -3,10 +3,43 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: #f6f8fa;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-border: #e2e8f0;
+    --bg-hover: #f3f4f6;
+    --text-primary: #1a1a2e;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(0, 0, 0, 0.03);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --glass-strong-bg: rgba(0, 0, 0, 0.05);
+  }
+
+  .dark {
+    --bg-primary: #0f172a;
+    --bg-secondary: #272a31;
+    --bg-card: #1d2027;
+    --bg-border: #32353c;
+    --bg-hover: #272a31;
+    --text-primary: #e1e2ec;
+    --text-secondary: #c2c6d6;
+    --text-muted: #8c909f;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-strong-bg: rgba(255, 255, 255, 0.05);
+  }
+
   body {
-    @apply bg-[#0F172A] text-[#e1e2ec] antialiased;
+    @apply bg-bg-primary text-text-primary antialiased;
     background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
     background-size: 24px 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dark body {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
   }
 
   ::-webkit-scrollbar {
@@ -27,43 +60,47 @@
 
 @layer components {
   .glass {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--glass-bg);
     backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--glass-border);
     border-radius: 0.75rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
   .glass-hover {
     transition: all 0.15s ease;
   }
   .glass-hover:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.10);
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
   }
   .glass-strong {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass-strong-bg);
     backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
     border-radius: 0.75rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--glass-bg);
     backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--glass-border);
     border-radius: 0.75rem;
     padding: 1.25rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
   .glass-input {
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: 0.25rem !important;
-    color: #fff !important;
+    color: var(--text-primary) !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
   .glass-input::placeholder {
-    color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--text-muted) !important;
   }
   .glass-input:focus {
     outline: none !important;
-    border-color: rgba(255, 255, 255, 0.20) !important;
+    border-color: var(--glass-border) !important;
     box-shadow: none !important;
   }
   .glass-btn {
@@ -81,13 +118,13 @@
     cursor: not-allowed !important;
   }
   .glass-btn-secondary {
-    background: rgba(255, 255, 255, 0.06) !important;
-    color: rgba(255, 255, 255, 0.8) !important;
+    background: var(--glass-bg) !important;
+    color: var(--text-secondary) !important;
     border-radius: 0.5rem !important;
     transition: all 0.15s ease;
   }
   .glass-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.10) !important;
+    background: var(--glass-strong-bg) !important;
   }
   .label-mono {
     font-family: 'JetBrains Mono', monospace !important;
@@ -95,6 +132,6 @@
     font-weight: 500 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.05em !important;
-    color: rgba(255, 255, 255, 0.5) !important;
+    color: var(--text-muted) !important;
   }
 }

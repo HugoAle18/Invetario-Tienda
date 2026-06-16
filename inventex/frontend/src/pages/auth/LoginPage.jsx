@@ -51,21 +51,21 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-primary-container" />
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-brand" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-bg-primary flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-container mb-4">
             <Package size={32} className="text-white" />
           </div>
-          <h1 className="text-3xl font-display font-bold text-white">INVENTEX</h1>
-          <p className="text-white/70 mt-1">Sistema de Gestión de Inventario</p>
+          <h1 className="text-3xl font-display font-bold text-text-primary">INVENTEX</h1>
+          <p className="text-text-secondary mt-1">Sistema de Gestión de Inventario</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="glass-card space-y-5">
