@@ -134,13 +134,20 @@ export default function ReportesPage() {
   }, {})
   const dataProveedor = Object.entries(capitalPorProveedor).map(([name, capital]) => ({ name, capital }))
 
-  const COLORS_PIE = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899']
+  const COLORS_PIE = ['#3b82f6', '#8b5cf6', '#d946ef', '#10b981', '#f59e0b']
 
-  const tooltipStyle = {
-    backgroundColor: isDark ? '#1E293B' : '#fff',
-    borderColor: isDark ? '#334155' : '#E2E8F0',
-    borderRadius: '8px',
-    color: isDark ? '#F8FAFC' : '#1E293B',
+  function CustomTooltip({ active, payload, label }) {
+    if (!active || !payload?.length) return null
+    return (
+      <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl text-xs font-medium text-slate-800 dark:text-slate-100">
+        <p className="font-bold mb-1">{label}</p>
+        {payload.map((p, i) => (
+          <p key={i} style={{ color: p.color }}>
+            {p.name}: <span className="font-bold">{p.value}</span>
+          </p>
+        ))}
+      </div>
+    )
   }
 
   const handleExportMovimientos = async () => {
@@ -304,14 +311,24 @@ export default function ReportesPage() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={dataMovBalance} barSize={80}>
-                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#E2E8F0'} />
-                <XAxis dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} />
-                <YAxis stroke="#94A3B8" tick={{ fill: '#94A3B8' }} />
-                <Tooltip contentStyle={tooltipStyle} />
-                <Legend wrapperStyle={{ color: isDark ? '#F8FAFC' : '#1E293B' }} />
-                <Bar dataKey="cantidad" name="Cantidad">
+                <defs>
+                  <linearGradient id="gradEntrada" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#0d9488" stopOpacity={0.85} />
+                  </linearGradient>
+                  <linearGradient id="gradSalida" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f43f5e" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#dc2626" stopOpacity={0.85} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} opacity={0.3} />
+                <XAxis dataKey="name" fontSize={12} fontWeight={600} fill="#64748b" stroke="#94A3B8" tick={{ fill: '#64748b' }} />
+                <YAxis fontSize={12} fontWeight={600} fill="#64748b" stroke="#94A3B8" tick={{ fill: '#64748b' }} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 12, fontWeight: 600, color: isDark ? '#e2e8f0' : '#475569' }} />
+                <Bar dataKey="cantidad" name="Cantidad" radius={[8, 8, 0, 0]}>
                   {dataMovBalance.map((entry, i) => (
-                    <Cell key={i} fill={entry.name === 'Entradas' ? '#10B981' : '#EF4444'} />
+                    <Cell key={i} fill={entry.name === 'Entradas' ? 'url(#gradEntrada)' : 'url(#gradSalida)'} />
                   ))}
                 </Bar>
               </BarChart>
@@ -327,12 +344,21 @@ export default function ReportesPage() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie data={dataCategoria} cx="50%" cy="50%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}>
+                <defs>
+                  {COLORS_PIE.map((color, i) => (
+                    <linearGradient key={i} id={`gradPie${i}`} x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor={color} stopOpacity={1} />
+                      <stop offset="100%" stopColor={color} stopOpacity={0.75} />
+                    </linearGradient>
+                  ))}
+                </defs>
+                <Pie data={dataCategoria} cx="50%" cy="50%" innerRadius="60%" outerRadius="80%" paddingAngle={4} dataKey="value">
                   {dataCategoria.map((_, i) => (
-                    <Cell key={i} fill={COLORS_PIE[i % COLORS_PIE.length]} />
+                    <Cell key={i} fill={`url(#gradPie${i % COLORS_PIE.length})`} stroke="transparent" />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value} uds`, 'Stock']} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend iconType="circle" layout="vertical" verticalAlign="bottom" wrapperStyle={{ fontSize: 11, fontWeight: 500, color: isDark ? '#e2e8f0' : '#475569' }} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -346,11 +372,17 @@ export default function ReportesPage() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={topFaltantes} layout="vertical" barSize={20}>
-                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#E2E8F0'} />
-                <XAxis type="number" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} />
-                <YAxis type="category" dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} width={140} tickFormatter={(v) => v.length > 18 ? v.substring(0, 18) + '…' : v} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value} uds`, 'Faltante']} />
-                <Bar dataKey="faltante" name="Faltante" fill="#F59E0B" radius={[0, 4, 4, 0]} />
+                <defs>
+                  <linearGradient id="gradFaltante" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#f59e0b" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#d97706" stopOpacity={0.85} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} opacity={0.3} />
+                <XAxis type="number" fontSize={12} fontWeight={600} fill="#64748b" stroke="#94A3B8" tick={{ fill: '#64748b' }} />
+                <YAxis type="category" dataKey="name" fontSize={12} fontWeight={600} fill="#64748b" stroke="#94A3B8" tick={{ fill: '#64748b' }} width={140} tickFormatter={(v) => v.length > 18 ? v.substring(0, 18) + '…' : v} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="faltante" name="Faltante" fill="url(#gradFaltante)" radius={[0, 8, 8, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -364,11 +396,17 @@ export default function ReportesPage() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={dataProveedor} barSize={20}>
-                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#E2E8F0'} />
-                <XAxis dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} tickFormatter={(v) => v.length > 14 ? v.substring(0, 14) + '…' : v} />
-                <YAxis stroke="#94A3B8" tick={{ fill: '#94A3B8' }} tickFormatter={(v) => `S/${v.toFixed(0)}`} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`S/. ${Number(value).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`, 'Capital']} />
-                <Bar dataKey="capital" name="Capital" fill="#2563EB" radius={[4, 4, 0, 0]} />
+                <defs>
+                  <linearGradient id="gradCapital" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#2563eb" stopOpacity={0.85} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} opacity={0.3} />
+                <XAxis dataKey="name" fontSize={12} fontWeight={600} fill="#64748b" stroke="#94A3B8" tick={{ fill: '#64748b' }} tickFormatter={(v) => v.length > 14 ? v.substring(0, 14) + '…' : v} />
+                <YAxis fontSize={12} fontWeight={600} fill="#64748b" stroke="#94A3B8" tick={{ fill: '#64748b' }} tickFormatter={(v) => `S/${v.toFixed(0)}`} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="capital" name="Capital" fill="url(#gradCapital)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
