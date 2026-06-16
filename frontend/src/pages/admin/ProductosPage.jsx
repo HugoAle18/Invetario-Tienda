@@ -234,7 +234,7 @@ export default function ProductosPage() {
                       {p.stock_actual}
                     </td>
                     <td className="py-3 px-4 text-right text-gray-900 dark:text-white hidden sm:table-cell text-sm font-bold">
-                      ${Number(p.precio_venta).toFixed(2)}
+                      S/ {Number(p.precio_venta).toFixed(2)}
                     </td>
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end gap-1">

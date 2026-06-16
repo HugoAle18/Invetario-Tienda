@@ -87,7 +87,7 @@ export default function EmpleadoMovimientosPage() {
                     <td className="py-3 px-4 text-right font-semibold text-gray-900 dark:text-white">{m.cantidad}</td>
                     <td className="py-3 px-4 text-gray-600 dark:text-white/60 hidden md:table-cell max-w-[200px] truncate">{m.motivo}</td>
                     <td className="py-3 px-4 text-gray-600 dark:text-white/60 text-right hidden lg:table-cell whitespace-nowrap">
-                      {new Date(m.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(m.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
                 ))}

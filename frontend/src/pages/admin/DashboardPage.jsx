@@ -27,11 +27,11 @@ const kpiConfig = [
 
 function formatCurrency(value) {
   const num = Number(value)
-  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(num)
+  return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(num)
 }
 
 function formatNumber(value) {
-  return Number(value).toLocaleString('es-MX')
+  return Number(value).toLocaleString('es-PE')
 }
 
 export default function DashboardPage() {
@@ -253,7 +253,7 @@ export default function DashboardPage() {
                     <td className="px-4 py-3.5 text-sm text-gray-600 dark:text-gray-400 hidden md:table-cell max-w-[200px] truncate">{mov.motivo}</td>
                     <td className="px-4 py-3.5 text-sm text-gray-600 dark:text-gray-400 hidden sm:table-cell">{mov.usuario}</td>
                     <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-500 text-right hidden lg:table-cell whitespace-nowrap">
-                      {new Date(mov.created_at).toLocaleDateString('es-MX')}
+                      {new Date(mov.created_at).toLocaleDateString('es-PE')}
                     </td>
                   </tr>
                 ))}
