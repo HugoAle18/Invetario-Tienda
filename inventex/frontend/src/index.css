@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0F172A] text-[#e1e2ec] antialiased;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+  }
+  .glass-hover {
+    transition: all 0.15s ease;
+  }
+  .glass-hover:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.10);
+  }
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+  }
+  .glass-input {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0.25rem !important;
+    color: #fff !important;
+  }
+  .glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.3) !important;
+  }
+  .glass-input:focus {
+    outline: none !important;
+    border-color: rgba(255, 255, 255, 0.20) !important;
+    box-shadow: none !important;
+  }
+  .glass-btn {
+    background: rgb(77, 142, 255) !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.15s ease;
+  }
+  .glass-btn:hover {
+    background: rgb(173, 198, 255) !important;
+  }
+  .glass-btn:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+  .glass-btn-secondary {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.15s ease;
+  }
+  .glass-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.10) !important;
+  }
+  .label-mono {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+  }
+}
