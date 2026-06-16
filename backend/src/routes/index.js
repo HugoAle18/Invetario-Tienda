@@ -9,6 +9,7 @@ import usuarioRoutes from './usuarioRoutes.js'
 import reporteRoutes from './reporteRoutes.js'
 import configRoutes from './configRoutes.js'
 import empleadoRoutes from './empleadoRoutes.js'
+import notificacionRoutes from './notificacionRoutes.js'
 
 const router = Router()
 
@@ -25,6 +26,7 @@ router.use('/productos', productoRoutes)
 router.use('/categorias', categoriaRoutes)
 router.use('/proveedores', proveedorRoutes)
 router.use('/movimientos', movimientoRoutes)
+router.use('/notificaciones', notificacionRoutes)
 router.use('/usuarios', usuarioRoutes)
 
 export default router

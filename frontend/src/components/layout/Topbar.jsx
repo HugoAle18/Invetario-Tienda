@@ -1,7 +1,11 @@
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { useTheme } from '@/context/ThemeContext'
-import { Menu, LogOut, User, Moon, Sun } from 'lucide-react'
+import { Menu, LogOut, Moon, Bell } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { notificacionesApi } from '@/api/notificaciones'
+import toast from 'react-hot-toast'
+import NotificationsPanel from '@/components/ui/NotificationsPanel'
 
 const obtenerTitulo = (path) => {
   switch (path) {
@@ -28,6 +32,70 @@ export default function Topbar({ onMenuClick }) {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const [panelOpen, setPanelOpen] = useState(false)
+  const [notificaciones, setNotificaciones] = useState([])
+  const [noLeidas, setNoLeidas] = useState(0)
+  const [loadingNotif, setLoadingNotif] = useState(false)
+  const prevCountRef = useRef(0)
+  const panelRef = useRef(null)
+
+  const fetchNotificaciones = useCallback(async () => {
+    try {
+      const { data: notifData } = await notificacionesApi.listar({ limit: 20 })
+      const data = notifData?.data || notifData || []
+      setNotificaciones(data)
+
+      const { data: countData } = await notificacionesApi.contarNoLeidas()
+      const count = countData?.count || 0
+
+      if (count > prevCountRef.current && prevCountRef.current > 0) {
+        toast.success(`${count - prevCountRef.current} notificación(es) nueva(s)`, {
+          icon: '🔔',
+          duration: 3000,
+        })
+      }
+      prevCountRef.current = count
+      setNoLeidas(count)
+    } catch {
+      // silent
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!user) return
+    fetchNotificaciones()
+    const interval = setInterval(fetchNotificaciones, 30000)
+    return () => clearInterval(interval)
+  }, [user, fetchNotificaciones])
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (panelRef.current && !panelRef.current.contains(e.target)) {
+        setPanelOpen(false)
+      }
+    }
+    if (panelOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      setLoadingNotif(true)
+      fetchNotificaciones().finally(() => setLoadingNotif(false))
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [panelOpen, fetchNotificaciones])
+
+  const handleMarcarLeida = async (id) => {
+    await notificacionesApi.marcarLeida(id)
+    setNoLeidas((prev) => Math.max(0, prev - 1))
+    setNotificaciones((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, leida: true } : n))
+    )
+  }
+
+  const handleMarcarTodasLeidas = async () => {
+    await notificacionesApi.marcarTodasLeidas()
+    setNoLeidas(0)
+    setNotificaciones((prev) => prev.map((n) => ({ ...n, leida: true })))
+  }
+
   const handleLogout = async () => {
     await logout()
     navigate('/login', { replace: true })
@@ -43,7 +111,7 @@ export default function Topbar({ onMenuClick }) {
         >
           <Menu size={20} />
         </button>
-         <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-text-primary truncate">
+        <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-text-primary truncate">
           {obtenerTitulo(location.pathname)}
         </h2>
       </div>
@@ -58,6 +126,31 @@ export default function Topbar({ onMenuClick }) {
             <Moon size={18} />
           </span>
         </button>
+
+        <div ref={panelRef} className="relative">
+          <button
+            onClick={() => setPanelOpen((v) => !v)}
+            className="relative p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors"
+            aria-label="Notificaciones"
+          >
+            <Bell size={18} />
+            {noLeidas > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                {noLeidas > 9 ? '9+' : noLeidas}
+              </span>
+            )}
+          </button>
+
+          {panelOpen && (
+            <NotificationsPanel
+              notificaciones={notificaciones}
+              loading={loadingNotif}
+              onMarcarLeida={handleMarcarLeida}
+              onMarcarTodasLeidas={handleMarcarTodasLeidas}
+              onClose={() => setPanelOpen(false)}
+            />
+          )}
+        </div>
 
         <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-bg-border">
           <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-semibold">
