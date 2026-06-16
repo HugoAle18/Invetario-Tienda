@@ -107,7 +107,7 @@ export default function Topbar({ onMenuClick }) {
   }
 
   return (
-    <header className="h-16 bg-white dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border flex items-center justify-between px-4 lg:px-6">
+    <header className="w-full h-16 sticky top-0 z-40 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/40 flex items-center justify-between px-6 transition-all duration-300">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
@@ -116,7 +116,7 @@ export default function Topbar({ onMenuClick }) {
         >
           <Menu size={20} />
         </button>
-        <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-text-primary truncate">
+        <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight font-sans truncate">
           {obtenerTitulo(location.pathname)}
         </h2>
       </div>
@@ -124,7 +124,7 @@ export default function Topbar({ onMenuClick }) {
       <div className="flex items-center gap-2">
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors"
+          className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer relative"
           aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
         >
           <span className={`inline-block transition-transform duration-300 ${dark ? 'rotate-0' : 'rotate-180'}`}>
@@ -135,7 +135,7 @@ export default function Topbar({ onMenuClick }) {
         <div ref={panelRef} className="relative">
           <button
             onClick={() => setPanelOpen((v) => !v)}
-            className="relative p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors"
+            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer relative"
             aria-label="Notificaciones"
           >
             <Bell size={18} />
@@ -157,21 +157,21 @@ export default function Topbar({ onMenuClick }) {
           )}
         </div>
 
-        <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-bg-border">
+        <div className="flex items-center gap-3 pl-3 border-l border-slate-200/60 dark:border-slate-800/60 hover:opacity-90 transition-opacity cursor-pointer">
           <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-semibold">
             {user?.nombre?.charAt(0).toUpperCase()}
           </div>
           <div className="hidden sm:block">
-            <p className="text-sm font-medium text-gray-900 dark:text-text-primary leading-tight">
+            <p className="text-sm font-bold text-slate-800 dark:text-slate-200 leading-tight">
               {user?.nombre}
             </p>
-            <p className="text-xs text-gray-500 dark:text-text-secondary capitalize">{user?.rol}</p>
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 capitalize">{user?.rol}</p>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-bg-hover hover:text-danger transition-colors"
+          className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/60 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer"
           aria-label="Cerrar sesión"
         >
           <LogOut size={18} />
