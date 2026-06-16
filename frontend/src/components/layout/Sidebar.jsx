@@ -47,17 +47,17 @@ export default function Sidebar({ open, onClose, role }) {
 
       <aside
         className={`
-          fixed md:sticky top-0 left-0 z-50 h-screen w-64 glass-strong
+          fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-gray-50 dark:bg-bg-secondary border-r border-gray-200 dark:border-bg-border
           flex flex-col transition-transform duration-300
           ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
       >
-        <div className="flex items-center justify-between h-16 px-5 border-b border-glass-border">
+        <div className="flex items-center justify-between h-16 px-5 border-b border-gray-200 dark:border-bg-border">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
               <Package size={18} className="text-white" />
             </div>
-            <span className="font-display font-bold text-lg text-text-primary">INVENTEX</span>
+            <span className="font-display font-bold text-lg text-gray-900 dark:text-white">INVENTEX</span>
           </div>
           <button onClick={onClose} className="md:hidden glass-btn-secondary p-1.5">
             <X size={20} />
@@ -76,19 +76,19 @@ export default function Sidebar({ open, onClose, role }) {
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                   ${isActive
-                    ? 'bg-bg-hover text-text-primary'
-                    : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
+                    ? 'bg-brand text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-bg-hover hover:text-gray-900 dark:hover:text-white'
                   }
                 `}
               >
-                <Icon size={18} />
+                <Icon size={18} className={`${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
                 {item.label}
               </NavLink>
             )
           })}
         </nav>
 
-        <div className="px-5 py-3 border-t border-glass-border text-xs text-text-muted text-center">
+        <div className="px-5 py-3 border-t border-gray-200 dark:border-bg-border text-xs text-gray-500 dark:text-gray-400 text-center">
           INVENTEX v1.0
         </div>
       </aside>

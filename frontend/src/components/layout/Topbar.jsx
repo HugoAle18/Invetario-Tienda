@@ -14,7 +14,7 @@ export default function Topbar({ onMenuClick, title }) {
   }
 
   return (
-    <header className="h-16 glass flex items-center justify-between px-4 lg:px-6">
+    <header className="h-16 bg-white dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border flex items-center justify-between px-4 lg:px-6">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
@@ -23,7 +23,7 @@ export default function Topbar({ onMenuClick, title }) {
         >
           <Menu size={20} />
         </button>
-        <h2 className="text-lg font-display font-semibold text-text-primary truncate">
+         <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-text-primary truncate">
           {title}
         </h2>
       </div>
@@ -31,7 +31,7 @@ export default function Topbar({ onMenuClick, title }) {
       <div className="flex items-center gap-2">
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg text-text-secondary hover:bg-bg-hover transition-colors"
+          className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors"
           aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
         >
           <span className={`inline-block transition-transform duration-300 ${dark ? 'rotate-0' : 'rotate-180'}`}>
@@ -39,21 +39,21 @@ export default function Topbar({ onMenuClick, title }) {
           </span>
         </button>
 
-        <div className="flex items-center gap-2 pl-2 border-l border-glass-border">
+        <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-bg-border">
           <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-semibold">
             {user?.nombre?.charAt(0).toUpperCase()}
           </div>
           <div className="hidden sm:block">
-            <p className="text-sm font-medium text-text-primary leading-tight">
+            <p className="text-sm font-medium text-gray-900 dark:text-text-primary leading-tight">
               {user?.nombre}
             </p>
-            <p className="text-xs text-text-secondary capitalize">{user?.rol}</p>
+            <p className="text-xs text-gray-500 dark:text-text-secondary capitalize">{user?.rol}</p>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="p-2 rounded-lg text-text-secondary hover:bg-bg-hover hover:text-danger transition-colors"
+          className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-bg-hover hover:text-danger transition-colors"
           aria-label="Cerrar sesión"
         >
           <LogOut size={18} />

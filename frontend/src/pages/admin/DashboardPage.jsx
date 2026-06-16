@@ -71,7 +71,7 @@ export default function DashboardPage() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {Array.from({ length: 7 }).map((_, i) => (
-          <div key={i} className="h-28 bg-bg-hover border border-bg-border rounded-xl animate-pulse" />
+          <div key={i} className="h-28 bg-gray-100 dark:bg-bg-hover border border-gray-200 dark:border-bg-border rounded-xl animate-pulse" />
         ))}
       </div>
     )
@@ -79,7 +79,7 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-text-secondary">
+      <div className="flex flex-col items-center justify-center py-20 text-gray-600 dark:text-text-secondary">
         <AlertCircle size={48} className="text-danger mb-4" />
         <p className="text-lg font-medium mb-2">{error}</p>
         <button
@@ -110,15 +110,15 @@ export default function DashboardPage() {
           return (
             <div
               key={key}
-              className="glass glass-hover p-4"
+              className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl glass-hover p-4"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-2 rounded-lg ${color}`}>
                   <Icon size={20} />
                 </div>
               </div>
-              <p className="text-2xl font-bold text-text-primary font-display">{value}</p>
-              <p className="text-sm text-text-secondary mt-1">{label}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-text-primary font-display">{value}</p>
+              <p className="text-sm text-gray-600 dark:text-text-secondary mt-1">{label}</p>
             </div>
           )
         })}
@@ -127,10 +127,10 @@ export default function DashboardPage() {
       {/* Charts & Recent movements */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
-        <div className="lg:col-span-2 glass-card">
-          <h3 className="font-display font-semibold text-text-primary mb-4">Movimientos por día</h3>
+        <div className="lg:col-span-2 bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
+          <h3 className="font-display font-semibold text-gray-900 dark:text-text-primary mb-4">Movimientos por día</h3>
           {movimientosPorDia.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-text-muted">
               <ArrowUpDown size={32} className="mb-2" />
               <p className="text-sm">Sin movimientos en los últimos días</p>
             </div>
@@ -138,7 +138,7 @@ export default function DashboardPage() {
             <div className="space-y-2">
               {movimientosPorDia.slice(-10).map((dia) => (
                 <div key={dia.fecha} className="flex items-center gap-3">
-                  <span className="text-xs text-text-secondary w-24 shrink-0">{dia.fecha}</span>
+                  <span className="text-xs text-gray-600 dark:text-text-secondary w-24 shrink-0">{dia.fecha}</span>
                   {dia.entrada > 0 && (
                     <div className="flex items-center gap-1 text-xs text-success">
                       <TrendingUp size={14} />
@@ -172,31 +172,31 @@ export default function DashboardPage() {
         </div>
 
         {/* Low stock alerts */}
-        <div className="glass-card">
-          <h3 className="font-display font-semibold text-text-primary mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
+          <h3 className="font-display font-semibold text-gray-900 dark:text-text-primary mb-4 flex items-center gap-2">
             <AlertTriangle size={18} className="text-warning" />
             Alertas de Stock
           </h3>
           {alertas.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-text-muted">
               <Package size={32} className="mb-2" />
               <p className="text-sm">Todo en orden</p>
-              <p className="text-xs text-text-muted mt-1">No hay productos con stock bajo</p>
+              <p className="text-xs text-gray-500 dark:text-text-muted mt-1">No hay productos con stock bajo</p>
             </div>
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto">
               {alertas.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-bg-hover"
+                  className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-bg-hover"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-text-primary truncate">{item.nombre}</p>
-                    <p className="text-xs text-text-muted">{item.codigo}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-text-primary truncate">{item.nombre}</p>
+                    <p className="text-xs text-gray-500 dark:text-text-muted">{item.codigo}</p>
                   </div>
                   <div className="text-right shrink-0 ml-3">
                     <p className="text-sm font-semibold text-danger">{item.stock_actual}</p>
-                    <p className="text-xs text-text-muted">min: {item.stock_minimo}</p>
+                    <p className="text-xs text-gray-500 dark:text-text-muted">min: {item.stock_minimo}</p>
                   </div>
                 </div>
               ))}
@@ -206,10 +206,10 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent movements */}
-      <div className="glass-card">
-        <h3 className="font-display font-semibold text-text-primary mb-4">Movimientos Recientes</h3>
+      <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
+        <h3 className="font-display font-semibold text-gray-900 dark:text-text-primary mb-4">Movimientos Recientes</h3>
         {movimientos.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+          <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-text-muted">
             <ArrowUpDown size={32} className="mb-2" />
             <p className="text-sm">No hay movimientos registrados</p>
           </div>
@@ -217,7 +217,7 @@ export default function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-bg-border text-text-secondary label-mono">
+                <tr className="border-b border-gray-200 dark:border-bg-border text-gray-600 dark:text-text-secondary label-mono">
                   <th className="text-left py-3 px-2 font-medium">Producto</th>
                   <th className="text-left py-3 px-2 font-medium">Tipo</th>
                   <th className="text-right py-3 px-2 font-medium">Cantidad</th>
@@ -228,8 +228,8 @@ export default function DashboardPage() {
               </thead>
               <tbody>
                 {movimientos.map((mov) => (
-                  <tr key={mov.id} className="border-b border-bg-border hover:bg-bg-hover transition-colors">
-                    <td className="py-3 px-2 text-text-primary font-medium">{mov.producto}</td>
+                  <tr key={mov.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors">
+                    <td className="py-3 px-2 text-gray-900 dark:text-text-primary font-medium">{mov.producto}</td>
                     <td className="py-3 px-2">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -241,10 +241,10 @@ export default function DashboardPage() {
                         {mov.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                       </span>
                     </td>
-                    <td className="py-3 px-2 text-right text-text-primary font-semibold">{mov.cantidad}</td>
-                    <td className="py-3 px-2 text-text-secondary hidden md:table-cell max-w-[200px] truncate">{mov.motivo}</td>
-                    <td className="py-3 px-2 text-text-secondary hidden sm:table-cell">{mov.usuario}</td>
-                    <td className="py-3 px-2 text-text-secondary text-right hidden lg:table-cell whitespace-nowrap">
+                    <td className="py-3 px-2 text-right text-gray-900 dark:text-text-primary font-semibold">{mov.cantidad}</td>
+                    <td className="py-3 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell max-w-[200px] truncate">{mov.motivo}</td>
+                    <td className="py-3 px-2 text-gray-600 dark:text-text-secondary hidden sm:table-cell">{mov.usuario}</td>
+                    <td className="py-3 px-2 text-gray-600 dark:text-text-secondary text-right hidden lg:table-cell whitespace-nowrap">
                       {new Date(mov.created_at).toLocaleDateString('es-MX')}
                     </td>
                   </tr>

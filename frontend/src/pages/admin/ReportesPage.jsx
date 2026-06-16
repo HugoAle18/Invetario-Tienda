@@ -9,6 +9,7 @@ import {
   AlertTriangle, TrendingUp, TrendingDown, ChevronDown, ChevronRight,
 } from 'lucide-react'
 import { exportarMovimientos, exportarInventario, exportarProductosBajoMinimo, exportarPorProveedor } from '@/utils/exportExcel'
+import { exportarMovimientosPDF, exportarInventarioPDF, exportarStockBajoPDF } from '@/utils/exportPDF'
 
 const TABS = [
   { key: 'movimientos', icon: '📊', label: 'Movimientos' },
@@ -149,7 +150,25 @@ export default function ReportesPage() {
   }
 
   const handlePDF = () => {
-    toast('📄 Función PDF próximamente', { icon: '📄' })
+    setExportando('pdf')
+    setTimeout(() => {
+      try {
+        if (activeTab === 'movimientos') {
+          if (movsFiltrados.length === 0) { toast.error('No hay movimientos para exportar'); setExportando(null); return }
+          exportarMovimientosPDF(movsFiltrados)
+        } else if (activeTab === 'inventario') {
+          if (prodConCategoria.length === 0) { toast.error('No hay productos para exportar'); setExportando(null); return }
+          exportarInventarioPDF(prodConCategoria)
+        } else if (activeTab === 'stockBajo') {
+          if (prodConCategoria.length === 0) { toast.error('No hay productos para exportar'); setExportando(null); return }
+          exportarStockBajoPDF(prodBajoStock)
+        } else {
+          toast.error('Exportación PDF no disponible para esta sección')
+        }
+        toast.success('✅ PDF generado correctamente')
+      } catch { toast.error('Error al generar PDF') }
+      finally { setExportando(null) }
+    }, 100)
   }
 
   const aplicaFiltros = () => { fetchAll() }
@@ -164,12 +183,12 @@ export default function ReportesPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 w-64 bg-bg-hover rounded-lg animate-pulse" />
-        <div className="h-12 bg-bg-hover rounded-xl animate-pulse" />
+        <div className="h-8 w-64 bg-gray-100 dark:bg-bg-hover rounded-lg animate-pulse" />
+        <div className="h-12 bg-gray-100 dark:bg-bg-hover rounded-xl animate-pulse" />
         <div className="flex gap-2">
-          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-10 flex-1 bg-bg-hover rounded-lg animate-pulse" />)}
+          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-10 flex-1 bg-gray-100 dark:bg-bg-hover rounded-lg animate-pulse" />)}
         </div>
-        <div className="h-96 bg-bg-hover rounded-xl animate-pulse" />
+        <div className="h-96 bg-gray-100 dark:bg-bg-hover rounded-xl animate-pulse" />
       </div>
     )
   }
@@ -178,7 +197,7 @@ export default function ReportesPage() {
     return (
       <div className="flex flex-col items-center py-20">
         <AlertCircle size={48} className="text-danger mb-4" />
-        <p className="text-lg font-medium text-text-primary mb-2">{error}</p>
+        <p className="text-lg font-medium text-gray-900 dark:text-text-primary mb-2">{error}</p>
         <button onClick={fetchAll} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
           <RefreshCw size={16} /> Reintentar
         </button>
@@ -192,25 +211,25 @@ export default function ReportesPage() {
       <div>
         <div className="flex items-center gap-2">
           <BarChart3 size={24} className="text-brand" />
-          <h1 className="text-2xl font-display font-bold text-text-primary">Reportes y Estadísticas</h1>
+          <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-text-primary">Reportes y Estadísticas</h1>
         </div>
-        <p className="text-text-secondary mt-1">Analiza el rendimiento de tu inventario</p>
+        <p className="text-gray-600 dark:text-text-secondary mt-1">Analiza el rendimiento de tu inventario</p>
       </div>
 
       {/* Sticky filter bar */}
-      <div className="sticky top-0 z-10 glass rounded-xl p-4 flex flex-wrap items-end gap-3">
+      <div className="sticky top-0 z-10 bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl p-4 flex flex-wrap items-end gap-3">
         <div>
-          <label className="block text-xs font-medium text-text-secondary mb-1">Desde</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Desde</label>
           <input type="date" value={desde} onChange={(e) => setDesde(e.target.value)}
             className="glass-input px-3 py-1.5 text-sm" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-text-secondary mb-1">Hasta</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Hasta</label>
           <input type="date" value={hasta} onChange={(e) => setHasta(e.target.value)}
             className="glass-input px-3 py-1.5 text-sm" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-text-secondary mb-1">Categoría</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Categoría</label>
           <select value={catFilter} onChange={(e) => setCatFilter(e.target.value)}
             className="glass-input px-3 py-1.5 text-sm min-w-[150px]">
             <option value="">Todas</option>
@@ -242,12 +261,12 @@ export default function ReportesPage() {
               className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-medium transition-colors border-b-2 ${
                 isActive
                   ? 'bg-brand text-white border-brand'
-                  : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary border-transparent'
+                  : 'text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-bg-hover hover:text-gray-900 dark:hover:text-text-primary border-transparent'
               }`}
             >
               <span>{tab.icon}</span>
               <span>{tab.label}</span>
-              <span className={`text-xs ml-1 ${isActive ? 'text-white/70' : 'text-text-muted'}`}>
+              <span className={`text-xs ml-1 ${isActive ? 'text-white/70' : 'text-gray-500 dark:text-text-muted'}`}>
                 ({count})
               </span>
             </button>
@@ -256,14 +275,16 @@ export default function ReportesPage() {
       </div>
 
       {/* Tab content area */}
-      <div className="glass rounded-xl rounded-tl-none">
+      <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl rounded-tl-none">
         {/* Export buttons */}
         <div className="flex items-center justify-end gap-2 p-4 pb-0">
           <button
             onClick={handlePDF}
-            className="flex items-center gap-1.5 px-3 py-1.5 glass-btn-secondary text-sm"
+            disabled={exportando !== null}
+            className="flex items-center gap-1.5 px-3 py-1.5 glass-btn-secondary text-sm disabled:opacity-50"
           >
-            📄 PDF
+            {exportando === 'pdf' ? <Loader2 size={16} className="animate-spin" /> : '📄'}
+            {' PDF'}
           </button>
           <button
             onClick={() => {
@@ -275,8 +296,8 @@ export default function ReportesPage() {
             disabled={exportando !== null}
             className="flex items-center gap-1.5 px-3 py-1.5 glass-btn text-sm disabled:opacity-50"
           >
-            {exportando ? <Loader2 size={16} className="animate-spin" /> : <FileSpreadsheet size={16} />}
-            {exportando ? 'Exportando...' : '📊 Excel'}
+            {exportando && exportando !== 'pdf' ? <Loader2 size={16} className="animate-spin" /> : <FileSpreadsheet size={16} />}
+            {exportando && exportando !== 'pdf' ? 'Exportando...' : '📊 Excel'}
           </button>
         </div>
 
@@ -297,7 +318,7 @@ export default function ReportesPage() {
               </div>
 
               {movsFiltrados.length === 0 ? (
-                <div className="flex flex-col items-center py-12 text-text-muted">
+                <div className="flex flex-col items-center py-12 text-gray-500 dark:text-text-muted">
                   <BarChart3 size={32} className="mb-2" />
                   <p className="text-sm">Sin movimientos en el período seleccionado</p>
                 </div>
@@ -305,7 +326,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-bg-border text-text-muted label-mono">
+                      <tr className="border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
                         <th className="text-left py-3 px-2 font-medium">Fecha/Hora</th>
                         <th className="text-left py-3 px-2 font-medium">Producto</th>
                         <th className="text-left py-3 px-2 font-medium">Tipo</th>
@@ -317,9 +338,9 @@ export default function ReportesPage() {
                     </thead>
                     <tbody>
                       {movsFiltrados.slice(0, 500).map((m) => (
-                        <tr key={m.id} className="border-b border-bg-border hover:bg-bg-hover transition-colors">
-                          <td className="py-2.5 px-2 text-text-muted text-xs whitespace-nowrap">{formatearFecha(m.created_at)}</td>
-                          <td className="py-2.5 px-2 text-text-primary font-medium">{m.productos?.nombre || m.producto || ''}</td>
+                        <tr key={m.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors">
+                          <td className="py-2.5 px-2 text-gray-500 dark:text-text-muted text-xs whitespace-nowrap">{formatearFecha(m.created_at)}</td>
+                          <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium">{m.productos?.nombre || m.producto || ''}</td>
                           <td className="py-2.5 px-2">
                             <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                               m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
@@ -327,20 +348,20 @@ export default function ReportesPage() {
                               {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                             </span>
                           </td>
-                          <td className="py-2.5 px-2 text-right text-text-primary font-semibold">{m.cantidad}</td>
-                          <td className="py-2.5 px-2 text-text-muted text-xs">
-                            <span className="text-text-secondary">-</span>
-                            <span className="mx-1 text-text-muted">→</span>
-                            <span className="text-text-secondary">-</span>
+                          <td className="py-2.5 px-2 text-right text-gray-900 dark:text-text-primary font-semibold">{m.cantidad}</td>
+                          <td className="py-2.5 px-2 text-gray-500 dark:text-text-muted text-xs">
+                            <span className="text-gray-600 dark:text-text-secondary">-</span>
+                            <span className="mx-1 text-gray-500 dark:text-text-muted">→</span>
+                            <span className="text-gray-600 dark:text-text-secondary">-</span>
                           </td>
-                          <td className="py-2.5 px-2 text-text-secondary hidden md:table-cell max-w-[200px] truncate">{m.motivo}</td>
-                          <td className="py-2.5 px-2 text-text-secondary hidden sm:table-cell">{m.usuarios?.nombre || m.usuario || ''}</td>
+                          <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell max-w-[200px] truncate">{m.motivo}</td>
+                          <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden sm:table-cell">{m.usuarios?.nombre || m.usuario || ''}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                   {movsFiltrados.length > 500 && (
-                    <p className="text-center text-text-muted text-xs mt-3">
+                    <p className="text-center text-gray-500 dark:text-text-muted text-xs mt-3">
                       Mostrando 500 de {movsFiltrados.length} movimientos
                     </p>
                   )}
@@ -356,7 +377,7 @@ export default function ReportesPage() {
                 <div className="px-3 py-1.5 rounded-lg bg-brand/10 text-brand text-sm">
                   Valor total: {formatCurrency(valorTotal)}
                 </div>
-                <div className="px-3 py-1.5 rounded-lg bg-bg-hover text-text-primary text-sm">
+                <div className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-bg-hover text-gray-900 dark:text-text-primary text-sm">
                   Productos: {prodConCategoria.length}
                 </div>
                 <div className="px-3 py-1.5 rounded-lg bg-danger/10 text-danger text-sm">
@@ -365,7 +386,7 @@ export default function ReportesPage() {
               </div>
 
               {prodConCategoria.length === 0 ? (
-                <div className="flex flex-col items-center py-12 text-text-muted">
+                <div className="flex flex-col items-center py-12 text-gray-500 dark:text-text-muted">
                   <BarChart3 size={32} className="mb-2" />
                   <p className="text-sm">No hay productos registrados</p>
                 </div>
@@ -373,7 +394,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-bg-border text-text-muted label-mono">
+                      <tr className="border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
                         <th className="text-left py-3 px-2 font-medium">Código</th>
                         <th className="text-left py-3 px-2 font-medium">Nombre</th>
                         <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Categoría</th>
@@ -398,11 +419,11 @@ export default function ReportesPage() {
                         return (
                           <>
                             {rows.map(({ p, estado, valorStock }) => (
-                              <tr key={p.id} className="border-b border-bg-border hover:bg-bg-hover transition-colors">
-                                <td className="py-2.5 px-2 font-mono text-xs text-text-muted">{p.codigo}</td>
-                                <td className="py-2.5 px-2 text-text-primary font-medium">{p.nombre}</td>
-                                <td className="py-2.5 px-2 text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
-                                <td className="py-2.5 px-2 text-right text-text-primary font-semibold">{p.stock_actual}</td>
+                              <tr key={p.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors">
+                                <td className="py-2.5 px-2 font-mono text-xs text-gray-500 dark:text-text-muted">{p.codigo}</td>
+                                <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium">{p.nombre}</td>
+                                <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
+                                <td className="py-2.5 px-2 text-right text-gray-900 dark:text-text-primary font-semibold">{p.stock_actual}</td>
                                 <td className="py-2.5 px-2">
                                   <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                                     estado === 'Disponible' ? 'bg-success/10 text-success'
@@ -415,18 +436,18 @@ export default function ReportesPage() {
                                     {' '}{estado}
                                   </span>
                                 </td>
-                                <td className="py-2.5 px-2 text-right text-text-secondary hidden lg:table-cell">{formatCurrency(p.precio_compra)}</td>
-                                <td className="py-2.5 px-2 text-right text-text-secondary hidden lg:table-cell">{formatCurrency(p.precio_venta)}</td>
-                                <td className="py-2.5 px-2 text-right text-text-primary font-mono">{formatCurrency(valorStock)}</td>
+                                <td className="py-2.5 px-2 text-right text-gray-600 dark:text-text-secondary hidden lg:table-cell">{formatCurrency(p.precio_compra)}</td>
+                                <td className="py-2.5 px-2 text-right text-gray-600 dark:text-text-secondary hidden lg:table-cell">{formatCurrency(p.precio_venta)}</td>
+                                <td className="py-2.5 px-2 text-right text-gray-900 dark:text-text-primary font-mono">{formatCurrency(valorStock)}</td>
                               </tr>
                             ))}
                             <tr className="bg-brand/10 font-semibold">
-                              <td className="py-3 px-2 text-text-primary" colSpan={3}>TOTALES</td>
-                              <td className="py-3 px-2 text-right text-text-primary">{formatNumber(totalStockCalc)}</td>
+                              <td className="py-3 px-2 text-gray-900 dark:text-text-primary" colSpan={3}>TOTALES</td>
+                              <td className="py-3 px-2 text-right text-gray-900 dark:text-text-primary">{formatNumber(totalStockCalc)}</td>
                               <td />
                               <td className="hidden lg:table-cell" />
                               <td className="hidden lg:table-cell" />
-                              <td className="py-3 px-2 text-right text-text-primary font-mono">{formatCurrency(totalValorCalc)}</td>
+                              <td className="py-3 px-2 text-right text-gray-900 dark:text-text-primary font-mono">{formatCurrency(totalValorCalc)}</td>
                             </tr>
                           </>
                         )
@@ -449,7 +470,7 @@ export default function ReportesPage() {
               )}
 
               {prodBajoStock.length === 0 ? (
-                <div className="flex flex-col items-center py-12 text-text-muted">
+                <div className="flex flex-col items-center py-12 text-gray-500 dark:text-text-muted">
                   <AlertTriangle size={32} className="mb-2" />
                   <p className="text-sm">No hay productos con stock bajo</p>
                 </div>
@@ -457,7 +478,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-bg-border text-text-muted label-mono">
+                      <tr className="border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
                         <th className="text-left py-3 px-2 font-medium">Código</th>
                         <th className="text-left py-3 px-2 font-medium">Nombre</th>
                         <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Categoría</th>
@@ -471,14 +492,14 @@ export default function ReportesPage() {
                       {[...prodBajoStock]
                         .sort((a, b) => (b.stock_minimo - b.stock_actual) - (a.stock_minimo - a.stock_actual))
                         .map((p) => (
-                          <tr key={p.id} className="border-b border-bg-border hover:bg-bg-hover transition-colors">
-                            <td className="py-2.5 px-2 font-mono text-xs text-text-muted">{p.codigo}</td>
-                            <td className="py-2.5 px-2 text-text-primary font-medium">{p.nombre}</td>
-                            <td className="py-2.5 px-2 text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
-                            <td className="py-2.5 px-2 text-right text-text-primary font-semibold">{p.stock_actual}</td>
-                            <td className="py-2.5 px-2 text-right text-text-secondary">{p.stock_minimo}</td>
+                          <tr key={p.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors">
+                            <td className="py-2.5 px-2 font-mono text-xs text-gray-500 dark:text-text-muted">{p.codigo}</td>
+                            <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium">{p.nombre}</td>
+                            <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
+                            <td className="py-2.5 px-2 text-right text-gray-900 dark:text-text-primary font-semibold">{p.stock_actual}</td>
+                            <td className="py-2.5 px-2 text-right text-gray-600 dark:text-text-secondary">{p.stock_minimo}</td>
                             <td className="py-2.5 px-2 text-right text-danger font-semibold">-{(p.stock_minimo || 0) - (p.stock_actual || 0)} uds</td>
-                            <td className="py-2.5 px-2 text-text-secondary hidden lg:table-cell">{p.proveedores?.nombre || '—'}</td>
+                            <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden lg:table-cell">{p.proveedores?.nombre || '—'}</td>
                           </tr>
                         ))}
                     </tbody>
@@ -492,7 +513,7 @@ export default function ReportesPage() {
           {activeTab === 'proveedores' && (
             <div className="space-y-4">
               {proveedores.length === 0 ? (
-                <div className="flex flex-col items-center py-12 text-text-muted">
+                <div className="flex flex-col items-center py-12 text-gray-500 dark:text-text-muted">
                   <BarChart3 size={32} className="mb-2" />
                   <p className="text-sm">No hay proveedores registrados</p>
                 </div>
@@ -500,7 +521,7 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-bg-border text-text-muted label-mono">
+                      <tr className="border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
                         <th className="text-left py-3 px-2 font-medium w-8" />
                         <th className="text-left py-3 px-2 font-medium">Proveedor</th>
                         <th className="text-right py-3 px-2 font-medium">Productos</th>
@@ -522,25 +543,25 @@ export default function ReportesPage() {
                           <tbody key={prov.id}>
                             <tr
                               onClick={() => setExpandedProv(isExpanded ? null : prov.id)}
-                              className="border-b border-bg-border hover:bg-bg-hover transition-colors cursor-pointer"
+                              className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors cursor-pointer"
                             >
-                              <td className="py-2.5 px-2 text-text-muted">
+                              <td className="py-2.5 px-2 text-gray-500 dark:text-text-muted">
                                 {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                               </td>
-                              <td className="py-2.5 px-2 text-text-primary font-medium">{prov.nombre}</td>
-                              <td className="py-2.5 px-2 text-right text-text-primary font-semibold">{rels.length}</td>
+                              <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium">{prov.nombre}</td>
+                              <td className="py-2.5 px-2 text-right text-gray-900 dark:text-text-primary font-semibold">{rels.length}</td>
                               <td className="py-2.5 px-2 text-right text-success hidden sm:table-cell">{entradas.length}</td>
                               <td className="py-2.5 px-2 text-right text-danger hidden sm:table-cell">{salidas.length}</td>
-                              <td className="py-2.5 px-2 text-text-secondary hidden md:table-cell text-xs">
+                              <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell text-xs">
                                 {ultimoMov ? formatearFecha(ultimoMov.created_at) : '—'}
                               </td>
                             </tr>
                             {isExpanded && rels.map((p) => (
-                              <tr key={p.id} className="bg-bg-hover/50 border-b border-bg-border">
+                              <tr key={p.id} className="bg-gray-100/50 dark:bg-bg-hover/50 border-b border-gray-200 dark:border-bg-border">
                                 <td />
-                                <td className="py-2 px-2 text-text-secondary text-xs pl-8" colSpan={5}>
+                                <td className="py-2 px-2 text-gray-600 dark:text-text-secondary text-xs pl-8" colSpan={5}>
                                   <span className="font-mono">{p.codigo}</span> — {p.nombre}
-                                  <span className="text-text-muted ml-2">Stock: {p.stock_actual}</span>
+                                  <span className="text-gray-500 dark:text-text-muted ml-2">Stock: {p.stock_actual}</span>
                                 </td>
                               </tr>
                             ))}

@@ -46,24 +46,24 @@ export default function UsuarioForm({ defaultValues, onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-white mb-1">Nombre</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Nombre</label>
         <input type="text" {...register('nombre')} className="w-full px-3 py-2 glass-input text-sm" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-white mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Email</label>
         <input type="email" {...register('email')} className="w-full px-3 py-2 glass-input text-sm" />
         {errors.email && <p className="text-danger text-xs mt-1">{errors.email.message}</p>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
-          Contraseña {isEditing && <span className="text-white/40 font-normal">(dejar vacío para mantener)</span>}
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+          Contraseña {isEditing && <span className="text-gray-400 dark:text-white/40 font-normal">(dejar vacío para mantener)</span>}
         </label>
         <input type="password" {...register('password')} className="w-full px-3 py-2 glass-input text-sm" />
         {errors.password && <p className="text-danger text-xs mt-1">{errors.password.message}</p>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-white mb-1">Rol</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Rol</label>
         <select {...register('rol')} className="w-full px-3 py-2 glass-input text-sm">
           <option value="empleado">Empleado</option>
           <option value="administrador">Administrador</option>

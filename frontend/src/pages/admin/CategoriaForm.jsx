@@ -20,12 +20,12 @@ export default function CategoriaForm({ defaultValues, onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-white mb-1">Nombre</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Nombre</label>
         <input type="text" {...register('nombre')} className="w-full px-3 py-2 glass-input text-sm" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-white mb-1">Descripción</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Descripción</label>
         <textarea {...register('descripcion')} rows={3} className="w-full px-3 py-2 glass-input text-sm resize-none" />
       </div>
       <div className="flex justify-end pt-2">

@@ -67,8 +67,8 @@ export default function CategoriasPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Tags size={22} className="text-brand" />
-          <h2 className="text-xl font-display font-bold text-white">Categorías</h2>
-          {!loading && <span className="text-sm text-white/50 bg-white/[0.06] px-2 py-0.5 rounded-full">{categorias.length}</span>}
+          <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">Categorías</h2>
+          {!loading && <span className="text-sm text-gray-500 dark:text-white/50 bg-gray-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">{categorias.length}</span>}
         </div>
         <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
           <Plus size={16} /> Nueva Categoría
@@ -76,7 +76,7 @@ export default function CategoriasPage() {
       </div>
 
       {error && (
-        <div className="flex flex-col items-center py-16 text-white/60">
+        <div className="flex flex-col items-center py-16 text-gray-600 dark:text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
           <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
@@ -88,13 +88,13 @@ export default function CategoriasPage() {
       {loading && !error && (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-14 bg-white/[0.04] border border-white/[0.06] rounded-lg animate-pulse" />
+            <div key={i} className="h-14 bg-gray-100 dark:bg-white/[0.04] border border-gray-200 dark:border-white/[0.06] rounded-lg animate-pulse" />
           ))}
         </div>
       )}
 
       {!loading && !error && categorias.length === 0 && (
-        <div className="flex flex-col items-center py-16 text-white/40">
+        <div className="flex flex-col items-center py-16 text-gray-400 dark:text-white/40">
           <Tags size={48} className="mb-3" />
           <p className="text-base font-medium">No hay categorías</p>
           <p className="text-sm mt-1">Crea tu primera categoría</p>
@@ -104,19 +104,19 @@ export default function CategoriasPage() {
       {!loading && !error && categorias.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categorias.map((cat) => (
-            <div key={cat.id} className="glass-card group">
+            <div key={cat.id} className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl group">
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
-                  <h4 className="text-white font-medium truncate">{cat.nombre}</h4>
+                  <h4 className="text-gray-900 dark:text-white font-medium truncate">{cat.nombre}</h4>
                   {cat.descripcion && (
-                    <p className="text-white/60 text-sm mt-1 line-clamp-2">{cat.descripcion}</p>
+                    <p className="text-gray-600 dark:text-white/60 text-sm mt-1 line-clamp-2">{cat.descripcion}</p>
                   )}
                 </div>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg text-white/60 hover:bg-white/[0.05] hover:text-brand transition-colors" title="Editar">
+                  <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-brand transition-colors" title="Editar">
                     <Pencil size={15} />
                   </button>
-                  <button onClick={() => handleDelete(cat)} className="p-1.5 rounded-lg text-white/60 hover:bg-white/[0.05] hover:text-danger transition-colors" title="Eliminar">
+                  <button onClick={() => handleDelete(cat)} className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-danger transition-colors" title="Eliminar">
                     <Trash2 size={15} />
                   </button>
                 </div>

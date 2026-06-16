@@ -48,7 +48,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Código</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Código</label>
           <input
             type="text"
             {...register('codigo')}
@@ -57,7 +57,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           {errors.codigo && <p className="text-danger text-xs mt-1">{errors.codigo.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Nombre</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Nombre</label>
           <input
             type="text"
             {...register('nombre')}
@@ -68,7 +68,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white mb-1">Descripción</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Descripción</label>
         <textarea
           {...register('descripcion')}
           rows={2}
@@ -78,7 +78,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Categoría</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Categoría</label>
           <select
             {...register('categoria_id')}
             className="w-full px-3 py-2 glass-input text-sm"
@@ -90,7 +90,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Proveedor</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Proveedor</label>
           <select
             {...register('proveedor_id')}
             className="w-full px-3 py-2 glass-input text-sm"
@@ -105,7 +105,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Precio Compra</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Precio Compra</label>
           <input
             type="number"
             step="0.01"
@@ -115,7 +115,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           {errors.precio_compra && <p className="text-danger text-xs mt-1">{errors.precio_compra.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Precio Venta</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Precio Venta</label>
           <input
             type="number"
             step="0.01"
@@ -128,7 +128,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Stock Mínimo</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Stock Mínimo</label>
           <input
             type="number"
             {...register('stock_minimo')}
@@ -137,7 +137,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           {errors.stock_minimo && <p className="text-danger text-xs mt-1">{errors.stock_minimo.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-white mb-1">Stock Actual</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Stock Actual</label>
           <input
             type="number"
             {...register('stock_actual')}
@@ -148,7 +148,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white mb-1">URL de imagen (opcional)</label>
+        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">URL de imagen (opcional)</label>
         <input
           type="text"
           {...register('imagen_url')}
