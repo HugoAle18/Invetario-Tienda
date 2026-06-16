@@ -37,6 +37,7 @@ export default function AiAgentWidget() {
   const [loading, setLoading] = useState(false)
   const chatRef = useRef(null)
   const inputRef = useRef(null)
+  const widgetRef = useRef(null)
 
   useEffect(() => {
     if (chatRef.current) {
@@ -48,6 +49,18 @@ export default function AiAgentWidget() {
     if (open && inputRef.current) {
       inputRef.current.focus()
     }
+  }, [open])
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (widgetRef.current && !widgetRef.current.contains(e.target) && open) {
+        setOpen(false)
+      }
+    }
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [open])
 
   const enviarMensaje = async () => {
@@ -86,7 +99,7 @@ export default function AiAgentWidget() {
       {/* Botón flotante */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer z-50 border border-white/20 animate-pulse group"
+        className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer z-50 border border-white/20 group"
         aria-label="Abrir Agente IA"
       >
         <Bot size={22} className="group-hover:rotate-12 transition-transform duration-300" />
@@ -94,7 +107,10 @@ export default function AiAgentWidget() {
 
       {/* Ventana de chat */}
       {open && (
-        <div className="fixed bottom-24 right-6 w-96 h-[520px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 transition-all duration-300 animate-fade-in">
+        <div
+          ref={widgetRef}
+          className="fixed bottom-24 right-6 w-96 h-[550px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
+        >
           {/* Encabezado */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center justify-between shadow-sm shrink-0">
             <div className="flex items-center gap-3">
