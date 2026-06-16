@@ -47,12 +47,11 @@ export default function Sidebar({ open, onClose, role }) {
 
       <aside
         className={`
-          fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-gray-50 dark:bg-bg-secondary border-r border-gray-200 dark:border-bg-border
-          flex flex-col transition-transform duration-300
+          fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/40 flex flex-col justify-between p-4 transition-all duration-300 shadow-sm
           ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
       >
-        <div className="flex items-center justify-between h-16 px-5 border-b border-gray-200 dark:border-bg-border">
+        <div className="flex items-center justify-between h-16 border-b border-slate-200/50 dark:border-slate-800/40">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
               <Package size={18} className="text-white" />
@@ -64,7 +63,7 @@ export default function Sidebar({ open, onClose, role }) {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-4 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = location.pathname.startsWith(item.to)
@@ -74,21 +73,21 @@ export default function Sidebar({ open, onClose, role }) {
                 to={item.to}
                 onClick={onClose}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                  flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all
                   ${isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-slate-200/80 dark:hover:bg-bg-hover hover:text-blue-600 dark:hover:text-white transition-all'
+                    ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/20 dark:bg-blue-500'
+                    : 'text-slate-700 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-900/60 hover:text-blue-600 dark:hover:text-white'
                   }
                 `}
               >
-                <Icon size={18} className={`${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
+                <Icon size={18} className={`${isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 {item.label}
               </NavLink>
             )
           })}
         </nav>
 
-        <div className="px-5 py-3 border-t border-gray-200 dark:border-bg-border text-xs text-gray-500 dark:text-gray-400 text-center">
+        <div className="pt-3 border-t border-slate-200/50 dark:border-slate-800/40 text-xs text-slate-500 dark:text-slate-400 text-center">
           INVENTEX v1.0
         </div>
       </aside>
