@@ -20,8 +20,8 @@ export default function AppLayout() {
         <Topbar
           onMenuClick={() => setSidebarOpen(true)}
         />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-transparent w-full">
-          <div className="w-full max-w-6xl flex flex-col gap-6">
+        <main className="flex-1 min-h-screen overflow-y-auto flex flex-col items-center bg-transparent w-full">
+          <div className="w-full max-w-7xl px-4 md:px-8 py-6 flex flex-col gap-6">
             <Outlet />
           </div>
         </main>
