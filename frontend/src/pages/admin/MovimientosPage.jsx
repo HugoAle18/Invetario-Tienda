@@ -148,10 +148,10 @@ export default function MovimientosPage() {
 
       {!loading && !error && movimientos.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
+          <div className="overflow-x-auto bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-white/[0.06] text-gray-600 dark:text-white/60 label-mono">
+                <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
                   <th className="text-right py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Cantidad</th>
@@ -162,10 +162,10 @@ export default function MovimientosPage() {
               </thead>
               <tbody>
                 {movimientos.map((m) => (
-                  <tr key={m.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
+                  <tr key={m.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
                     <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">{m.productos?.nombre}</td>
                     <td className="py-3 px-4">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                      <span className={`px-2.5 py-1 text-xs font-bold rounded-full text-white shadow-sm ${m.tipo === 'entrada' ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-rose-600 dark:bg-rose-500'}`}>
                         {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                       </span>
                     </td>

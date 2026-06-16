@@ -40,7 +40,7 @@ export default function EmpleadoMovimientosPage() {
         <div className="flex flex-col items-center py-16 text-gray-600 dark:text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
-          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm">
             <RefreshCw size={16} /> Reintentar
           </button>
         </div>
@@ -64,10 +64,10 @@ export default function EmpleadoMovimientosPage() {
 
       {!loading && !error && movimientos.length > 0 && (
         <>
-          <div className="overflow-x-auto glass">
+          <div className="overflow-x-auto bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-white/[0.06] label-mono bg-blue-50/80 dark:bg-bg-secondary">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
                   <th className="text-right py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Cantidad</th>
@@ -77,10 +77,10 @@ export default function EmpleadoMovimientosPage() {
               </thead>
               <tbody>
                 {movimientos.map((m) => (
-                  <tr key={m.id} className="border-b border-gray-200 dark:border-white/[0.06] even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover transition-colors">
+                  <tr key={m.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
                     <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">{m.productos?.nombre}</td>
                     <td className="py-3 px-4">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                      <span className={`px-2.5 py-1 text-xs font-bold rounded-full text-white shadow-sm ${m.tipo === 'entrada' ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-rose-600 dark:bg-rose-500'}`}>
                         {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                       </span>
                     </td>

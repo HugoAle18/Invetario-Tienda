@@ -88,7 +88,7 @@ export default function ProveedoresPage() {
           <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">Proveedores</h2>
           {!loading && <span className="text-sm text-gray-500 dark:text-white/50 bg-gray-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">{proveedores.length}</span>}
         </div>
-        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm">
           <Plus size={16} /> Nuevo Proveedor
         </button>
       </div>
@@ -122,7 +122,7 @@ export default function ProveedoresPage() {
       {!loading && !error && proveedores.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
           {proveedores.map((prov) => (
-            <div key={prov.id} className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
+            <div key={prov.id} className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
               <div className="flex items-start justify-between mb-2">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{prov.nombre}</h4>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -135,7 +135,7 @@ export default function ProveedoresPage() {
                 </div>
               </div>
               <div className="space-y-1 text-sm text-gray-500 dark:text-text-secondary">
-                {prov.contacto && <p className="truncate"><span className="text-gray-400 dark:text-white/40">Contacto:</span> {prov.contacto}</p>}
+                {prov.contacto && <p className="truncate"><span className="text-gray-400 dark:text-gray-500">Contacto:</span> {prov.contacto}</p>}
                 {prov.telefono && <p className="truncate flex items-center gap-1.5"><Phone size={13} /> {prov.telefono}</p>}
                 {prov.email && <p className="truncate flex items-center gap-1.5"><Mail size={13} /> {prov.email}</p>}
                 {prov.direccion && <p className="truncate flex items-center gap-1.5"><MapPin size={13} /> {prov.direccion}</p>}

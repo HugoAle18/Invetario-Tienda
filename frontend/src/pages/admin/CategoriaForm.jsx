@@ -21,7 +21,7 @@ export default function CategoriaForm({ defaultValues, onSubmit, loading }) {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
-        <input type="text" {...register('nombre')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
+        <input type="text" {...register('nombre')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
       <div className="flex flex-col gap-2">
@@ -29,7 +29,7 @@ export default function CategoriaForm({ defaultValues, onSubmit, loading }) {
         <textarea {...register('descripcion')} rows={3} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all resize-none" />
       </div>
       <div className="flex justify-end pt-2">
-        <button type="submit" disabled={loading} className="px-5 py-2 glass-btn flex items-center gap-2">
+        <button type="submit" disabled={loading} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg flex items-center gap-2">
           {loading && <Loader2 size={16} className="animate-spin" />}
           {defaultValues?.id ? 'Guardar cambios' : 'Crear categoría'}
         </button>

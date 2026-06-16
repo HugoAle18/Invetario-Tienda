@@ -139,7 +139,7 @@ export default function ProductosPage() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2 glass-btn text-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm"
         >
           <Plus size={16} />
           Nuevo Producto
@@ -203,10 +203,10 @@ export default function ProductosPage() {
       {/* Table */}
       {!loading && !error && productos.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
+          <div className="overflow-x-auto bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-white/[0.06] text-gray-600 dark:text-white/60 label-mono">
+                <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Código</th>
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
                   <th className="text-left py-3 px-4 font-medium hidden md:table-cell text-blue-900 dark:text-text-primary font-bold">Categoría</th>
@@ -217,23 +217,23 @@ export default function ProductosPage() {
               </thead>
               <tbody>
                 {productos.map((p) => (
-                  <tr key={p.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
+                  <tr key={p.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
                     <td className="py-3 px-4 font-mono text-xs text-gray-600 dark:text-white/60">{p.codigo}</td>
                     <td className="py-3 px-4">
                       <p className="text-gray-900 dark:text-white font-medium">{p.nombre}</p>
                       {p.stock_actual <= p.stock_minimo && (
-                        <span className="text-xs text-danger">Stock bajo</span>
+                        <span className="px-2.5 py-1 text-xs font-black rounded-full bg-red-600 text-white shadow-sm mt-1 inline-block">Stock bajo</span>
                       )}
                     </td>
                     <td className="py-3 px-4 text-gray-600 dark:text-white/60 hidden md:table-cell">
                       {p.categorias?.nombre || '—'}
                     </td>
                     <td className={`py-3 px-4 text-right font-semibold ${
-                      p.stock_actual <= p.stock_minimo ? 'text-danger' : 'text-gray-900 dark:text-white'
+                      p.stock_actual <= p.stock_minimo ? 'text-red-600 font-black' : 'text-gray-900 dark:text-white'
                     }`}>
                       {p.stock_actual}
                     </td>
-                    <td className="py-3 px-4 text-right text-gray-900 dark:text-white hidden sm:table-cell">
+                    <td className="py-3 px-4 text-right text-gray-900 dark:text-white hidden sm:table-cell text-sm font-bold">
                       ${Number(p.precio_venta).toFixed(2)}
                     </td>
                     <td className="py-3 px-4 text-right">

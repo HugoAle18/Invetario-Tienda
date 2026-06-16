@@ -248,7 +248,7 @@ export default function ReportesPage() {
       <div className="flex flex-col items-center py-20">
         <AlertCircle size={48} className="text-danger mb-4" />
         <p className="text-lg font-medium text-gray-900 dark:text-text-primary mb-2">{error}</p>
-        <button onClick={fetchAll} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+        <button onClick={fetchAll} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm">
           <RefreshCw size={16} /> Reintentar
         </button>
       </div>
@@ -267,29 +267,29 @@ export default function ReportesPage() {
       </div>
 
       {/* Sticky filter bar */}
-      <div className="sticky top-0 z-10 bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl p-4 flex flex-wrap items-end gap-3">
+      <div className="sticky top-0 z-10 bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-wrap items-end gap-3">
         <div>
           <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Desde</label>
           <input type="date" value={desde} onChange={(e) => setDesde(e.target.value)}
-            className="glass-input px-3 py-1.5 text-sm" />
+            className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Hasta</label>
           <input type="date" value={hasta} onChange={(e) => setHasta(e.target.value)}
-            className="glass-input px-3 py-1.5 text-sm" />
+            className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Categoría</label>
           <select value={catFilter} onChange={(e) => setCatFilter(e.target.value)}
             className="glass-input px-3 py-1.5 text-sm min-w-[150px]">
-            <option value="">Todas</option>
-            {categorias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+            <option value="" className="bg-white dark:bg-slate-800 text-gray-900 dark:text-white">Todas</option>
+            {categorias.map((c) => <option key={c.id} value={c.id} className="bg-white dark:bg-slate-800 text-gray-900 dark:text-white">{c.nombre}</option>)}
           </select>
         </div>
-        <button onClick={aplicaFiltros} className="glass-btn px-4 py-1.5 text-sm h-[34px]">
+        <button onClick={aplicaFiltros} className="px-4 py-1.5 text-sm h-[34px] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg">
           Aplicar filtros
         </button>
-        <button onClick={limpiarFiltros} className="glass-btn-secondary px-4 py-1.5 text-sm h-[34px]">
+        <button onClick={limpiarFiltros} className="px-4 py-1.5 text-sm h-[34px] bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 font-medium transition-all rounded-lg">
           Limpiar
         </button>
       </div>
@@ -297,7 +297,7 @@ export default function ReportesPage() {
       {/* Dashboard Analítico */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {/* CHART 1: Balance de Movimientos */}
-        <div id="grafico-balance" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-balance" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Balance de Movimientos (Entradas vs Salidas)</h3>
           {movsFiltrados.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -320,7 +320,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 2: Distribución de Stock por Categoría */}
-        <div id="grafico-categorias" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-categorias" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Distribución del Inventario por Categoría</h3>
           {dataCategoria.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -339,7 +339,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 3: Top 5 Productos Stock Bajo */}
-        <div id="grafico-stock-bajo" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-stock-bajo" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Top 5 Productos Próximos a Agotarse</h3>
           {topFaltantes.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin alertas</div>
@@ -357,7 +357,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 4: Capital Invertido por Proveedor */}
-        <div id="grafico-proveedores" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-proveedores" className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Capital Invertido por Proveedor (S/.)</h3>
           {dataProveedor.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -406,13 +406,13 @@ export default function ReportesPage() {
       </div>
 
       {/* Tab content area */}
-      <div className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl rounded-tl-none">
+      <div className="bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl rounded-tl-none shadow-sm">
         {/* Export buttons */}
         <div className="flex items-center justify-end gap-2 p-4 pb-0">
           <button
             onClick={handlePDF}
             disabled={exportando !== null}
-            className="flex items-center gap-1.5 px-3 py-1.5 border border-red-200 hover:bg-red-50 text-red-600 font-medium rounded-lg text-sm disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold shadow-sm hover:shadow-md transition-all rounded-lg text-sm disabled:opacity-50"
           >
             {exportando === 'pdf' ? <Loader2 size={16} className="animate-spin" /> : '📄'}
             {' PDF'}
@@ -425,7 +425,7 @@ export default function ReportesPage() {
               else if (activeTab === 'proveedores') handleExportProveedores()
             }}
             disabled={exportando !== null}
-            className="flex items-center gap-1.5 px-3 py-1.5 border border-emerald-200 hover:bg-emerald-50 text-emerald-600 font-medium rounded-lg text-sm disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold shadow-sm hover:shadow-md transition-all rounded-lg text-sm disabled:opacity-50"
           >
             {exportando && exportando !== 'pdf' ? <Loader2 size={16} className="animate-spin" /> : <FileSpreadsheet size={16} />}
             {exportando && exportando !== 'pdf' ? 'Exportando...' : '📊 Excel'}
@@ -457,8 +457,8 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
-                        <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Fecha/Hora</th>
+                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Fecha/Hora</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Producto</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Tipo</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Cantidad</th>
@@ -469,12 +469,12 @@ export default function ReportesPage() {
                     </thead>
                     <tbody>
                       {movsFiltrados.slice(0, 500).map((m) => (
-                        <tr key={m.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
+                        <tr key={m.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
                           <td className="py-2.5 px-2 text-gray-500 dark:text-text-muted text-xs whitespace-nowrap">{formatearFecha(m.created_at)}</td>
                           <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium text-blue-900 dark:text-text-primary font-bold">{m.productos?.nombre || m.producto || ''}</td>
                           <td className="py-2.5 px-2">
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                              m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
+                            <span className={`px-2.5 py-1 text-xs font-bold rounded-full text-white shadow-sm ${
+                              m.tipo === 'entrada' ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-rose-600 dark:bg-rose-500'
                             }`}>
                               {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                             </span>
@@ -525,14 +525,14 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
-                        <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Código</th>
+                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Código</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
-                        <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Categoría</th>
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden md:table-cell">Categoría</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Stock</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Estado</th>
-                        <th className="text-right py-3 px-2 font-medium hidden lg:table-cell">Precio Compra</th>
-                        <th className="text-right py-3 px-2 font-medium hidden lg:table-cell">Precio Venta</th>
+                        <th className="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden lg:table-cell">Precio Compra</th>
+                        <th className="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden lg:table-cell">Precio Venta</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Valor en Stock</th>
                       </tr>
                     </thead>
@@ -550,7 +550,7 @@ export default function ReportesPage() {
                         return (
                           <>
                             {rows.map(({ p, estado, valorStock }) => (
-                              <tr key={p.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
+                              <tr key={p.id} className="border-b border-gray-200 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
                                 <td className="py-2.5 px-2 font-mono text-xs text-gray-500 dark:text-text-muted">{p.codigo}</td>
                                 <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium text-blue-900 dark:text-text-primary font-bold">{p.nombre}</td>
                                 <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
@@ -609,21 +609,21 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
-                        <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Código</th>
+                      <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Código</th>
                         <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
-                        <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Categoría</th>
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden md:table-cell">Categoría</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Stock Actual</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Stock Mínimo</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Faltante</th>
-                        <th className="text-left py-3 px-2 font-medium hidden lg:table-cell">Proveedor</th>
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden lg:table-cell">Proveedor</th>
                       </tr>
                     </thead>
                     <tbody>
                       {[...prodBajoStock]
                         .sort((a, b) => (b.stock_minimo - b.stock_actual) - (a.stock_minimo - a.stock_actual))
                         .map((p) => (
-                          <tr key={p.id} className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
+                          <tr key={p.id} className="border-b border-gray-200 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
                             <td className="py-2.5 px-2 font-mono text-xs text-gray-500 dark:text-text-muted">{p.codigo}</td>
                             <td className="py-2.5 px-2 text-gray-900 dark:text-text-primary font-medium text-blue-900 dark:text-text-primary font-bold">{p.nombre}</td>
                             <td className="py-2.5 px-2 text-gray-600 dark:text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
@@ -652,13 +652,13 @@ export default function ReportesPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-bg-border text-gray-500 dark:text-text-muted label-mono">
+                      <tr className="bg-blue-50/80 dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-text-muted label-mono">
                         <th className="text-left py-3 px-2 font-medium w-8" />
-                        <th className="text-left py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Proveedor</th>
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider">Proveedor</th>
                         <th className="text-right py-3 px-2 font-medium text-blue-900 dark:text-text-primary font-bold">Productos</th>
-                        <th className="text-right py-3 px-2 font-medium hidden sm:table-cell">Entradas</th>
-                        <th className="text-right py-3 px-2 font-medium hidden sm:table-cell">Salidas</th>
-                        <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Último movimiento</th>
+                        <th className="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden sm:table-cell">Entradas</th>
+                        <th className="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden sm:table-cell">Salidas</th>
+                        <th className="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider hidden md:table-cell">Último movimiento</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -674,7 +674,7 @@ export default function ReportesPage() {
                           <tbody key={prov.id}>
                             <tr
                               onClick={() => setExpandedProv(isExpanded ? null : prov.id)}
-                              className="border-b border-gray-200 dark:border-bg-border hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover cursor-pointer"
+                              className="border-b border-gray-200 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-bg-hover transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover cursor-pointer"
                             >
                               <td className="py-2.5 px-2 text-gray-500 dark:text-text-muted">
                                 {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -688,7 +688,7 @@ export default function ReportesPage() {
                               </td>
                             </tr>
                             {isExpanded && rels.map((p) => (
-                              <tr key={p.id} className="bg-gray-100/50 dark:bg-bg-hover/50 border-b border-gray-200 dark:border-bg-border hover:bg-blue-50/40 dark:hover:bg-bg-hover transition-colors">
+                              <tr key={p.id} className="bg-gray-100/50 dark:bg-bg-hover/50 border-b border-gray-200 dark:border-slate-800 hover:bg-blue-50/40 dark:hover:bg-bg-hover transition-colors">
                                 <td />
                                 <td className="py-2 px-2 text-gray-600 dark:text-text-secondary text-xs pl-8" colSpan={5}>
                                   <span className="font-mono">{p.codigo}</span> — {p.nombre}

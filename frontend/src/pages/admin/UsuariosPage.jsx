@@ -96,7 +96,7 @@ export default function UsuariosPage() {
           <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">Usuarios</h2>
           {!loading && <span className="text-sm text-gray-500 dark:text-white/50 bg-gray-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">{total}</span>}
         </div>
-        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm">
           <Plus size={16} /> Nuevo Usuario
         </button>
       </div>
@@ -135,10 +135,10 @@ export default function UsuariosPage() {
 
       {!loading && !error && usuarios.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl">
+          <div className="overflow-x-auto bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-blue-50/80 dark:bg-bg-secondary border-b border-gray-200 dark:border-white/[0.06] text-gray-600 dark:text-white/60 label-mono">
+                <tr className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400">
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Nombre</th>
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Email</th>
                   <th className="text-left py-3 px-4 font-medium text-blue-900 dark:text-text-primary font-bold">Rol</th>
@@ -148,12 +148,12 @@ export default function UsuariosPage() {
               </thead>
               <tbody>
                 {usuarios.map((u) => (
-                  <tr key={u.id} className="border-b border-gray-200 dark:border-white/[0.06] hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-colors even:bg-slate-50/70 dark:even:bg-transparent hover:bg-blue-50/40 dark:hover:bg-bg-hover">
+                  <tr key={u.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
                     <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">{u.nombre}</td>
                     <td className="py-3 px-4 text-gray-600 dark:text-white/60">{u.email}</td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                        u.rol === 'administrador' ? 'bg-brand/10 text-brand' : 'bg-gray-100 dark:bg-white/[0.05] text-gray-600 dark:text-white/60'
+                        u.rol === 'administrador' ? 'bg-violet-600 text-white shadow-sm' : 'bg-amber-600 text-white shadow-sm'
                       }`}>
                         {u.rol === 'administrador' ? 'Admin' : 'Empleado'}
                       </span>

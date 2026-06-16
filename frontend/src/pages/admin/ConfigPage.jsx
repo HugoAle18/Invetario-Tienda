@@ -126,7 +126,7 @@ export default function ConfigPage() {
       </div>
 
       {/* Profile */}
-      <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+      <div className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700/50">
           <User size={18} className="text-brand" />
           <h3 className="font-display font-semibold text-gray-900 dark:text-white">Mi Perfil</h3>
@@ -135,18 +135,18 @@ export default function ConfigPage() {
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
             <input type="text" {...perfilForm.register('nombre')}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
+              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
             {perfilForm.formState.errors.nombre && <p className="text-danger text-xs mt-1">{perfilForm.formState.errors.nombre.message}</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
             <input type="email" {...perfilForm.register('email')}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
+              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
             {perfilForm.formState.errors.email && <p className="text-danger text-xs mt-1">{perfilForm.formState.errors.email.message}</p>}
           </div>
           <div className="flex justify-end pt-2">
             <button type="submit" disabled={profileLoading}
-              className="px-5 py-2.5 glass-btn flex items-center gap-2 text-sm">
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg flex items-center gap-2 text-sm">
               {profileLoading && <Loader2 size={16} className="animate-spin" />}
               Guardar cambios
             </button>
@@ -155,7 +155,7 @@ export default function ConfigPage() {
       </div>
 
       {/* Password */}
-      <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+      <div className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700/50">
           <Lock size={18} className="text-brand" />
           <h3 className="font-display font-semibold text-gray-900 dark:text-white">Cambiar Contraseña</h3>
@@ -168,7 +168,7 @@ export default function ConfigPage() {
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{labels[field]}</label>
                 <div className="relative">
                   <input type={showPasswords[field] ? 'text' : 'password'} {...passwordForm.register(field)}
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all pr-10" />
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all pr-10" />
                   <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, [field]: !p[field] }))}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
                     {showPasswords[field] ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -180,7 +180,7 @@ export default function ConfigPage() {
           })}
           <div className="flex justify-end pt-2">
             <button type="submit" disabled={passwordLoading}
-              className="px-5 py-2.5 glass-btn flex items-center gap-2 text-sm">
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg flex items-center gap-2 text-sm">
               {passwordLoading && <Loader2 size={16} className="animate-spin" />}
               Cambiar contraseña
             </button>

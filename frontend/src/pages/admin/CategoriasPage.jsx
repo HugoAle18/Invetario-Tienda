@@ -70,7 +70,7 @@ export default function CategoriasPage() {
           <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">Categorías</h2>
           {!loading && <span className="text-sm text-gray-500 dark:text-white/50 bg-gray-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">{categorias.length}</span>}
         </div>
-        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm">
           <Plus size={16} /> Nueva Categoría
         </button>
       </div>
@@ -79,7 +79,7 @@ export default function CategoriasPage() {
         <div className="flex flex-col items-center py-16 text-gray-600 dark:text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
-          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm">
             <RefreshCw size={16} /> Reintentar
           </button>
         </div>
@@ -104,13 +104,18 @@ export default function CategoriasPage() {
       {!loading && !error && categorias.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
           {categorias.map((cat) => (
-            <div key={cat.id} className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
+            <div key={cat.id} className="bg-white dark:bg-slate-950 p-6 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-4 group hover:border-blue-500 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300">
               <div className="flex items-start justify-between">
-                <div className="min-w-0">
-                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{cat.nombre}</h4>
-                  {cat.descripcion && (
-                    <p className="text-sm text-gray-500 dark:text-text-secondary break-words line-clamp-2">{cat.descripcion}</p>
-                  )}
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md flex items-center justify-center shrink-0">
+                    <Tags size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{cat.nombre}</h4>
+                    {cat.descripcion && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400 break-words line-clamp-2">{cat.descripcion}</p>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-brand transition-colors" title="Editar">
