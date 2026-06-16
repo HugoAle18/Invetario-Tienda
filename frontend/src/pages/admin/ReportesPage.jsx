@@ -9,7 +9,7 @@ import {
   AlertTriangle, TrendingUp, TrendingDown, ChevronDown, ChevronRight,
 } from 'lucide-react'
 import { exportarMovimientos, exportarInventario, exportarProductosBajoMinimo, exportarPorProveedor } from '@/utils/exportExcel'
-import { exportarMovimientosPDF, exportarInventarioPDF, exportarStockBajoPDF } from '@/utils/exportPDF'
+import { exportarMovimientosPDF, exportarInventarioPDF, exportarStockBajoPDF, exportarReporteGraficoPDF } from '@/utils/exportPDF'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell,
@@ -196,26 +196,29 @@ export default function ReportesPage() {
     finally { setExportando(null) }
   }
 
-  const handlePDF = () => {
+  const handlePDF = async () => {
     setExportando('pdf')
-    setTimeout(() => {
-      try {
-        if (activeTab === 'movimientos') {
-          if (movsFiltrados.length === 0) { toast.error('No hay movimientos para exportar'); setExportando(null); return }
-          exportarMovimientosPDF(movsFiltrados)
-        } else if (activeTab === 'inventario') {
-          if (prodConCategoria.length === 0) { toast.error('No hay productos para exportar'); setExportando(null); return }
-          exportarInventarioPDF(prodConCategoria)
-        } else if (activeTab === 'stockBajo') {
-          if (prodConCategoria.length === 0) { toast.error('No hay productos para exportar'); setExportando(null); return }
-          exportarStockBajoPDF(prodBajoStock)
-        } else {
-          toast.error('Exportación PDF no disponible para esta sección')
-        }
-        toast.success('✅ PDF generado correctamente')
-      } catch { toast.error('Error al generar PDF') }
-      finally { setExportando(null) }
-    }, 100)
+    toast.loading('Procesando gráficos y generando PDF...')
+    try {
+      const exito = await exportarReporteGraficoPDF(
+        prodConCategoria,
+        'grafico-balance',
+        'grafico-categorias',
+        'grafico-stock-bajo',
+        'grafico-proveedores',
+        { totalEntradas, totalSalidas, sinStock: sinStock.length, prodBajoStock: prodBajoStock.length, valorTotal },
+      )
+      toast.dismiss()
+      if (exito) {
+        toast.success('✅ PDF Ejecutivo exportado con gráficos')
+      } else {
+        toast.error('Error al capturar los componentes visuales')
+      }
+    } catch {
+      toast.dismiss()
+      toast.error('Error al generar PDF')
+    }
+    finally { setExportando(null) }
   }
 
   const aplicaFiltros = () => { fetchAll() }
@@ -294,7 +297,7 @@ export default function ReportesPage() {
       {/* Dashboard Analítico */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {/* CHART 1: Balance de Movimientos */}
-        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-balance" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Balance de Movimientos (Entradas vs Salidas)</h3>
           {movsFiltrados.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -317,7 +320,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 2: Distribución de Stock por Categoría */}
-        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-categorias" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Distribución del Inventario por Categoría</h3>
           {dataCategoria.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
@@ -336,7 +339,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 3: Top 5 Productos Stock Bajo */}
-        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-stock-bajo" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Top 5 Productos Próximos a Agotarse</h3>
           {topFaltantes.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin alertas</div>
@@ -354,7 +357,7 @@ export default function ReportesPage() {
         </div>
 
         {/* CHART 4: Capital Invertido por Proveedor */}
-        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+        <div id="grafico-proveedores" className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
           <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Capital Invertido por Proveedor (S/.)</h3>
           {dataProveedor.length === 0 ? (
             <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>

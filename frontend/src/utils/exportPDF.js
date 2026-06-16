@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 
 const agregarEncabezadoPDF = (doc, titulo, subtitulo, esLandscape = false) => {
   const anchoTotal = esLandscape ? 297 : 210;
@@ -189,4 +190,79 @@ export const exportarStockBajoPDF = (data) => {
   agregarPiePagina(doc);
   doc.save(`INVENTEX_StockBajo_${formatearFechaPDF()}.pdf`);
   return true;
+};
+
+export const exportarReporteGraficoPDF = async (dataTabular, idGraf1, idGraf2, idGraf3, idGraf4, resumen = {}) => {
+  if (!dataTabular || dataTabular.length === 0) return false;
+
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  agregarEncabezadoPDF(doc, 'Reporte Ejecutivo de Gestión', 'Métricas analíticas e inventario', true);
+
+  try {
+    const capturar = async (id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null });
+      return canvas.toDataURL('image/png');
+    };
+
+    const [imgBalance, imgCategorias, imgStockBajo, imgProveedores] = await Promise.all([
+      capturar(idGraf1), capturar(idGraf2), capturar(idGraf3), capturar(idGraf4),
+    ]);
+
+    doc.setTextColor(30, 41, 59);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('I. ANÁLISIS VISUAL Y ESTADÍSTICAS', 14, 38);
+
+    if (imgBalance) doc.addImage(imgBalance, 'PNG', 14, 44, 130, 75);
+    if (imgCategorias) doc.addImage(imgCategorias, 'PNG', 152, 44, 130, 75);
+    if (imgStockBajo) doc.addImage(imgStockBajo, 'PNG', 14, 124, 130, 75);
+    if (imgProveedores) doc.addImage(imgProveedores, 'PNG', 152, 124, 130, 75);
+
+    doc.addPage({ orientation: 'landscape', format: 'a4' });
+    agregarEncabezadoPDF(doc, 'Reporte Ejecutivo de Gestión', 'Detalle de registros tabulares', true);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('II. DETALLE DE REGISTROS', 14, 38);
+
+    const { totalEntradas, totalSalidas, sinStock, prodBajoStock, valorTotal } = resumen;
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139);
+    doc.text(`Entradas: ${totalEntradas ?? '—'} uds  |  Salidas: ${totalSalidas ?? '—'} uds  |  Sin stock: ${sinStock ?? '—'}  |  Stock bajo: ${prodBajoStock ?? '—'}`, 14, 44);
+    doc.setTextColor(30, 41, 59);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Valor total del almacén: S/. ${Number(valorTotal ?? 0).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`, 14, 50);
+
+    autoTable(doc, {
+      startY: 56,
+      head: [['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Estado', 'Proveedor', 'Valor Stock']],
+      body: dataTabular.map(p => [
+        p.codigo || '',
+        p.nombre || '',
+        p.categorias?.nombre || '',
+        p.stock_actual ?? 0,
+        p.stock_minimo ?? 0,
+        p.stock_actual <= 0 ? 'Sin stock' : p.stock_actual <= (p.stock_minimo || 0) ? 'Stock bajo' : 'Disponible',
+        p.proveedores?.nombre || '',
+        `S/. ${((Number(p.precio_compra) || 0) * (p.stock_actual || 0)).toFixed(2)}`,
+      ]),
+      headStyles: { fillColor: [37, 99, 235], textColor: 255, fontStyle: 'bold', fontSize: 8, halign: 'center' },
+      bodyStyles: { fontSize: 7.5, textColor: [30, 41, 59] },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      margin: { left: 14, right: 14 },
+      tableLineColor: [226, 232, 240],
+      tableLineWidth: 0.1,
+    });
+
+    agregarPiePagina(doc);
+    doc.save(`INVENTEX_Reporte_Ejecutivo_${formatearFechaPDF()}.pdf`);
+    return true;
+
+  } catch (error) {
+    console.error('Error generando gráficos en PDF', error);
+    return false;
+  }
 };

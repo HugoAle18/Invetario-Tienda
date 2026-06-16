@@ -87,6 +87,58 @@ function crearYFinalizar(hojaName, filas, nombreArchivo) {
   saveAs(new Blob([wbout], { type: 'application/octet-stream' }), nombreArchivo)
 }
 
+function crearConResumen(hojaName, filasJson, resumen, nombreArchivo) {
+  const wb = XLSX.utils.book_new()
+  const headers = filasJson.length > 0 ? Object.keys(filasJson[0]) : []
+  const summaryRows = [
+    ['RESUMEN EJECUTIVO', ...headers.slice(1).map(() => '')].slice(0, headers.length),
+    ['Total Stock', resumen.totalStock ?? '', '', 'Valor Total Almacén', resumen.valorTotalFormatted ?? '', ''].slice(0, headers.length),
+    ['Prod. Críticos (Stock Bajo)', resumen.prodBajoStock ?? '', '', 'Sin Stock', resumen.sinStock ?? '', ''].slice(0, headers.length),
+    headers.map(() => ''),
+  ]
+  const dataRows = filasJson.map(f => headers.map(h => f[h] ?? ''))
+  const allRows = [...summaryRows, ...dataRows]
+  const ws = XLSX.utils.aoa_to_sheet(allRows)
+  // style summary header
+  for (let c = 0; c < headers.length; c++) {
+    const ref = XLSX.utils.encode_cell({ r: 0, c })
+    if (ws[ref]) {
+      ws[ref].s = { fill: { fgColor: { rgb: '2563EB' } }, font: { bold: true, color: { rgb: 'FFFFFF' }, sz: 12 }, alignment: { horizontal: 'center', vertical: 'center' } }
+    }
+  }
+  // blue tint on summary data rows
+  for (let r = 1; r <= 2; r++) {
+    for (let c = 0; c < headers.length; c++) {
+      const ref = XLSX.utils.encode_cell({ r, c })
+      if (ws[ref]) {
+        ws[ref].s = { fill: { fgColor: { rgb: 'EFF6FF' } }, font: { bold: true, color: { rgb: '1E293B' }, sz: 10 }, alignment: { horizontal: 'center', vertical: 'center' } }
+      }
+    }
+  }
+  // merge title across all columns
+  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } }]
+  // style data headers (row 4)
+  for (let c = 0; c < headers.length; c++) {
+    const ref = XLSX.utils.encode_cell({ r: 3, c })
+    if (ws[ref]) {
+      ws[ref].s = { fill: { fgColor: { rgb: '2563EB' } }, font: { bold: true, color: { rgb: 'FFFFFF' }, sz: 11 }, alignment: { horizontal: 'center', vertical: 'center' } }
+    }
+  }
+  // alternating row colors for data
+  for (let r = 4; r < allRows.length; r++) {
+    const color = (r - 4) % 2 === 0 ? 'F8FAFC' : 'FFFFFF'
+    for (let c = 0; c < headers.length; c++) {
+      const ref = XLSX.utils.encode_cell({ r, c })
+      if (ws[ref]) { ws[ref].s = { ...ws[ref]?.s, fill: { fgColor: { rgb: color } }, font: { ...ws[ref]?.s?.font, sz: 10 }, alignment: { vertical: 'center' } } }
+    }
+  }
+  XLSX.utils.book_append_sheet(wb, ws, hojaName)
+  ws['!freeze'] = { xSplit: 0, ySplit: 4 }
+  autoAncho(ws)
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+  saveAs(new Blob([wbout], { type: 'application/octet-stream' }), nombreArchivo)
+}
+
 export function exportarMovimientos(data, filtros = {}) {
   if (!data || data.length === 0) return
   const filas = data.map((m) => ({
@@ -108,11 +160,15 @@ export function exportarInventario(data) {
   if (!data || data.length === 0) return
   let totalStock = 0
   let totalValor = 0
+  let prodBajoStock = 0
+  let sinStock = 0
   const filas = data.map((p) => {
     const estado = p.stock_actual <= 0 ? 'Sin stock' : p.stock_actual <= p.stock_minimo ? 'Stock bajo' : 'Disponible'
     const valorStock = (Number(p.precio_compra) || 0) * (p.stock_actual || 0)
     totalStock += p.stock_actual || 0
     totalValor += valorStock
+    if (p.stock_actual <= 0) sinStock++
+    else if (p.stock_actual <= p.stock_minimo) prodBajoStock++
     return {
       Código: p.codigo,
       Nombre: p.nombre,
@@ -140,7 +196,13 @@ export function exportarInventario(data) {
     'Precio Venta': '',
     'Valor en Stock': totalValor,
   })
-  crearYFinalizar('Inventario Actual', filas, `INVENTEX_Inventario_${fechaActual()}.xlsx`)
+  crearConResumen('Inventario Actual', filas, {
+    totalStock,
+    prodBajoStock,
+    sinStock,
+    valorTotal: totalValor,
+    valorTotalFormatted: `S/. ${totalValor.toLocaleString('es-PE', { minimumFractionDigits: 2 })}`,
+  }, `INVENTEX_Inventario_${fechaActual()}.xlsx`)
 }
 
 export function exportarProductosBajoMinimo(data) {
