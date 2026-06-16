@@ -10,6 +10,10 @@ import {
 } from 'lucide-react'
 import { exportarMovimientos, exportarInventario, exportarProductosBajoMinimo, exportarPorProveedor } from '@/utils/exportExcel'
 import { exportarMovimientosPDF, exportarInventarioPDF, exportarStockBajoPDF } from '@/utils/exportPDF'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell,
+} from 'recharts'
 
 const TABS = [
   { key: 'movimientos', icon: '📊', label: 'Movimientos' },
@@ -48,11 +52,18 @@ export default function ReportesPage() {
   const [error, setError] = useState(null)
   const [exportando, setExportando] = useState(null)
   const [expandedProv, setExpandedProv] = useState(null)
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
   const [desde, setDesde] = useState(() => {
     const d = new Date(); d.setDate(d.getDate() - 30); return d.toISOString().split('T')[0]
   })
   const [hasta, setHasta] = useState(() => new Date().toISOString().split('T')[0])
   const [catFilter, setCatFilter] = useState('')
+
+  useEffect(() => {
+    const obs = new MutationObserver(() => setIsDark(document.documentElement.classList.contains('dark')))
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => obs.disconnect()
+  }, [])
 
   const fetchAll = useCallback(async () => {
     setLoading(true)
@@ -95,6 +106,42 @@ export default function ReportesPage() {
   const prodBajoStock = productos.filter((p) => p.stock_actual <= p.stock_minimo)
   const sinStock = productos.filter((p) => p.stock_actual <= 0)
   const valorTotal = productos.reduce((s, p) => s + (Number(p.precio_compra) || 0) * (p.stock_actual || 0), 0)
+
+  const dataMovBalance = [
+    { name: 'Entradas', cantidad: totalEntradas },
+    { name: 'Salidas', cantidad: totalSalidas },
+  ]
+
+  const stockPorCategoria = productos.reduce((acc, p) => {
+    const cat = p.categorias?.nombre || 'Sin categoría'
+    acc[cat] = (acc[cat] || 0) + (p.stock_actual || 0)
+    return acc
+  }, {})
+  const dataCategoria = Object.entries(stockPorCategoria).map(([name, value]) => ({ name, value }))
+
+  const topFaltantes = [...prodBajoStock]
+    .sort((a, b) => ((b.stock_minimo || 0) - (b.stock_actual || 0)) - ((a.stock_minimo || 0) - (a.stock_actual || 0)))
+    .slice(0, 5)
+    .map(p => ({
+      name: p.nombre.length > 22 ? p.nombre.substring(0, 22) + '…' : p.nombre,
+      faltante: (p.stock_minimo || 0) - (p.stock_actual || 0),
+    }))
+
+  const capitalPorProveedor = productos.reduce((acc, p) => {
+    const prov = p.proveedores?.nombre || 'Sin Proveedor'
+    acc[prov] = (acc[prov] || 0) + ((Number(p.precio_compra) || 0) * (p.stock_actual || 0))
+    return acc
+  }, {})
+  const dataProveedor = Object.entries(capitalPorProveedor).map(([name, capital]) => ({ name, capital }))
+
+  const COLORS_PIE = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899']
+
+  const tooltipStyle = {
+    backgroundColor: isDark ? '#1E293B' : '#fff',
+    borderColor: isDark ? '#334155' : '#E2E8F0',
+    borderRadius: '8px',
+    color: isDark ? '#F8FAFC' : '#1E293B',
+  }
 
   const handleExportMovimientos = async () => {
     setExportando('movimientos')
@@ -242,6 +289,87 @@ export default function ReportesPage() {
         <button onClick={limpiarFiltros} className="glass-btn-secondary px-4 py-1.5 text-sm h-[34px]">
           Limpiar
         </button>
+      </div>
+
+      {/* Dashboard Analítico */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {/* CHART 1: Balance de Movimientos */}
+        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+          <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Balance de Movimientos (Entradas vs Salidas)</h3>
+          {movsFiltrados.length === 0 ? (
+            <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={dataMovBalance} barSize={80}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#E2E8F0'} />
+                <XAxis dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} />
+                <YAxis stroke="#94A3B8" tick={{ fill: '#94A3B8' }} />
+                <Tooltip contentStyle={tooltipStyle} />
+                <Legend wrapperStyle={{ color: isDark ? '#F8FAFC' : '#1E293B' }} />
+                <Bar dataKey="cantidad" name="Cantidad">
+                  {dataMovBalance.map((entry, i) => (
+                    <Cell key={i} fill={entry.name === 'Entradas' ? '#10B981' : '#EF4444'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {/* CHART 2: Distribución de Stock por Categoría */}
+        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+          <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Distribución del Inventario por Categoría</h3>
+          {dataCategoria.length === 0 ? (
+            <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie data={dataCategoria} cx="50%" cy="50%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}>
+                  {dataCategoria.map((_, i) => (
+                    <Cell key={i} fill={COLORS_PIE[i % COLORS_PIE.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value} uds`, 'Stock']} />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {/* CHART 3: Top 5 Productos Stock Bajo */}
+        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+          <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Top 5 Productos Próximos a Agotarse</h3>
+          {topFaltantes.length === 0 ? (
+            <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin alertas</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={topFaltantes} layout="vertical" barSize={20}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#E2E8F0'} />
+                <XAxis type="number" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} />
+                <YAxis type="category" dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} width={140} tickFormatter={(v) => v.length > 18 ? v.substring(0, 18) + '…' : v} />
+                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value} uds`, 'Faltante']} />
+                <Bar dataKey="faltante" name="Faltante" fill="#F59E0B" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {/* CHART 4: Capital Invertido por Proveedor */}
+        <div className="bg-white dark:bg-bg-secondary p-6 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm">
+          <h3 className="text-base font-semibold mb-4 text-gray-900 dark:text-white">Capital Invertido por Proveedor (S/.)</h3>
+          {dataProveedor.length === 0 ? (
+            <div className="flex items-center justify-center h-[300px] text-gray-400 dark:text-text-muted text-sm">Sin datos</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={dataProveedor} barSize={20}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#E2E8F0'} />
+                <XAxis dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8' }} tickFormatter={(v) => v.length > 14 ? v.substring(0, 14) + '…' : v} />
+                <YAxis stroke="#94A3B8" tick={{ fill: '#94A3B8' }} tickFormatter={(v) => `S/${v.toFixed(0)}`} />
+                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`S/. ${Number(value).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`, 'Capital']} />
+                <Bar dataKey="capital" name="Capital" fill="#2563EB" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}
