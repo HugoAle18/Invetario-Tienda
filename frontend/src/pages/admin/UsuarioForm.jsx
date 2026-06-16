@@ -44,27 +44,27 @@ export default function UsuarioForm({ defaultValues, onSubmit, loading }) {
   }, [defaultValues, reset])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Nombre</label>
-        <input type="text" {...register('nombre')} className="w-full px-3 py-2 glass-input text-sm" />
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+        <input type="text" {...register('nombre')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Email</label>
-        <input type="email" {...register('email')} className="w-full px-3 py-2 glass-input text-sm" />
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+        <input type="email" {...register('email')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
         {errors.email && <p className="text-danger text-xs mt-1">{errors.email.message}</p>}
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">
-          Contraseña {isEditing && <span className="text-gray-400 dark:text-white/40 font-normal">(dejar vacío para mantener)</span>}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Contraseña {isEditing && <span className="text-gray-400 dark:text-gray-500 font-normal">(dejar vacío para mantener)</span>}
         </label>
-        <input type="password" {...register('password')} className="w-full px-3 py-2 glass-input text-sm" />
+        <input type="password" {...register('password')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
         {errors.password && <p className="text-danger text-xs mt-1">{errors.password.message}</p>}
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Rol</label>
-        <select {...register('rol')} className="w-full px-3 py-2 glass-input text-sm">
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rol</label>
+        <select {...register('rol')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all">
           <option value="empleado">Empleado</option>
           <option value="administrador">Administrador</option>
         </select>

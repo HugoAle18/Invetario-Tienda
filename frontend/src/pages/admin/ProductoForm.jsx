@@ -45,43 +45,43 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
   }, [defaultValues, reset])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Código</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Código</label>
           <input
             type="text"
             {...register('codigo')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           />
           {errors.codigo && <p className="text-danger text-xs mt-1">{errors.codigo.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Nombre</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
           <input
             type="text"
             {...register('nombre')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           />
           {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Descripción</label>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
         <textarea
           {...register('descripcion')}
-          rows={2}
-          className="w-full px-3 py-2 glass-input text-sm resize-none"
+          rows={3}
+          className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all resize-none"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Categoría</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Categoría</label>
           <select
             {...register('categoria_id')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           >
             <option value="">Sin categoría</option>
             {categorias.map((cat) => (
@@ -90,10 +90,10 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Proveedor</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Proveedor</label>
           <select
             {...register('proveedor_id')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           >
             <option value="">Sin proveedor</option>
             {proveedores.map((prov) => (
@@ -105,22 +105,22 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Precio Compra</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Precio Compra</label>
           <input
             type="number"
             step="0.01"
             {...register('precio_compra')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           />
           {errors.precio_compra && <p className="text-danger text-xs mt-1">{errors.precio_compra.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Precio Venta</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Precio Venta</label>
           <input
             type="number"
             step="0.01"
             {...register('precio_venta')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           />
           {errors.precio_venta && <p className="text-danger text-xs mt-1">{errors.precio_venta.message}</p>}
         </div>
@@ -128,31 +128,31 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Stock Mínimo</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Stock Mínimo</label>
           <input
             type="number"
             {...register('stock_minimo')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           />
           {errors.stock_minimo && <p className="text-danger text-xs mt-1">{errors.stock_minimo.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Stock Actual</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Stock Actual</label>
           <input
             type="number"
             {...register('stock_actual')}
-            className="w-full px-3 py-2 glass-input text-sm"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           />
           {errors.stock_actual && <p className="text-danger text-xs mt-1">{errors.stock_actual.message}</p>}
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">URL de imagen (opcional)</label>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">URL de imagen (opcional)</label>
         <input
           type="text"
           {...register('imagen_url')}
-          className="w-full px-3 py-2 glass-input text-sm"
+          className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
           placeholder="https://..."
         />
       </div>

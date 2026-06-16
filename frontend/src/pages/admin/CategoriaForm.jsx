@@ -18,15 +18,15 @@ export default function CategoriaForm({ defaultValues, onSubmit, loading }) {
   useEffect(() => { if (defaultValues) reset(defaultValues) }, [defaultValues, reset])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Nombre</label>
-        <input type="text" {...register('nombre')} className="w-full px-3 py-2 glass-input text-sm" />
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+        <input type="text" {...register('nombre')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-1">Descripción</label>
-        <textarea {...register('descripcion')} rows={3} className="w-full px-3 py-2 glass-input text-sm resize-none" />
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
+        <textarea {...register('descripcion')} rows={3} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all resize-none" />
       </div>
       <div className="flex justify-end pt-2">
         <button type="submit" disabled={loading} className="px-5 py-2 glass-btn flex items-center gap-2">
