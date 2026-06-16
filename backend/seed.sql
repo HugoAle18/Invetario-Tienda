@@ -4,8 +4,8 @@
 -- 1. Ir a: https://supabase.com/dashboard/project/jcyqgdoytvbmmrtzvlai/sql/new
 -- 2. Pegar este script y ejecutar
 -- 3. Credenciales de acceso:
---    Admin:    admin@inventex.com / admin123
---    Empleado: empleado@inventex.com / empleado123
+--    Admin:    admin@inventex.com / Admin123!
+--    Empleado: empleado@inventex.com / Empleado123!
 -- ============================================================
 
 -- LIMPIAR DATOS EXISTENTES (en orden inverso por FK)
@@ -49,8 +49,8 @@ INSERT INTO proveedores (nombre, contacto, telefono, email, direccion) VALUES
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 INSERT INTO usuarios (nombre, email, password, rol, activo) VALUES
-  ('Admin Principal', 'admin@inventex.com',    crypt('admin123',    gen_salt('bf')), 'administrador', true),
-  ('Empleado Demo',   'empleado@inventex.com', crypt('empleado123', gen_salt('bf')), 'empleado',      true);
+  ('Admin Principal', 'admin@inventex.com',    crypt('Admin123!',    gen_salt('bf')), 'administrador', true),
+  ('Empleado Demo',   'empleado@inventex.com', crypt('Empleado123!', gen_salt('bf')), 'empleado',      true);
 
 -- ============================================================
 -- 4. PRODUCTOS
@@ -165,8 +165,14 @@ UNION ALL
 SELECT '✅ Movimientos:', COUNT(*) FROM movimientos;
 
 -- ============================================================
+-- CORREGIR CONTRASEÑAS (si ya ejecutaste el seed anterior)
+-- ============================================================
+UPDATE usuarios SET password = crypt('Admin123!', gen_salt('bf'))    WHERE email = 'admin@inventex.com';
+UPDATE usuarios SET password = crypt('Empleado123!', gen_salt('bf')) WHERE email = 'empleado@inventex.com';
+
+-- ============================================================
 -- CREDENCIALES DE ACCESO
 -- ============================================================
---   Admin:    admin@inventex.com / admin123
---   Empleado: empleado@inventex.com / empleado123
+--   Admin:    admin@inventex.com / Admin123!
+--   Empleado: empleado@inventex.com / Empleado123!
 -- ============================================================
