@@ -1,193 +1,129 @@
-import { useState, useRef, useEffect } from 'react'
-import { Bot, Sparkles, Send, X, Loader2 } from 'lucide-react'
-import { consultarAgenteIA } from '@/services/aiService'
+import { useState, useEffect, useRef } from 'react'
 
-const MENSAJES_INICIALES = [
-  {
-    rol: 'agent',
-    texto: `¡Hola! Soy el **Agente Residente** de INVENTEX. Puedo ayudarte con:
-
-- 📊 **Resumen general** del inventario
-- 🚨 **Alertas** de stock bajo o productos críticos
-- 🛒 **Recomendaciones de compra** basadas en el stock actual
-- 📦 **Análisis por categoría** o **proveedor**
-- 📋 **Historial de movimientos** recientes
-
-¿Qué deseas consultar?`,
-  },
-]
-
-function formatearRespuesta(texto) {
-  if (!texto) return ''
-  return texto
-    .replace(/^### (.+)$/gm, '<h4 class="text-sm font-bold text-gray-900 dark:text-white mb-2 mt-1">$1</h4>')
-    .replace(/^## (.+)$/gm, '<h3 class="text-base font-bold text-gray-900 dark:text-white mb-2">$1</h3>')
-    .replace(/^# (.+)$/gm, '<h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2">$1</h2>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold">$1</strong>')
-    .replace(/_(.+?)_/g, '<em class="italic text-gray-500 dark:text-gray-400">$1</em>')
-    .replace(/^- (.+)$/gm, '<li class="ml-3 text-gray-700 dark:text-gray-200 list-disc">$1</li>')
-    .replace(/\n\n/g, '<br/><br/>')
-    .replace(/\n/g, '<br/>')
-}
-
-export default function AiAgentWidget() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [mensajes, setMensajes] = useState(MENSAJES_INICIALES)
+const VentanaChat = ({ onClose }) => {
+  const [messages, setMessages] = useState([
+    { id: 1, sender: 'bot', text: '¡Hola! Soy tu Agente de IA. ¿En qué puedo ayudarte con el inventario hoy?' }
+  ])
   const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const chatRef = useRef(null)
-  const inputRef = useRef(null)
-  const widgetRef = useRef(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const chatEndRef = useRef(null)
 
   useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight
-    }
-  }, [mensajes])
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isOpen])
+  const handleSend = (e) => {
+    e.preventDefault()
+    if (!input.trim()) return
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (widgetRef.current && !widgetRef.current.contains(e.target) && isOpen) {
-        setIsOpen(false)
-      }
-    }
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isOpen])
-
-  const enviarMensaje = async () => {
-    const texto = input.trim()
-    if (!texto || loading) return
-
-    setMensajes((prev) => [...prev, { rol: 'user', texto }])
+    const userMessage = { id: Date.now(), sender: 'user', text: input }
+    setMessages(prev => [...prev, userMessage])
     setInput('')
-    setLoading(true)
 
-    try {
-      const respuesta = await consultarAgenteIA(texto)
-      setMensajes((prev) => [...prev, { rol: 'agent', texto: respuesta }])
-    } catch {
-      setMensajes((prev) => [
-        ...prev,
-        {
-          rol: 'agent',
-          texto: '_Lo siento, tuve un problema al conectar con mi cerebro analítico. Por favor, inténtalo de nuevo._',
-        },
-      ])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      enviarMensaje()
-    }
+    setIsLoading(true)
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        sender: 'bot',
+        text: 'Estoy analizando las tendencias de stock de tus productos basándome en los movimientos recientes.'
+      }])
+      setIsLoading(false)
+    }, 1000)
   }
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer z-[60] border border-white/20 group"
-        aria-label="Abrir Agente IA"
-      >
-        <Bot size={22} className="group-hover:rotate-12 transition-transform duration-300" />
-      </button>
+      <div
+        className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-40 transition-all duration-300"
+        onClick={onClose}
+      />
 
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[50] transition-opacity duration-300"
-            onClick={() => setIsOpen(false)}
-          />
+      <div className="fixed bottom-24 right-6 w-96 h-[550px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
 
-          <div
-            ref={widgetRef}
-            className="fixed bottom-24 right-6 w-96 h-[550px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-[55]"
-          >
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center justify-between shadow-sm shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/20">
-                  <Sparkles size={16} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold leading-tight">Agente Residente IA</h3>
-                  <p className="text-[10px] text-blue-100 font-medium">Analista de Inventario</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
-                aria-label="Cerrar"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-2 scroll-smooth">
-              {mensajes.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex ${msg.rol === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={
-                      msg.rol === 'user'
-                        ? 'max-w-[80%] bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none text-sm font-medium shadow-sm my-1'
-                        : 'max-w-[80%] bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm my-1 border border-slate-200/30 dark:border-slate-700/30 leading-relaxed font-sans'
-                    }
-                    dangerouslySetInnerHTML={
-                      msg.rol === 'agent' ? { __html: formatearRespuesta(msg.texto) } : undefined
-                    }
-                  >
-                    {msg.rol === 'user' && msg.texto}
-                  </div>
-                </div>
-              ))}
-
-              {loading && (
-                <div className="flex justify-start">
-                  <div className="max-w-[80%] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm border border-slate-200/30 dark:border-slate-700/30">
-                    <Loader2 size={16} className="animate-spin inline mr-2" />
-                    Analizando inventario...
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2 p-3 bg-white/50 dark:bg-slate-950/50 border-t border-slate-200/40 dark:border-slate-800/40 shrink-0">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Pregunta al agente..."
-                disabled={loading}
-                className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-400 dark:placeholder-slate-500 disabled:opacity-50"
-              />
-              <button
-                onClick={enviarMensaje}
-                disabled={loading || !input.trim()}
-                className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white transition-all cursor-pointer disabled:cursor-not-allowed font-bold"
-                aria-label="Enviar"
-              >
-                <Send size={16} />
-              </button>
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center justify-between shadow-md shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse" />
+            <div>
+              <h3 className="font-bold text-sm tracking-wide">Agente Residente IA</h3>
+              <p className="text-[10px] text-blue-100">Analista de Inventario</p>
             </div>
           </div>
-        </>
-      )}
+          <button
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-slate-950/20">
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
+                  msg.sender === 'user'
+                    ? 'bg-blue-600 text-white rounded-tr-none'
+                    : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-none border border-slate-200/50 dark:border-slate-700/50'
+                }`}
+              >
+                {msg.text}
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none text-sm border border-slate-200/50 dark:border-slate-700/50 text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          )}
+          <div ref={chatEndRef} />
+        </div>
+
+        <form onSubmit={handleSend} className="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2 shrink-0">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Pregúntale a la IA sobre tu stock..."
+            className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+          />
+          <button
+            type="submit"
+            className="p-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold transition-all shadow-md cursor-pointer active:scale-95"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </>
+  )
+}
+
+export default function AiAgentWidget() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer z-50 border border-white/20 group"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 group-hover:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+      </button>
+
+      {isOpen && <VentanaChat onClose={() => setIsOpen(false)} />}
     </>
   )
 }
