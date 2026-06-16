@@ -39,8 +39,11 @@ export default function LoginPage() {
       toast.success(`Bienvenido, ${userData.nombre}`)
       navigate(userData.rol === 'administrador' ? '/admin/dashboard' : '/empleado/panel', { replace: true })
     } catch (err) {
-      const msg = err.response?.data?.error || 'Error al iniciar sesión'
-      toast.error(msg)
+      const status = err.response?.status
+      const data = err.response?.data
+      console.log('[LOGIN ERROR]', { status, data, message: err.message })
+      const msg = data?.error || 'Error al iniciar sesión'
+      toast.error(`Error ${status}: ${msg}`, { duration: 8000 })
     } finally {
       setSubmitting(false)
     }

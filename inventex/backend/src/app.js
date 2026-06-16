@@ -29,13 +29,15 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
 
-app.set('trust proxy', 1)
+app.set('trust proxy', 2)
 app.use(express.json())
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 50,
+  keyGenerator: (req) => req.body?.email || req.ip,
   message: { error: 'Demasiadas solicitudes. Intenta de nuevo en 15 minutos.' },
+  skip: (req) => req.method !== 'POST',
 })
 
 app.use('/api/v1/auth', authLimiter)

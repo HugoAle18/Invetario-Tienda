@@ -26,11 +26,22 @@ async function generateRefreshToken(userId) {
 export async function login(req, res) {
   const { email, password } = req.body
 
+  console.log(`[LOGIN] Intento de login para: ${email}`)
+
   const { data: user, error } = await supabase
     .from('usuarios')
     .select('id, nombre, email, password, rol, activo')
     .eq('email', email)
     .single()
+
+  if (error) {
+    console.log(`[LOGIN] Error de BD: ${error.message}`)
+  }
+  if (!user) {
+    console.log(`[LOGIN] Usuario no encontrado: ${email}`)
+  } else if (!user.activo) {
+    console.log(`[LOGIN] Usuario inactivo: ${email}`)
+  }
 
   if (error || !user || !user.activo) {
     return res.status(401).json({ error: 'Credenciales inválidas' })
@@ -38,8 +49,11 @@ export async function login(req, res) {
 
   const valid = await bcrypt.compare(password, user.password)
   if (!valid) {
+    console.log(`[LOGIN] Contraseña incorrecta para: ${email}`)
     return res.status(401).json({ error: 'Credenciales inválidas' })
   }
+
+  console.log(`[LOGIN] Login exitoso: ${email}`)
 
   const accessToken = generateAccessToken(user)
   const refreshToken = await generateRefreshToken(user.id)
