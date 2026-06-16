@@ -5,6 +5,8 @@ import { proveedoresApi } from '@/api/proveedores'
 import ProductoForm from './ProductoForm'
 import Modal from '@/components/ui/Modal'
 import toast from 'react-hot-toast'
+import { useAuth } from '@/context/AuthContext'
+import { crearNotificacionAutomatica } from '@/services/notificationService'
 import {
   Package,
   Search,
@@ -17,6 +19,7 @@ import {
 } from 'lucide-react'
 
 export default function ProductosPage() {
+  const { user } = useAuth()
   const [productos, setProductos] = useState([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -91,6 +94,13 @@ export default function ProductosPage() {
       } else {
         await productosApi.crear(data)
         toast.success('Producto creado')
+        crearNotificacionAutomatica({
+          usuario_id: user.id,
+          tipo: 'sistema',
+          titulo: 'Nuevo producto',
+          mensaje: `Se creó el producto "${data.nombre || data.codigo}"`,
+          referencia_tipo: 'producto',
+        })
       }
       setModalOpen(false)
       setEditing(null)

@@ -4,6 +4,7 @@ import MovementForm from '@/components/ui/MovementForm'
 import Modal from '@/components/ui/Modal'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/context/AuthContext'
+import { crearNotificacionAutomatica } from '@/services/notificationService'
 import {
   ArrowUpDown,
   Plus,
@@ -71,6 +72,13 @@ export default function MovimientosPage() {
       toast.success(`${movementType === 'entrada' ? 'Entrada' : 'Salida'} registrada correctamente`)
       setModalOpen(false)
       fetch()
+      crearNotificacionAutomatica({
+        usuario_id: user.id,
+        tipo: movementType === 'entrada' ? 'entrada' : 'salida',
+        titulo: movementType === 'entrada' ? 'Entrada registrada' : 'Salida registrada',
+        mensaje: `${movementType === 'entrada' ? 'Entrada' : 'Salida'} de ${formData.cantidad} unidades registrada`,
+        referencia_tipo: 'movimiento',
+      })
     } catch (err) {
       const msg = err.response?.data?.error || 'Error al registrar movimiento'
       toast.error(msg)

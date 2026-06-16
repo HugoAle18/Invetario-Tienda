@@ -64,8 +64,13 @@ export default function Topbar({ onMenuClick }) {
   useEffect(() => {
     if (!user) return
     fetchNotificaciones()
-    const interval = setInterval(fetchNotificaciones, 30000)
-    return () => clearInterval(interval)
+    const interval = setInterval(fetchNotificaciones, 10000)
+    const onRefresh = () => { fetchNotificaciones() }
+    window.addEventListener('notifications-refresh', onRefresh)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('notifications-refresh', onRefresh)
+    }
   }, [user, fetchNotificaciones])
 
   useEffect(() => {

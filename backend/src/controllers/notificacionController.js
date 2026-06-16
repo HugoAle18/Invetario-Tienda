@@ -50,3 +50,12 @@ export async function marcarTodasLeidas(req, res) {
     res.status(500).json({ error: 'Error al marcar notificaciones' })
   }
 }
+
+export async function crear(req, res) {
+  try {
+    const data = await notificacionModel.crear(req.body)
+    res.status(201).json(data)
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear notificación' })
+  }
+}

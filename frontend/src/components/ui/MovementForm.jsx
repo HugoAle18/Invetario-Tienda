@@ -49,7 +49,7 @@ export default function MovementForm({ tipo, showPrecio, onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="block text-text-primary text-sm font-medium mb-1">Producto</label>
+        <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1">Producto</label>
         <ProductoSearch
           onSelect={handleProductChange}
           tipo={tipo}
@@ -60,25 +60,25 @@ export default function MovementForm({ tipo, showPrecio, onSubmit, loading }) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-text-primary text-sm font-medium mb-1">Cantidad</label>
+          <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1">Cantidad</label>
           <input
             type="number"
             min="1"
             {...register('cantidad')}
-            className="glass-input w-full px-3 py-2 text-sm"
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm"
           />
           {errors.cantidad && <p className="text-danger text-xs mt-1">{errors.cantidad.message}</p>}
         </div>
         {showPrecio && (
           <div>
-            <label className="block text-text-primary text-sm font-medium mb-1">Precio unitario</label>
+            <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1">Precio unitario</label>
             <input
               type="number"
               step="0.01"
               min="0"
               {...register('precio_unitario')}
               placeholder="0.00"
-              className="glass-input w-full px-3 py-2 text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm"
             />
             {errors.precio_unitario && <p className="text-danger text-xs mt-1">{errors.precio_unitario.message}</p>}
           </div>
@@ -114,11 +114,11 @@ export default function MovementForm({ tipo, showPrecio, onSubmit, loading }) {
       )}
 
       <div>
-        <label className="block text-text-primary text-sm font-medium mb-1">Motivo</label>
+        <label className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1">Motivo</label>
         <textarea
           {...register('motivo')}
           rows={2}
-          className="glass-input w-full px-3 py-2 text-sm resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
           placeholder={tipo === 'entrada' ? 'Compra a proveedor, devolución, etc.' : 'Venta, merma, ajuste, etc.'}
         />
         {errors.motivo && <p className="text-danger text-xs mt-1">{errors.motivo.message}</p>}

@@ -141,7 +141,7 @@ export default function ProductoSearch({ onSelect, tipo = 'entrada', placeholder
           onKeyDown={handleKeyDown}
           onFocus={() => { if (results.length > 0) setIsOpen(true) }}
           placeholder={placeholder}
-          className="glass-input w-full pl-9 pr-8 py-2 text-sm"
+          className="w-full pl-9 pr-8 py-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm"
         />
         {loading && <Loader2 size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted animate-spin" />}
       </div>

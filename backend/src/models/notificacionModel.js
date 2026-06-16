@@ -61,3 +61,14 @@ export async function marcarTodasLeidas(usuario_id) {
 
   if (error) throw error
 }
+
+export async function crear({ usuario_id, tipo, titulo, mensaje, referencia_tipo, referencia_id }) {
+  const { data, error } = await supabase
+    .from('notificaciones')
+    .insert({ usuario_id, tipo, titulo, mensaje, referencia_tipo, referencia_id })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}

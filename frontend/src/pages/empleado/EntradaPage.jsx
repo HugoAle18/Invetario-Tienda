@@ -3,8 +3,11 @@ import { movimientosApi } from '@/api/movimientos'
 import MovementForm from '@/components/ui/MovementForm'
 import toast from 'react-hot-toast'
 import { ArrowDownToLine, CheckCircle } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
+import { crearNotificacionAutomatica } from '@/services/notificationService'
 
 export default function EntradaPage() {
+  const { user } = useAuth()
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -19,6 +22,13 @@ export default function EntradaPage() {
       })
       toast.success('Entrada registrada correctamente')
       setSuccess(true)
+      crearNotificacionAutomatica({
+        usuario_id: user.id,
+        tipo: 'entrada',
+        titulo: 'Entrada registrada',
+        mensaje: `Entrada de ${data.cantidad} unidades registrada`,
+        referencia_tipo: 'movimiento',
+      })
     } catch (err) {
       toast.error(err.response?.data?.error || 'Error al registrar entrada')
     } finally {

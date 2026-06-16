@@ -52,7 +52,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           <input
             type="text"
             {...register('codigo')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
           {errors.codigo && <p className="text-danger text-xs mt-1">{errors.codigo.message}</p>}
         </div>
@@ -61,7 +61,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           <input
             type="text"
             {...register('nombre')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
           {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
         </div>
@@ -72,7 +72,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
         <textarea
           {...register('descripcion')}
           rows={3}
-          className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all resize-none"
+          className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
         />
       </div>
 
@@ -81,11 +81,11 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Categoría</label>
           <select
             {...register('categoria_id')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           >
-            <option value="">Sin categoría</option>
+            <option value="" className="bg-white dark:bg-slate-800 text-gray-900 dark:text-white">Sin categoría</option>
             {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+              <option key={cat.id} value={cat.id} className="bg-white dark:bg-slate-800 text-gray-900 dark:text-white">{cat.nombre}</option>
             ))}
           </select>
         </div>
@@ -93,11 +93,11 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Proveedor</label>
           <select
             {...register('proveedor_id')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           >
-            <option value="">Sin proveedor</option>
+            <option value="" className="bg-white dark:bg-slate-800 text-gray-900 dark:text-white">Sin proveedor</option>
             {proveedores.map((prov) => (
-              <option key={prov.id} value={prov.id}>{prov.nombre}</option>
+              <option key={prov.id} value={prov.id} className="bg-white dark:bg-slate-800 text-gray-900 dark:text-white">{prov.nombre}</option>
             ))}
           </select>
         </div>
@@ -110,7 +110,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
             type="number"
             step="0.01"
             {...register('precio_compra')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
           {errors.precio_compra && <p className="text-danger text-xs mt-1">{errors.precio_compra.message}</p>}
         </div>
@@ -120,7 +120,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
             type="number"
             step="0.01"
             {...register('precio_venta')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
           {errors.precio_venta && <p className="text-danger text-xs mt-1">{errors.precio_venta.message}</p>}
         </div>
@@ -132,7 +132,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           <input
             type="number"
             {...register('stock_minimo')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
           {errors.stock_minimo && <p className="text-danger text-xs mt-1">{errors.stock_minimo.message}</p>}
         </div>
@@ -141,7 +141,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
           <input
             type="number"
             {...register('stock_actual')}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+            className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
           {errors.stock_actual && <p className="text-danger text-xs mt-1">{errors.stock_actual.message}</p>}
         </div>
@@ -152,7 +152,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
         <input
           type="text"
           {...register('imagen_url')}
-          className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all"
+          className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           placeholder="https://..."
         />
       </div>

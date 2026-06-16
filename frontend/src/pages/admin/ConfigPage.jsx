@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { configApi } from '@/api/config'
 import { useAuth } from '@/context/AuthContext'
 import toast from 'react-hot-toast'
+import { crearNotificacionAutomatica } from '@/services/notificationService'
 import { Settings, User, Lock, Loader2, AlertCircle, RefreshCw, Eye, EyeOff } from 'lucide-react'
 
 const perfilSchema = z.object({
@@ -61,6 +62,12 @@ export default function ConfigPage() {
       const res = await configApi.updatePerfil(data)
       setUser((prev) => ({ ...prev, nombre: res.data.nombre, email: res.data.email }))
       toast.success('Perfil actualizado')
+      crearNotificacionAutomatica({
+        usuario_id: user.id,
+        tipo: 'sistema',
+        titulo: 'Perfil actualizado',
+        mensaje: 'Se actualizó la información del perfil',
+      })
     } catch (err) {
       toast.error(err.response?.data?.error || 'Error al actualizar perfil')
     } finally {
@@ -77,6 +84,12 @@ export default function ConfigPage() {
       })
       toast.success('Contraseña actualizada')
       passwordForm.reset()
+      crearNotificacionAutomatica({
+        usuario_id: user.id,
+        tipo: 'sistema',
+        titulo: 'Contraseña cambiada',
+        mensaje: 'Se cambió la contraseña del usuario',
+      })
     } catch (err) {
       toast.error(err.response?.data?.error || 'Error al cambiar contraseña')
     } finally {

@@ -24,27 +24,27 @@ export default function ProveedorForm({ defaultValues, onSubmit, loading }) {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
-        <input type="text" {...register('nombre')} className="w-full px-3 py-2 w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all text-sm" />
+        <input type="text" {...register('nombre')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Persona de contacto</label>
-        <input type="text" {...register('contacto')} className="w-full px-3 py-2 w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all text-sm" />
+        <input type="text" {...register('contacto')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Teléfono</label>
-          <input type="text" {...register('telefono')} className="w-full px-3 py-2 w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all text-sm" />
+          <input type="text" {...register('telefono')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" />
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-          <input type="email" {...register('email')} className="w-full px-3 py-2 w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all text-sm" />
+          <input type="email" {...register('email')} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" />
           {errors.email && <p className="text-danger text-xs mt-1">{errors.email.message}</p>}
         </div>
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Dirección</label>
-        <textarea {...register('direccion')} rows={2} className="w-full px-3 py-2 w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-bg-border bg-gray-50 dark:bg-transparent text-gray-950 dark:text-white focus:ring-2 focus:ring-brand focus:border-transparent outline-none transition-all text-sm resize-none" />
+        <textarea {...register('direccion')} rows={2} className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm resize-none" />
       </div>
       <div className="flex justify-end pt-2">
         <button type="submit" disabled={loading} className="px-5 py-2 glass-btn flex items-center gap-2">

@@ -3,9 +3,12 @@ import { proveedoresApi } from '@/api/proveedores'
 import ProveedorForm from './ProveedorForm'
 import Modal from '@/components/ui/Modal'
 import toast from 'react-hot-toast'
+import { useAuth } from '@/context/AuthContext'
+import { crearNotificacionAutomatica } from '@/services/notificationService'
 import { Truck, Plus, Pencil, Trash2, AlertCircle, RefreshCw, Phone, Mail, MapPin } from 'lucide-react'
 
 export default function ProveedoresPage() {
+  const { user } = useAuth()
   const [proveedores, setProveedores] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -37,9 +40,24 @@ export default function ProveedoresPage() {
       if (editing) {
         await proveedoresApi.actualizar(editing.id, data)
         toast.success('Proveedor actualizado')
+        crearNotificacionAutomatica({
+          usuario_id: user.id,
+          tipo: 'sistema',
+          titulo: 'Proveedor actualizado',
+          mensaje: `Se actualizó el proveedor "${data.nombre}"`,
+          referencia_tipo: 'proveedor',
+          referencia_id: editing.id,
+        })
       } else {
         await proveedoresApi.crear(data)
         toast.success('Proveedor creado')
+        crearNotificacionAutomatica({
+          usuario_id: user.id,
+          tipo: 'sistema',
+          titulo: 'Nuevo proveedor',
+          mensaje: `Se registró el proveedor "${data.nombre}"`,
+          referencia_tipo: 'proveedor',
+        })
       }
       setModalOpen(false)
       setEditing(null)
