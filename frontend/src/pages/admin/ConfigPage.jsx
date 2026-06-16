@@ -111,7 +111,7 @@ export default function ConfigPage() {
       <div className="flex flex-col items-center py-20 text-gray-600 dark:text-white/60">
         <AlertCircle size={48} className="text-danger mb-4" />
         <p className="text-lg font-medium mb-2">{fetchError}</p>
-        <button onClick={() => window.location.reload()} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+        <button onClick={() => window.location.reload()} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
           <RefreshCw size={16} /> Reintentar
         </button>
       </div>
@@ -146,7 +146,7 @@ export default function ConfigPage() {
           </div>
           <div className="flex justify-end pt-2">
             <button type="submit" disabled={profileLoading}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg flex items-center gap-2 text-sm">
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {profileLoading && <Loader2 size={16} className="animate-spin" />}
               Guardar cambios
             </button>
@@ -180,7 +180,7 @@ export default function ConfigPage() {
           })}
           <div className="flex justify-end pt-2">
             <button type="submit" disabled={passwordLoading}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg flex items-center gap-2 text-sm">
+              className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 active:bg-black dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {passwordLoading && <Loader2 size={16} className="animate-spin" />}
               Cambiar contraseña
             </button>

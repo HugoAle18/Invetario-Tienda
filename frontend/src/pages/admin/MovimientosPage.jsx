@@ -98,10 +98,10 @@ export default function MovimientosPage() {
           {!loading && <span className="text-sm text-gray-500 dark:text-white/50 bg-gray-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full">{total}</span>}
         </div>
         <div className="flex gap-2">
-          <button onClick={() => openForm('entrada')} className="flex items-center gap-2 px-4 py-2 bg-success hover:bg-success/80 text-white text-sm font-medium rounded-lg transition-colors">
+          <button onClick={() => openForm('entrada')} className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white font-extrabold text-sm px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg">
             <ArrowDownToLine size={16} /> Entrada
           </button>
-          <button onClick={() => openForm('salida')} className="flex items-center gap-2 px-4 py-2 bg-danger hover:bg-danger/80 text-white text-sm font-medium rounded-lg transition-colors">
+          <button onClick={() => openForm('salida')} className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 dark:bg-rose-500 dark:hover:bg-rose-600 text-white font-extrabold text-sm px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg">
             <ArrowUpFromLine size={16} /> Salida
           </button>
         </div>
@@ -124,7 +124,7 @@ export default function MovimientosPage() {
         <div className="flex flex-col items-center py-16 text-gray-600 dark:text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
-          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+          <button onClick={fetch} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
             <RefreshCw size={16} /> Reintentar
           </button>
         </div>

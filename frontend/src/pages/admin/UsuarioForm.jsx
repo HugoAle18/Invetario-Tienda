@@ -71,7 +71,7 @@ export default function UsuarioForm({ defaultValues, onSubmit, loading }) {
         {errors.rol && <p className="text-danger text-xs mt-1">{errors.rol.message}</p>}
       </div>
       <div className="flex justify-end pt-2">
-        <button type="submit" disabled={loading} className="px-5 py-2 glass-btn flex items-center gap-2">
+        <button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm py-2.5 rounded-xl transition-all shadow-md font-sans tracking-wide mt-2 flex items-center justify-center gap-2">
           {loading && <Loader2 size={16} className="animate-spin" />}
           {isEditing ? 'Guardar cambios' : 'Crear usuario'}
         </button>

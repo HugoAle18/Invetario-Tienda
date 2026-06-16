@@ -139,7 +139,7 @@ export default function ProductosPage() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold transition-all shadow-md hover:shadow-lg rounded-lg text-sm"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
         >
           <Plus size={16} />
           Nuevo Producto
@@ -175,7 +175,7 @@ export default function ProductosPage() {
         <div className="flex flex-col items-center justify-center py-16 text-gray-600 dark:text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
-          <button onClick={fetchProductos} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
+          <button onClick={fetchProductos} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
             <RefreshCw size={16} />
             Reintentar
           </button>

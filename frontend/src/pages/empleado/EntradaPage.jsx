@@ -49,7 +49,7 @@ export default function EntradaPage() {
             <p className="text-base font-medium text-gray-900 dark:text-white">Entrada registrada</p>
             <button
               onClick={() => setSuccess(false)}
-              className="mt-4 px-4 py-2 glass-btn text-sm"
+              className="mt-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
             >
               Nueva entrada
             </button>

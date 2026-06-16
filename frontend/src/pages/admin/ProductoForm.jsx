@@ -161,7 +161,7 @@ export default function ProductoForm({ defaultValues, categorias, proveedores, o
         <button
           type="submit"
           disabled={loading}
-          className="px-5 py-2 glass-btn flex items-center gap-2"
+          className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold text-sm py-2.5 rounded-xl transition-all shadow-md font-sans tracking-wide mt-2 flex items-center justify-center gap-2"
         >
           {loading && <Loader2 size={16} className="animate-spin" />}
           {defaultValues?.id ? 'Guardar cambios' : 'Crear producto'}
