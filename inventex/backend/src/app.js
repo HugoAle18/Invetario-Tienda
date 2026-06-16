@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import rateLimit from 'express-rate-limit'
+// import rateLimit from 'express-rate-limit'
 import routes from './routes/index.js'
 
 const app = express()
@@ -32,16 +32,16 @@ if (process.env.NODE_ENV !== 'production') {
 app.set('trust proxy', 2)
 app.use(express.json())
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  keyGenerator: (req) => req.body?.email || req.ip,
-  message: { error: 'Demasiadas solicitudes. Intenta de nuevo en 15 minutos.' },
-  skip: (req) => req.method !== 'POST',
-  validate: false,
-})
-
-app.use('/api/v1/auth', authLimiter)
+// const authLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 200,
+//   keyGenerator: (req) => req.body?.email || req.ip,
+//   message: { error: 'Demasiadas solicitudes. Intenta de nuevo en 15 minutos.' },
+//   skip: (req) => req.method !== 'POST',
+//   validate: false,
+// })
+//
+// app.use('/api/v1/auth', authLimiter)
 app.use('/api/v1', routes)
 
 app.use((_req, res) => {
