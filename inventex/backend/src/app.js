@@ -18,12 +18,12 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'))
+      callback(null, origin)
     }
   },
   credentials: true,
 }))
-app.use(helmet())
+app.use(helmet({ crossOriginResourcePolicy: false }))
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
