@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bot, Sparkles, Send, X, Loader2 } from 'lucide-react'
+import { Sparkles, Send, X, Loader2 } from 'lucide-react'
 import { consultarAgenteIA } from '@/services/aiService'
 
 const MENSAJES_INICIALES = [
@@ -30,8 +30,7 @@ function formatearRespuesta(texto) {
     .replace(/\n/g, '<br/>')
 }
 
-export default function AiAgentWidget() {
-  const [open, setOpen] = useState(false)
+export default function AiAgentWidget({ onClose }) {
   const [mensajes, setMensajes] = useState(MENSAJES_INICIALES)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -46,22 +45,20 @@ export default function AiAgentWidget() {
   }, [mensajes])
 
   useEffect(() => {
-    if (open && inputRef.current) {
+    if (inputRef.current) {
       inputRef.current.focus()
     }
-  }, [open])
+  }, [])
 
   useEffect(() => {
     function handleClickOutside(e) {
-      if (widgetRef.current && !widgetRef.current.contains(e.target) && open) {
-        setOpen(false)
+      if (widgetRef.current && !widgetRef.current.contains(e.target)) {
+        onClose()
       }
     }
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
+    document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [open])
+  }, [onClose])
 
   const enviarMensaje = async () => {
     const texto = input.trim()
@@ -96,96 +93,85 @@ export default function AiAgentWidget() {
 
   return (
     <>
-      {/* Botón flotante */}
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer z-50 border border-white/20 group"
-        aria-label="Abrir Agente IA"
+      <div
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity duration-300"
+        onClick={onClose}
+      />
+      <div
+        ref={widgetRef}
+        className="fixed bottom-24 right-6 w-96 h-[550px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
       >
-        <Bot size={22} className="group-hover:rotate-12 transition-transform duration-300" />
-      </button>
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center justify-between shadow-sm shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/20">
+              <Sparkles size={16} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold leading-tight">Agente Residente IA</h3>
+              <p className="text-[10px] text-blue-100 font-medium">Analista de Inventario</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
+            aria-label="Cerrar"
+          >
+            <X size={16} />
+          </button>
+        </div>
 
-      {/* Ventana de chat */}
-      {open && (
-        <div
-          ref={widgetRef}
-          className="fixed bottom-24 right-6 w-96 h-[550px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
-        >
-          {/* Encabezado */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center justify-between shadow-sm shrink-0">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/20">
-                <Sparkles size={16} />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold leading-tight">Agente Residente IA</h3>
-                <p className="text-[10px] text-blue-100 font-medium">Analista de Inventario</p>
+        <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-2 scroll-smooth">
+          {mensajes.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${msg.rol === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={
+                  msg.rol === 'user'
+                    ? 'max-w-[80%] bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none text-sm font-medium shadow-sm my-1'
+                    : 'max-w-[80%] bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm my-1 border border-slate-200/30 dark:border-slate-700/30 leading-relaxed font-sans'
+                }
+                dangerouslySetInnerHTML={
+                  msg.rol === 'agent' ? { __html: formatearRespuesta(msg.texto) } : undefined
+                }
+              >
+                {msg.rol === 'user' && msg.texto}
               </div>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="p-1.5 rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
-              aria-label="Cerrar"
-            >
-              <X size={16} />
-            </button>
-          </div>
+          ))}
 
-          {/* Mensajes */}
-          <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-2 scroll-smooth">
-            {mensajes.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex ${msg.rol === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={
-                    msg.rol === 'user'
-                      ? 'max-w-[80%] bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none text-sm font-medium shadow-sm my-1'
-                      : 'max-w-[80%] bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm my-1 border border-slate-200/30 dark:border-slate-700/30 leading-relaxed font-sans'
-                  }
-                  dangerouslySetInnerHTML={
-                    msg.rol === 'agent' ? { __html: formatearRespuesta(msg.texto) } : undefined
-                  }
-                >
-                  {msg.rol === 'user' && msg.texto}
-                </div>
+          {loading && (
+            <div className="flex justify-start">
+              <div className="max-w-[80%] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm border border-slate-200/30 dark:border-slate-700/30">
+                <Loader2 size={16} className="animate-spin inline mr-2" />
+                Analizando inventario...
               </div>
-            ))}
-
-            {loading && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm border border-slate-200/30 dark:border-slate-700/30">
-                  <Loader2 size={16} className="animate-spin inline mr-2" />
-                  Analizando inventario...
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          <div className="flex items-center gap-2 p-3 bg-white/50 dark:bg-slate-950/50 border-t border-slate-200/40 dark:border-slate-800/40 shrink-0">
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Pregunta al agente..."
-              disabled={loading}
-              className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-400 dark:placeholder-slate-500 disabled:opacity-50"
-            />
-            <button
-              onClick={enviarMensaje}
-              disabled={loading || !input.trim()}
-              className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white transition-all cursor-pointer disabled:cursor-not-allowed font-bold"
-              aria-label="Enviar"
-            >
-              <Send size={16} />
-            </button>
-          </div>
+            </div>
+          )}
         </div>
-      )}
+
+        <div className="flex items-center gap-2 p-3 bg-white/50 dark:bg-slate-950/50 border-t border-slate-200/40 dark:border-slate-800/40 shrink-0">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Pregunta al agente..."
+            disabled={loading}
+            className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-400 dark:placeholder-slate-500 disabled:opacity-50"
+          />
+          <button
+            onClick={enviarMensaje}
+            disabled={loading || !input.trim()}
+            className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white transition-all cursor-pointer disabled:cursor-not-allowed font-bold"
+            aria-label="Enviar"
+          >
+            <Send size={16} />
+          </button>
+        </div>
+      </div>
     </>
   )
 }

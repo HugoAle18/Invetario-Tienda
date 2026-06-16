@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import { Bot } from 'lucide-react'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import AiAgentWidget from '@/components/ai/AiAgentWidget'
@@ -7,6 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
   const { user } = useAuth()
 
   return (
@@ -27,7 +29,18 @@ export default function AppLayout() {
           </div>
         </main>
       </div>
-      <AiAgentWidget />
+
+      <button
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer z-50 border border-white/20 group"
+        aria-label="Abrir Agente IA"
+      >
+        <Bot size={22} className="group-hover:rotate-12 transition-transform duration-300" />
+      </button>
+
+      {isChatOpen && (
+        <AiAgentWidget onClose={() => setIsChatOpen(false)} />
+      )}
     </div>
   )
 }
