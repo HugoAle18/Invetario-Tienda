@@ -47,19 +47,19 @@ export default function Sidebar({ open, onClose, role }) {
 
       <aside
         className={`
-          fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-bg-secondary border-r border-bg-border
+          fixed md:sticky top-0 left-0 z-50 h-screen w-64 glass-strong
           flex flex-col transition-transform duration-300
           ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
       >
-        <div className="flex items-center justify-between h-16 px-5 border-b border-bg-border">
+        <div className="flex items-center justify-between h-16 px-5 border-b border-glass-border">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
               <Package size={18} className="text-white" />
             </div>
             <span className="font-display font-bold text-lg text-text-primary">INVENTEX</span>
           </div>
-          <button onClick={onClose} className="md:hidden text-text-secondary hover:text-text-primary">
+          <button onClick={onClose} className="md:hidden glass-btn-secondary p-1.5">
             <X size={20} />
           </button>
         </div>
@@ -76,7 +76,7 @@ export default function Sidebar({ open, onClose, role }) {
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                   ${isActive
-                    ? 'bg-brand/10 text-brand'
+                    ? 'bg-bg-hover text-text-primary'
                     : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
                   }
                 `}
@@ -88,7 +88,7 @@ export default function Sidebar({ open, onClose, role }) {
           })}
         </nav>
 
-        <div className="px-5 py-3 border-t border-bg-border text-xs text-text-muted text-center">
+        <div className="px-5 py-3 border-t border-glass-border text-xs text-text-muted text-center">
           INVENTEX v1.0
         </div>
       </aside>

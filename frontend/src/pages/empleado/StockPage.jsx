@@ -48,19 +48,19 @@ export default function StockPage() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Package size={22} className="text-brand" />
-        <h2 className="text-xl font-display font-bold text-text-primary">Stock</h2>
-        {!loading && <span className="text-sm text-text-muted bg-bg-hover px-2 py-0.5 rounded-full">{total}</span>}
+        <h2 className="text-xl font-bold text-white">Stock</h2>
+        {!loading && <span className="text-sm text-white/40 bg-white/[0.06] px-2 py-0.5 rounded-full text-white/50">{total}</span>}
       </div>
 
       <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por código o nombre..."
-            className="w-full pl-9 pr-3 py-2 bg-bg-card border border-bg-border rounded-lg text-text-primary placeholder-text-muted focus:border-brand focus:ring-1 focus:ring-brand outline-none text-sm" />
+            className="w-full pl-9 pr-3 py-2 glass-input text-sm" />
         </div>
         <select value={categoriaFiltro} onChange={(e) => { setCategoriaFiltro(e.target.value); setPage(1) }}
-          className="px-3 py-2 bg-bg-card border border-bg-border rounded-lg text-text-primary focus:border-brand focus:ring-1 focus:ring-brand outline-none text-sm">
+          className="px-3 py-2 glass-input text-sm">
           <option value="">Todas las categorías</option>
           {categorias.map((cat) => (
             <option key={cat.id} value={cat.id}>{cat.nombre}</option>
@@ -69,10 +69,10 @@ export default function StockPage() {
       </form>
 
       {error && (
-        <div className="flex flex-col items-center py-16 text-text-secondary">
+        <div className="flex flex-col items-center py-16 text-white/60">
           <AlertCircle size={40} className="text-danger mb-3" />
           <p className="text-base font-medium mb-2">{error}</p>
-          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-hover text-white rounded-lg text-sm">
+          <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
             <RefreshCw size={16} /> Reintentar
           </button>
         </div>
@@ -81,13 +81,13 @@ export default function StockPage() {
       {loading && !error && (
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-14 bg-bg-card border border-bg-border rounded-lg animate-pulse" />
+            <div key={i} className="h-14 bg-white/[0.04] rounded-lg animate-pulse" />
           ))}
         </div>
       )}
 
       {!loading && !error && productos.length === 0 && (
-        <div className="flex flex-col items-center py-16 text-text-muted">
+        <div className="flex flex-col items-center py-16 text-white/40">
           <Package size={48} className="mb-3" />
           <p className="text-base font-medium">Sin productos</p>
           <p className="text-sm mt-1">No hay productos disponibles para consultar</p>
@@ -96,10 +96,10 @@ export default function StockPage() {
 
       {!loading && !error && productos.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-bg-card border border-bg-border rounded-xl">
+          <div className="overflow-x-auto glass">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-bg-border text-text-secondary text-xs uppercase tracking-wider">
+                <tr className="border-b border-white/[0.06] label-mono">
                   <th className="text-left py-3 px-4 font-medium">Código</th>
                   <th className="text-left py-3 px-4 font-medium">Nombre</th>
                   <th className="text-left py-3 px-4 font-medium hidden md:table-cell">Categoría</th>
@@ -108,16 +108,16 @@ export default function StockPage() {
               </thead>
               <tbody>
                 {productos.map((p) => (
-                  <tr key={p.id} className="border-b border-bg-border hover:bg-bg-hover transition-colors">
-                    <td className="py-3 px-4 font-mono text-xs text-text-secondary">{p.codigo}</td>
+                  <tr key={p.id} className="border-b border-white/[0.06] hover:bg-white/[0.05] transition-colors">
+                    <td className="py-3 px-4 font-mono text-xs text-white/60">{p.codigo}</td>
                     <td className="py-3 px-4">
-                      <p className="text-text-primary font-medium">{p.nombre}</p>
+                      <p className="text-white font-medium">{p.nombre}</p>
                       {p.stock_actual <= p.stock_minimo && (
                         <span className="text-xs text-danger">Stock bajo</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-text-secondary hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
-                    <td className={`py-3 px-4 text-right font-semibold ${p.stock_actual <= p.stock_minimo ? 'text-danger' : 'text-text-primary'}`}>
+                    <td className="py-3 px-4 text-white/60 hidden md:table-cell">{p.categorias?.nombre || '—'}</td>
+                    <td className={`py-3 px-4 text-right font-semibold ${p.stock_actual <= p.stock_minimo ? 'text-danger' : 'text-white'}`}>
                       {p.stock_actual}
                     </td>
                   </tr>
@@ -127,13 +127,13 @@ export default function StockPage() {
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm text-text-secondary">
+            <div className="flex items-center justify-between text-sm text-white/60">
               <span>Página {page} de {totalPages} ({total} registros)</span>
               <div className="flex gap-2">
                 <button disabled={page <= 1} onClick={() => setPage(p => p - 1)}
-                  className="px-3 py-1.5 bg-bg-card border border-bg-border rounded-lg disabled:opacity-40 hover:bg-bg-hover transition-colors">Anterior</button>
+                  className="px-3 py-1.5 glass-btn-secondary disabled:opacity-40">Anterior</button>
                 <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}
-                  className="px-3 py-1.5 bg-bg-card border border-bg-border rounded-lg disabled:opacity-40 hover:bg-bg-hover transition-colors">Siguiente</button>
+                  className="px-3 py-1.5 glass-btn-secondary disabled:opacity-40">Siguiente</button>
               </div>
             </div>
           )}

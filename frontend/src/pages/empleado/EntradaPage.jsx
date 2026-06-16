@@ -30,16 +30,16 @@ export default function EntradaPage() {
     <div className="max-w-lg mx-auto space-y-4">
       <div className="flex items-center gap-2">
         <ArrowDownToLine size={22} className="text-success" />
-        <h2 className="text-xl font-display font-bold text-text-primary">Registrar Entrada</h2>
+        <h2 className="text-xl font-bold text-white">Registrar Entrada</h2>
       </div>
-      <div className="bg-bg-card border border-bg-border rounded-xl p-5">
+      <div className="glass-card">
         {success ? (
-          <div className="flex flex-col items-center py-8 text-text-muted">
+          <div className="flex flex-col items-center py-8 text-white/40">
             <CheckCircle size={48} className="text-success mb-3" />
-            <p className="text-base font-medium text-text-primary">Entrada registrada</p>
+            <p className="text-base font-medium text-white">Entrada registrada</p>
             <button
               onClick={() => setSuccess(false)}
-              className="mt-4 px-4 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors"
+              className="mt-4 px-4 py-2 glass-btn text-sm"
             >
               Nueva entrada
             </button>

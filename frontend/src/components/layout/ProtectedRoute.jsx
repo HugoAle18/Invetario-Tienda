@@ -7,8 +7,8 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-brand" />
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-primary-container" />
       </div>
     )
   }

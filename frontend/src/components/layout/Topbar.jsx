@@ -1,11 +1,11 @@
 import { useAuth } from '@/context/AuthContext'
 import { useTheme } from '@/context/ThemeContext'
-import { Sun, Moon, Menu, LogOut, User } from 'lucide-react'
+import { Menu, LogOut, User, Moon, Sun } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Topbar({ onMenuClick, title }) {
   const { user, logout } = useAuth()
-  const { dark, toggle } = useTheme()
+  const { dark, toggleTheme } = useTheme()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -14,11 +14,11 @@ export default function Topbar({ onMenuClick, title }) {
   }
 
   return (
-    <header className="h-16 bg-bg-secondary border-b border-bg-border flex items-center justify-between px-4 lg:px-6">
+    <header className="h-16 glass flex items-center justify-between px-4 lg:px-6">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
-          className="md:hidden p-2 rounded-lg text-text-secondary hover:bg-bg-hover transition-colors"
+          className="md:hidden glass-btn-secondary p-2"
           aria-label="Abrir menú"
         >
           <Menu size={20} />
@@ -30,14 +30,16 @@ export default function Topbar({ onMenuClick, title }) {
 
       <div className="flex items-center gap-2">
         <button
-          onClick={toggle}
+          onClick={toggleTheme}
           className="p-2 rounded-lg text-text-secondary hover:bg-bg-hover transition-colors"
-          aria-label="Cambiar tema"
+          aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
         >
-          {dark ? <Sun size={18} /> : <Moon size={18} />}
+          <span className={`inline-block transition-transform duration-300 ${dark ? 'rotate-0' : 'rotate-180'}`}>
+            <Moon size={18} />
+          </span>
         </button>
 
-        <div className="flex items-center gap-2 pl-2 border-l border-bg-border">
+        <div className="flex items-center gap-2 pl-2 border-l border-glass-border">
           <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-semibold">
             {user?.nombre?.charAt(0).toUpperCase()}
           </div>
@@ -45,7 +47,7 @@ export default function Topbar({ onMenuClick, title }) {
             <p className="text-sm font-medium text-text-primary leading-tight">
               {user?.nombre}
             </p>
-            <p className="text-xs text-text-muted capitalize">{user?.rol}</p>
+            <p className="text-xs text-text-secondary capitalize">{user?.rol}</p>
           </div>
         </div>
 

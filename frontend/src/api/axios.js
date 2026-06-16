@@ -21,11 +21,13 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+const isAuthRoute = (url) => url?.includes('/auth/')
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute(originalRequest.url)) {
       originalRequest._retry = true
       try {
         const { getRefreshToken, setRefreshToken, removeRefreshToken } = await import('@/utils/token')

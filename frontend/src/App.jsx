@@ -11,7 +11,14 @@ export default function App() {
         <Toaster
           position="top-right"
           toastOptions={{
-            className: 'dark:bg-bg-card dark:text-text-primary',
+            style: {
+              background: 'var(--glass-strong-bg)',
+              backdropFilter: 'blur(16px)',
+              border: '1px solid var(--glass-border)',
+              color: 'var(--text-primary)',
+              borderRadius: '8px',
+              fontSize: '14px',
+            },
             duration: 4000,
           }}
         />

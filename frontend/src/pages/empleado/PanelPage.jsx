@@ -32,20 +32,20 @@ export default function PanelPage() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 bg-bg-card border border-bg-border rounded-xl animate-pulse" />
+            <div key={i} className="h-24 bg-white/[0.04] rounded-xl animate-pulse" />
           ))}
         </div>
-        <div className="h-64 bg-bg-card border border-bg-border rounded-xl animate-pulse" />
+        <div className="h-64 bg-white/[0.04] rounded-xl animate-pulse" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center py-20 text-text-secondary">
+      <div className="flex flex-col items-center py-20 text-white/60">
         <AlertCircle size={48} className="text-danger mb-4" />
         <p className="text-lg font-medium mb-2">{error}</p>
-        <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-hover text-white rounded-lg text-sm">
+        <button onClick={fetch} className="flex items-center gap-2 px-4 py-2 glass-btn text-sm">
           <RefreshCw size={16} /> Reintentar
         </button>
       </div>
@@ -62,29 +62,29 @@ export default function PanelPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-display font-bold text-text-primary">
+        <h1 className="text-2xl font-bold text-white">
           Bienvenido, {user?.nombre}
         </h1>
-        <p className="text-text-secondary mt-1">Panel de control de empleado</p>
+        <p className="text-white/60 mt-1">Panel de control de empleado</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="bg-bg-card border border-bg-border rounded-xl p-4">
+          <div key={label} className="glass p-4">
             <div className={`p-2 rounded-lg w-fit ${color} mb-3`}>
               <Icon size={20} />
             </div>
-            <p className="text-2xl font-bold text-text-primary font-display">{value}</p>
-            <p className="text-sm text-text-secondary mt-1">{label}</p>
+            <p className="text-2xl font-bold text-white">{value}</p>
+            <p className="text-sm text-white/60 mt-1">{label}</p>
           </div>
         ))}
       </div>
 
       {/* Recent movements */}
-      <div className="bg-bg-card border border-bg-border rounded-xl p-5">
-        <h3 className="font-display font-semibold text-text-primary mb-4">Movimientos Recientes</h3>
+      <div className="glass-card">
+        <h3 className="font-semibold text-white mb-4">Movimientos Recientes</h3>
         {(!data?.movimientos_recientes || data.movimientos_recientes.length === 0) ? (
-          <div className="flex flex-col items-center py-10 text-text-muted">
+          <div className="flex flex-col items-center py-10 text-white/40">
             <ArrowUpDown size={32} className="mb-2" />
             <p className="text-sm">No hay movimientos recientes</p>
           </div>
@@ -92,7 +92,7 @@ export default function PanelPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-bg-border text-text-secondary text-xs uppercase tracking-wider">
+                <tr className="border-b border-white/[0.06] label-mono">
                   <th className="text-left py-3 px-2 font-medium">Producto</th>
                   <th className="text-left py-3 px-2 font-medium">Tipo</th>
                   <th className="text-right py-3 px-2 font-medium">Cantidad</th>
@@ -102,16 +102,16 @@ export default function PanelPage() {
               </thead>
               <tbody>
                 {data.movimientos_recientes.map((m) => (
-                  <tr key={m.id} className="border-b border-bg-border hover:bg-bg-hover transition-colors">
-                    <td className="py-3 px-2 text-text-primary font-medium">{m.producto}</td>
+                  <tr key={m.id} className="border-b border-white/[0.06] hover:bg-white/[0.05] transition-colors">
+                    <td className="py-3 px-2 text-white font-medium">{m.producto}</td>
                     <td className="py-3 px-2">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.tipo === 'entrada' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
                         {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
                       </span>
                     </td>
-                    <td className="py-3 px-2 text-right font-semibold text-text-primary">{m.cantidad}</td>
-                    <td className="py-3 px-2 text-text-secondary hidden sm:table-cell max-w-[200px] truncate">{m.motivo}</td>
-                    <td className="py-3 px-2 text-text-secondary hidden sm:table-cell">{m.usuario}</td>
+                    <td className="py-3 px-2 text-right font-semibold text-white">{m.cantidad}</td>
+                    <td className="py-3 px-2 text-white/60 hidden sm:table-cell max-w-[200px] truncate">{m.motivo}</td>
+                    <td className="py-3 px-2 text-white/60 hidden sm:table-cell">{m.usuario}</td>
                   </tr>
                 ))}
               </tbody>

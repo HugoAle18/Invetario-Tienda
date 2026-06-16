@@ -71,7 +71,7 @@ export default function DashboardPage() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {Array.from({ length: 7 }).map((_, i) => (
-          <div key={i} className="h-28 bg-bg-card border border-bg-border rounded-xl animate-pulse" />
+          <div key={i} className="h-28 bg-bg-hover border border-bg-border rounded-xl animate-pulse" />
         ))}
       </div>
     )
@@ -84,7 +84,7 @@ export default function DashboardPage() {
         <p className="text-lg font-medium mb-2">{error}</p>
         <button
           onClick={fetchData}
-          className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-hover text-white rounded-lg transition-colors text-sm"
+          className="flex items-center gap-2 px-4 py-2 glass-btn text-sm"
         >
           <RefreshCw size={16} />
           Reintentar
@@ -110,7 +110,7 @@ export default function DashboardPage() {
           return (
             <div
               key={key}
-              className="bg-bg-card border border-bg-border rounded-xl p-4 hover:border-bg-hover transition-colors"
+              className="glass glass-hover p-4"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-2 rounded-lg ${color}`}>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
       {/* Charts & Recent movements */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
-        <div className="lg:col-span-2 bg-bg-card border border-bg-border rounded-xl p-5">
+        <div className="lg:col-span-2 glass-card">
           <h3 className="font-display font-semibold text-text-primary mb-4">Movimientos por día</h3>
           {movimientosPorDia.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-text-muted">
@@ -172,7 +172,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Low stock alerts */}
-        <div className="bg-bg-card border border-bg-border rounded-xl p-5">
+        <div className="glass-card">
           <h3 className="font-display font-semibold text-text-primary mb-4 flex items-center gap-2">
             <AlertTriangle size={18} className="text-warning" />
             Alertas de Stock
@@ -206,7 +206,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent movements */}
-      <div className="bg-bg-card border border-bg-border rounded-xl p-5">
+      <div className="glass-card">
         <h3 className="font-display font-semibold text-text-primary mb-4">Movimientos Recientes</h3>
         {movimientos.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-text-muted">
@@ -217,7 +217,7 @@ export default function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-bg-border text-text-secondary text-xs uppercase tracking-wider">
+                <tr className="border-b border-bg-border text-text-secondary label-mono">
                   <th className="text-left py-3 px-2 font-medium">Producto</th>
                   <th className="text-left py-3 px-2 font-medium">Tipo</th>
                   <th className="text-right py-3 px-2 font-medium">Cantidad</th>

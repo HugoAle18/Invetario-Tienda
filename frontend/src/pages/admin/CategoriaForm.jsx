@@ -20,16 +20,16 @@ export default function CategoriaForm({ defaultValues, onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-text-primary mb-1">Nombre</label>
-        <input type="text" {...register('nombre')} className="w-full px-3 py-2 bg-bg-primary border border-bg-border rounded-lg text-text-primary focus:border-brand focus:ring-1 focus:ring-brand outline-none text-sm" />
+        <label className="block text-sm font-medium text-white mb-1">Nombre</label>
+        <input type="text" {...register('nombre')} className="w-full px-3 py-2 glass-input text-sm" />
         {errors.nombre && <p className="text-danger text-xs mt-1">{errors.nombre.message}</p>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-text-primary mb-1">Descripción</label>
-        <textarea {...register('descripcion')} rows={3} className="w-full px-3 py-2 bg-bg-primary border border-bg-border rounded-lg text-text-primary focus:border-brand focus:ring-1 focus:ring-brand outline-none text-sm resize-none" />
+        <label className="block text-sm font-medium text-white mb-1">Descripción</label>
+        <textarea {...register('descripcion')} rows={3} className="w-full px-3 py-2 glass-input text-sm resize-none" />
       </div>
       <div className="flex justify-end pt-2">
-        <button type="submit" disabled={loading} className="px-5 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-60 flex items-center gap-2">
+        <button type="submit" disabled={loading} className="px-5 py-2 glass-btn flex items-center gap-2">
           {loading && <Loader2 size={16} className="animate-spin" />}
           {defaultValues?.id ? 'Guardar cambios' : 'Crear categoría'}
         </button>
