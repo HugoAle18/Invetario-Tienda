@@ -102,14 +102,14 @@ export default function CategoriasPage() {
       )}
 
       {!loading && !error && categorias.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {categorias.map((cat) => (
-            <div key={cat.id} className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl group">
+            <div key={cat.id} className="bg-white dark:bg-bg-secondary p-5 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm h-full flex flex-col justify-between overflow-hidden group">
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
-                  <h4 className="text-gray-900 dark:text-white font-medium truncate">{cat.nombre}</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{cat.nombre}</h4>
                   {cat.descripcion && (
-                    <p className="text-gray-600 dark:text-white/60 text-sm mt-1 line-clamp-2">{cat.descripcion}</p>
+                    <p className="text-sm text-gray-500 dark:text-text-secondary break-words line-clamp-2">{cat.descripcion}</p>
                   )}
                 </div>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">

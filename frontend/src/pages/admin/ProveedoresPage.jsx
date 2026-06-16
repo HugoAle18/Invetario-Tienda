@@ -102,11 +102,11 @@ export default function ProveedoresPage() {
       )}
 
       {!loading && !error && proveedores.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {proveedores.map((prov) => (
-            <div key={prov.id} className="bg-white dark:bg-bg-secondary border border-gray-200 dark:border-bg-border rounded-xl group">
+            <div key={prov.id} className="bg-white dark:bg-bg-secondary p-5 rounded-xl border border-gray-200 dark:border-bg-border shadow-sm h-full flex flex-col justify-between overflow-hidden group">
               <div className="flex items-start justify-between mb-2">
-                <h4 className="text-gray-900 dark:text-white font-medium truncate">{prov.nombre}</h4>
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{prov.nombre}</h4>
                 <div className="flex gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => openEdit(prov)} className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-brand transition-colors" title="Editar">
                     <Pencil size={15} />
@@ -116,7 +116,7 @@ export default function ProveedoresPage() {
                   </button>
                 </div>
               </div>
-              <div className="space-y-1 text-sm text-gray-600 dark:text-white/60">
+              <div className="space-y-1 text-sm text-gray-500 dark:text-text-secondary">
                 {prov.contacto && <p className="truncate"><span className="text-gray-400 dark:text-white/40">Contacto:</span> {prov.contacto}</p>}
                 {prov.telefono && <p className="truncate flex items-center gap-1.5"><Phone size={13} /> {prov.telefono}</p>}
                 {prov.email && <p className="truncate flex items-center gap-1.5"><Mail size={13} /> {prov.email}</p>}

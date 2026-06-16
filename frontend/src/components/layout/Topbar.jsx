@@ -1,12 +1,27 @@
 import { useAuth } from '@/context/AuthContext'
 import { useTheme } from '@/context/ThemeContext'
 import { Menu, LogOut, User, Moon, Sun } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
-export default function Topbar({ onMenuClick, title }) {
+const obtenerTitulo = (path) => {
+  switch (path) {
+    case '/admin/dashboard': return 'Dashboard'
+    case '/admin/productos': return 'Productos'
+    case '/admin/categorias': return 'Categorías'
+    case '/admin/proveedores': return 'Proveedores'
+    case '/admin/movimientos': return 'Movimientos'
+    case '/admin/usuarios': return 'Usuarios'
+    case '/admin/reportes': return 'Reportes'
+    case '/admin/configuracion': return 'Configuración'
+    default: return 'INVENTEX'
+  }
+}
+
+export default function Topbar({ onMenuClick }) {
   const { user, logout } = useAuth()
   const { dark, toggleTheme } = useTheme()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleLogout = async () => {
     await logout()
@@ -24,7 +39,7 @@ export default function Topbar({ onMenuClick, title }) {
           <Menu size={20} />
         </button>
          <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-text-primary truncate">
-          {title}
+          {obtenerTitulo(location.pathname)}
         </h2>
       </div>
 
