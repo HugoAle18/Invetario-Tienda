@@ -112,11 +112,11 @@ export default function MovimientosPage() {
         <select
           value={tipoFiltro}
           onChange={(e) => { setTipoFiltro(e.target.value); setPage(1) }}
-          className="appearance-none bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors hover:bg-slate-800"
+          className="appearance-none bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-white text-sm rounded-xl px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors hover:bg-slate-200 dark:hover:bg-slate-800"
         >
-          <option value="" className="bg-slate-950 text-white py-2">📦 Todos los movimientos</option>
-          <option value="entrada" className="bg-slate-950 text-emerald-400 py-2">🟩 Entradas</option>
-          <option value="salida" className="bg-slate-950 text-red-400 py-2">🟥 Salidas</option>
+          <option value="" className="bg-white dark:bg-slate-950 text-slate-700 dark:text-white py-2">📦 Todos los movimientos</option>
+          <option value="entrada" className="bg-white dark:bg-slate-950 text-emerald-600 dark:text-emerald-400 py-2">🟩 Entradas</option>
+          <option value="salida" className="bg-white dark:bg-slate-950 text-red-600 dark:text-red-400 py-2">🟥 Salidas</option>
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
           <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -153,38 +153,42 @@ export default function MovimientosPage() {
 
       {!loading && !error && movimientos.length > 0 && (
         <>
-          <div className="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden shadow-xl mt-4">
+          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-md dark:shadow-xl mt-4">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-300">
-                <thead className="bg-slate-950/80 text-slate-400 text-xs uppercase font-semibold">
+              <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase font-semibold border-b border-slate-200 dark:border-slate-800">
                   <tr>
                     <th className="p-4 pl-6">Producto</th>
-                    <th className="p-4">Tipo</th>
+                    <th className="p-4 text-center">Tipo</th>
                     <th className="p-4 text-right">Cantidad</th>
                     <th className="p-4 hidden md:table-cell">Motivo</th>
                     <th className="p-4 hidden sm:table-cell">Usuario</th>
                     <th className="p-4 text-right pr-6 hidden lg:table-cell">Fecha</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/40">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                   {movimientos.map((m) => (
-                    <tr key={m.id} className="hover:bg-slate-800/10 transition-colors">
-                      <td className="p-4 pl-6 font-medium text-white">{m.productos?.nombre}</td>
-                      <td className="p-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    <tr key={m.id} className="bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900/10 transition-colors">
+                      <td className="p-4 pl-6 font-semibold text-slate-900 dark:text-white">{m.productos?.nombre}</td>
+                      <td className="p-4 text-center">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
                           m.tipo === 'entrada'
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20'
+                            : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20'
                         }`}>
-                          {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
+                          {m.tipo === 'entrada' ? '📥 Entrada' : '📤 Salida'}
                         </span>
                       </td>
-                      <td className={`p-4 text-right font-bold ${m.tipo === 'entrada' ? 'text-emerald-400' : 'text-slate-300'}`}>
+                      <td className={`p-4 text-right font-bold font-mono ${
+                        m.tipo === 'entrada'
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-slate-700 dark:text-slate-300'
+                      }`}>
                         {m.tipo === 'entrada' ? `+${m.cantidad}` : `-${m.cantidad}`}
                       </td>
-                      <td className="p-4 text-slate-400 max-w-xs truncate hidden md:table-cell">{m.motivo}</td>
-                      <td className="p-4 text-slate-400 text-xs hidden sm:table-cell">{m.usuarios?.nombre || 'Admin Principal'}</td>
-                      <td className="p-4 text-right pr-6 font-mono text-xs text-slate-500 hidden lg:table-cell whitespace-nowrap">
+                      <td className="p-4 text-slate-600 dark:text-slate-400 max-w-xs truncate hidden md:table-cell">{m.motivo}</td>
+                      <td className="p-4 text-slate-500 dark:text-slate-400 text-xs font-medium hidden sm:table-cell">{m.usuarios?.nombre || 'Admin Principal'}</td>
+                      <td className="p-4 text-right pr-6 font-mono text-xs text-slate-400 dark:text-slate-500 hidden lg:table-cell whitespace-nowrap">
                         {new Date(m.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </td>
                     </tr>
