@@ -1,8 +1,161 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 
-const VentanaChat = ({ onClose, productos = [], movimientos = [] }) => {
+const SALUDOS = ['hola', 'buen dia', 'buenas', 'que tal', 'buenos dias', 'buenas tardes', 'buenas noches']
+
+function extraerContexto(productos, categorias, proveedores, movimientos) {
+  return {
+    fecha_actual: new Date().toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }),
+    productos: productos.map(p => ({
+      codigo: p.codigo,
+      nombre: p.nombre,
+      categoria: p.categoria || 'Sin categoría',
+      stock: p.stock ?? p.stock_actual ?? 0,
+      precio: p.precio_venta || p.precio || 0,
+    })),
+    categorias: categorias.map(c => c.nombre),
+    proveedores: proveedores.map(pr => pr.nombre),
+    ultimos_movimientos: movimientos.slice(0, 20).map(m => ({
+      producto: m.producto || m.productos?.nombre,
+      tipo: m.tipo,
+      cantidad: m.cantidad,
+      motivo: m.motivo,
+      fecha: m.created_at ? new Date(m.created_at).toLocaleDateString('es-PE') : '',
+    })),
+  }
+}
+
+function procesarConsulta(consulta, ctx) {
+  const texto = consulta.toLowerCase().trim()
+  const { productos, categorias, proveedores, ultimos_movimientos, fecha_actual } = ctx
+
+  if (SALUDOS.includes(texto)) {
+    return `¡Hola! Soy el Agente Residente de INVENTEX. Puedes preguntarme sobre productos, stock, categorías, proveedores o movimientos. ¿En qué te ayudo?`
+  }
+
+  if (texto === 'ayuda' || texto === 'help' || texto === 'que puedes hacer' || texto === 'comandos') {
+    return (
+      '**Comandos disponibles:**\n\n' +
+      '• "resumen del inventario" — estadísticas generales\n' +
+      '• "stock bajo" o "alertas" — productos que necesitan reabastecimiento\n' +
+      '• "categorías" — listar todas las categorías\n' +
+      '• "proveedores" — listar todos los proveedores\n' +
+      '• "últimos movimientos" — ver actividad reciente\n' +
+      '• Nombre de un producto — consultar su stock y precio\n' +
+      '• "productos de [categoría]" — filtrar por categoría\n' +
+      '• "stock de [producto]" — cantidad exacta en almacén'
+    )
+  }
+
+  if (texto === 'resumen del inventario' || texto === 'resumen' || texto.includes('analiza') || texto.includes('inventario') && !texto.includes('producto') && !texto.includes('categoria')) {
+    if (productos.length === 0) return 'No hay productos registrados en el sistema actual.'
+
+    const totalProductos = productos.length
+    const valorTotal = productos.reduce((acc, p) => acc + (p.stock * p.precio), 0)
+    const stockBajo = productos.filter(p => p.stock <= 5)
+    const sinStock = productos.filter(p => p.stock === 0)
+    const porCategoria = {}
+    productos.forEach(p => {
+      porCategoria[p.categoria] = (porCategoria[p.categoria] || 0) + 1
+    })
+
+    let res = `**Resumen del Inventario — ${fecha_actual}**\n\n`
+    res += `• **Total de productos:** ${totalProductos}\n`
+    res += `• **Valor del almacén:** S/ ${valorTotal.toFixed(2)}\n`
+    res += `• **Productos con stock bajo:** ${stockBajo.length}\n`
+    res += `• **Productos sin stock:** ${sinStock.length}\n\n`
+    res += `**Productos por categoría:**\n`
+    Object.entries(porCategoria).forEach(([cat, count]) => {
+      res += `  • ${cat}: ${count}\n`
+    })
+    return res
+  }
+
+  if (texto === 'categorias' || texto === 'categorías' || texto === 'listar categorias' || texto === 'que categorias hay' || texto.includes('categoria')) {
+    if (categorias.length === 0) return 'No hay categorías registradas en el sistema.'
+    let res = `**Categorías del sistema (${categorias.length}):**\n`
+    categorias.forEach(c => { res += `  • ${c}\n` })
+    return res
+  }
+
+  if (texto === 'proveedores' || texto === 'listar proveedores' || texto.includes('proveedor')) {
+    if (proveedores.length === 0) return 'No hay proveedores registrados en el sistema.'
+    let res = `**Proveedores registrados (${proveedores.length}):**\n`
+    proveedores.forEach(p => { res += `  • ${p}\n` })
+    return res
+  }
+
+  if (texto.includes('ultimos movimientos') || texto.includes('últimos movimientos') || texto.includes('movimientos recientes') || texto === 'movimientos') {
+    if (ultimos_movimientos.length === 0) return 'No hay movimientos registrados.'
+    let res = `**Últimos ${ultimos_movimientos.length} movimientos:**\n\n`
+    ultimos_movimientos.forEach(m => {
+      res += `• ${m.tipo === 'entrada' ? '📥 Entrada' : '📤 Salida'} — ${m.producto || 'N/A'} (${m.cantidad} und) — ${m.motivo}\n`
+    })
+    return res
+  }
+
+  if (texto.includes('stock bajo') || texto.includes('alerta') || texto.includes('reabastecer') || texto.includes('comprar stock') || texto.includes('que comprar') || texto.includes('que debo comprar')) {
+    const criticos = productos.filter(p => p.stock <= 5)
+    if (criticos.length === 0) return 'Todos los productos tienen stock saludable. No se necesita reabastecimiento urgente.'
+    let res = `**⚠️ Productos que requieren reabastecimiento (${criticos.length}):**\n\n`
+    criticos.forEach(p => {
+      res += `• **${p.nombre}** — ${p.stock} unidades (mínimo sugerido: 5)\n`
+    })
+    return res
+  }
+
+  const matchCategoria = texto.match(/productos de (.+)/) || texto.match(/productos en (.+)/)
+  if (matchCategoria) {
+    const catBuscada = matchCategoria[1].toLowerCase().trim()
+    const prodsCat = productos.filter(p => p.categoria.toLowerCase().includes(catBuscada))
+    if (prodsCat.length === 0) return `No encuentro productos en la categoría "${matchCategoria[1]}" en el sistema actual.`
+    let res = `**Productos en ${prodsCat[0].categoria} (${prodsCat.length}):**\n\n`
+    prodsCat.forEach(p => {
+      res += `• **${p.nombre}** — S/ ${p.precio.toFixed(2)} — Stock: ${p.stock}\n`
+    })
+    return res
+  }
+
+  if (texto.includes('stock de ') || texto.includes('cuantos ') || texto.includes('cuantas ') || texto.includes('cuanto ') || texto.includes('stock del ')) {
+    const palabrasExcluir = ['stock', 'de', 'del', 'cuanto', 'cuantos', 'cuantas', 'hay', 'tiene', 'tienen', 'en', 'el', 'la', 'los', 'las', 'un', 'una']
+    const palabras = texto.split(' ').filter(w => w.length > 2 && !palabrasExcluir.includes(w))
+    const encontrado = productos.find(p =>
+      palabras.some(palabra => p.nombre.toLowerCase().includes(palabra))
+    )
+    if (encontrado) {
+      return `**${encontrado.nombre}** — Stock actual: **${encontrado.stock} unidades** — Precio: S/ ${encontrado.precio.toFixed(2)}`
+    }
+  }
+
+  const palabrasExcluir = ['stock', 'de', 'del', 'precio', 'categoria', 'producto', 'hay', 'tiene', 'tienen', 'sobre', 'para', 'esta', 'como', 'que', 'con', 'por', 'los', 'las', 'en', 'el', 'la', 'un', 'una', 'cuanto', 'cuantos', 'informacion', 'dame', 'muestrame', 'buscar']
+  const palabrasClave = texto.split(' ').filter(w => w.length > 2 && !palabrasExcluir.includes(w))
+
+  if (palabrasClave.length > 0) {
+    const encontrados = productos.filter(p =>
+      palabrasClave.some(palabra =>
+        p.nombre.toLowerCase().includes(palabra) ||
+        (p.codigo && p.codigo.toLowerCase() === palabra)
+      )
+    )
+
+    if (encontrados.length > 0) {
+      let res = ''
+      encontrados.forEach(p => {
+        const estado = p.stock <= 5 ? '🔴 Stock bajo' : '🟢 Normal'
+        res += `**${p.nombre}** (${p.codigo})\n`
+        res += `  • Categoría: ${p.categoria}\n`
+        res += `  • Stock: ${p.stock} — ${estado}\n`
+        res += `  • Precio: S/ ${p.precio.toFixed(2)}\n\n`
+      })
+      return res.trim()
+    }
+  }
+
+  return 'No encuentro registros de ese artículo en el sistema actual. Consulta por nombre de producto, categoría, o escribe "ayuda" para ver los comandos disponibles.'
+}
+
+const VentanaChat = ({ onClose, sistemaContexto }) => {
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'bot', text: '¡Hola! Soy tu Agente Residente de IA. He analizado el inventario actual. Pregúntame sobre el stock de un artículo, qué productos están bajos o cuándo comprar mercancía.' }
+    { id: 1, sender: 'bot', text: '¡Hola! Soy tu Agente de IA de INVENTEX. Pregúntame sobre productos, stock, categorías o proveedores.' }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -11,63 +164,6 @@ const VentanaChat = ({ onClose, productos = [], movimientos = [] }) => {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
-
-  const procesarConsultaIA = (consulta) => {
-    const texto = consulta.toLowerCase().trim()
-
-    if (['hola', 'buen día', 'buenas', 'que tal', 'oe'].includes(texto)) {
-      return "¡Hola! ¿En qué puedo ayudarte a optimizar el stock hoy? Puedes preguntarme por productos específicos, alertas de stock o predicciones de compra."
-    }
-
-    if (texto.includes('stock bajo') || texto.includes('alerta') || texto.includes('comprar') || texto.includes('predic') || texto.includes('cuando')) {
-      const criticos = productos.filter(p => Number(p.stock_actual || p.stock) <= Number(p.stock_minimo || 5))
-
-      if (criticos.length === 0) {
-        return "He analizado el inventario y todos los niveles están saludables. Ningún producto está por debajo del stock mínimo establecido."
-      }
-
-      let respuesta = "⚠️ **Análisis de Reabastecimiento Crítico:**\n\nBasado en el ritmo de salidas y el stock mínimo, te sugiero comprar stock de los siguientes productos de inmediato:\n"
-
-      criticos.forEach(p => {
-        const stockActual = p.stock_actual !== undefined ? p.stock_actual : p.stock
-        const salidasRecientes = movimientos.filter(m => m.producto === p.nombre && m.tipo === 'Salida').length
-
-        respuesta += `• **${p.nombre}**: Tienes ${stockActual} unidades (Mínimo: ${p.stock_minimo || 5}). `
-
-        if (salidasRecientes > 2) {
-          respuesta += `*¡Alta demanda! Se predice rotura de stock en menos de 3 días.*\n`
-        } else {
-          respuesta += `*Se recomienda reabastecer esta semana.*\n`
-        }
-      })
-      return respuesta
-    }
-
-    if (texto.includes('inventario') || texto.includes('resumen') || texto.includes('analiza')) {
-      const totalProductos = productos.length
-      const valorTotal = productos.reduce((acc, p) => acc + (Number(p.stock_actual || p.stock || 0) * Number(p.precio || p.precio_venta || 0)), 0)
-      const stockBajoCount = productos.filter(p => Number(p.stock_actual || p.stock) <= Number(p.stock_minimo || 5)).length
-
-      return `📊 **Análisis General del Inventario:**\n\n• **Variedad:** Cuentas con ${totalProductos} productos registrados.\n• **Valor del Almacén:** El capital total invertido estimado es de **S/. ${valorTotal.toFixed(2)}**.\n• **Riesgos:** Hay ${stockBajoCount} alertas activas de stock bajo que requieren tu atención inmediata para evitar perder ventas.`
-    }
-
-    const palabrasClave = texto.split(' ').filter(w => w.length > 3 && !['cuanto', 'stock', 'tiene', 'sobre', 'para', 'esta'].includes(w))
-
-    if (palabrasClave.length > 0) {
-      const productoEncontrado = productos.find(p =>
-        palabrasClave.some(palabra => p.nombre.toLowerCase().includes(palabra))
-      )
-
-      if (productoEncontrado) {
-        const stockActual = productoEncontrado.stock_actual !== undefined ? productoEncontrado.stock_actual : productoEncontrado.stock
-        const estado = stockActual <= (productoEncontrado.stock_minimo || 5) ? "🔴 CRÍTICO (Requiere compra)" : "🟢 SALUDABLE"
-
-        return `🔍 **Reporte de Artículo:**\n\nEl producto **${productoEncontrado.nombre}** cuenta con **${stockActual}** unidades en almacén. \n• **Estado:** ${estado}\n• **Precio de Venta:** S/. ${productoEncontrado.precio || productoEncontrado.precio_venta}\n• **Categoría:** ${productoEncontrado.categoria || 'General'}`
-      }
-    }
-
-    return "No pude identificar el producto o la métrica exacta. Prueba consultando de formas simples como: *'¿Qué debo comprar?'*, *'Analiza el inventario'* o el nombre específico de un producto como *'Shampoo'* o *'Mochila'*."
-  }
 
   const handleSend = (e) => {
     e.preventDefault()
@@ -79,10 +175,10 @@ const VentanaChat = ({ onClose, productos = [], movimientos = [] }) => {
     setIsLoading(true)
 
     setTimeout(() => {
-      const respuestaIA = procesarConsultaIA(mensajeUsuario)
-      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: respuestaIA }])
+      const respuesta = procesarConsulta(mensajeUsuario, sistemaContexto)
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: respuesta }])
       setIsLoading(false)
-    }, 600)
+    }, 400)
   }
 
   return (
@@ -96,7 +192,7 @@ const VentanaChat = ({ onClose, productos = [], movimientos = [] }) => {
             <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse" />
             <div>
               <h3 className="font-bold text-sm tracking-wide">Agente Residente IA</h3>
-              <p className="text-[10px] text-blue-100">Analista Predictivo Activo</p>
+              <p className="text-[10px] text-blue-100">Analista de Inventario</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/10 text-white/80 cursor-pointer">
@@ -137,7 +233,7 @@ const VentanaChat = ({ onClose, productos = [], movimientos = [] }) => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe 'analizar', 'comprar stock' o un producto..."
+            placeholder="Producto, stock, categoría..."
             className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
           />
           <button type="submit" className="p-2.5 rounded-xl bg-indigo-600 text-white font-bold shadow-md cursor-pointer active:scale-95">
@@ -151,8 +247,13 @@ const VentanaChat = ({ onClose, productos = [], movimientos = [] }) => {
   )
 }
 
-export const AiAgentWidget = ({ productos = [], movimientos = [] }) => {
+export const AiAgentWidget = ({ productos = [], categorias = [], proveedores = [], movimientos = [] }) => {
   const [isOpen, setIsOpen] = useState(false)
+
+  const sistemaContexto = useMemo(() =>
+    extraerContexto(productos, categorias, proveedores, movimientos),
+    [productos, categorias, proveedores, movimientos]
+  )
 
   return (
     <>
@@ -168,8 +269,7 @@ export const AiAgentWidget = ({ productos = [], movimientos = [] }) => {
       {isOpen && (
         <VentanaChat
           onClose={() => setIsOpen(false)}
-          productos={productos}
-          movimientos={movimientos}
+          sistemaContexto={sistemaContexto}
         />
       )}
     </>
