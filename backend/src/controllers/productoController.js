@@ -5,6 +5,7 @@ function aplanarCategoria(producto) {
   return {
     ...producto,
     categoria: producto.categorias?.nombre || 'Sin categoría',
+    stock: producto.stock_actual ?? producto.stock ?? 0,
   }
 }
 

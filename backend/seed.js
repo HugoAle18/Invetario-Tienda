@@ -16,6 +16,8 @@ const CATEGORIAS = [
   { nombre: 'Herramientas', descripcion: 'Herramientas y ferretería' },
   { nombre: 'Hogar', descripcion: 'Artículos para el hogar y decoración' },
   { nombre: 'Salud y Belleza', descripcion: 'Productos de cuidado personal' },
+  { nombre: 'Equipamiento Deportivo', descripcion: 'Artículos y accesorios deportivos' },
+  { nombre: 'Artículos de Escritorio', descripcion: 'Útiles y accesorios de oficina' },
 ]
 
 const PROVEEDORES = [
@@ -38,7 +40,7 @@ const PRODUCTOS = [
   { codigo: 'ELE-005', nombre: 'Webcam HD 1080p', descripcion: 'Cámara web con micrófono integrado', precio_compra: 25.00, precio_venta: 59.90, stock_actual: 20, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 1 },
 
   // Ropa y Accesorios (cat 1)
-  { codigo: 'ROP-001', nombre: 'Zapatillas Running', descripcion: 'Zapatillas deportivas con amortiguación', precio_compra: 55.00, precio_venta: 150.00, stock_actual: 2, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 5 },
+  { codigo: 'ROP-001', nombre: 'Zapatillas Running', descripcion: 'Zapatillas deportivas con amortiguación', precio_compra: 55.00, precio_venta: 150.00, stock_actual: 2, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 6, proveedor_idx: 5 },
   { codigo: 'ROP-002', nombre: 'Camiseta Algodón Premium', descripcion: 'Camiseta de manga corta 100% algodón orgánico', precio_compra: 12.00, precio_venta: 35.00, stock_actual: 100, stock_minimo: 30, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
   { codigo: 'ROP-003', nombre: 'Chaqueta Impermeable', descripcion: 'Chaqueta con membrana impermeable y transpirable', precio_compra: 45.00, precio_venta: 120.00, stock_actual: 15, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 4 },
   { codigo: 'ROP-004', nombre: 'Jeans Clásico', descripcion: 'Pantalón jeans de corte recto', precio_compra: 28.00, precio_venta: 79.90, stock_actual: 40, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
@@ -49,9 +51,9 @@ const PRODUCTOS = [
   { codigo: 'ALI-003', nombre: 'Chocolate Artesanal 200g', descripcion: 'Chocolate negro 70% cacao artesanal', precio_compra: 8.50, precio_venta: 22.00, stock_actual: 80, stock_minimo: 25, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
   { codigo: 'ALI-004', nombre: 'Agua Mineral 2L', descripcion: 'Agua mineral natural sin gas', precio_compra: 1.50, precio_venta: 4.50, stock_actual: 200, stock_minimo: 50, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
 
-  // Herramientas (cat 3)
-  { codigo: 'HER-001', nombre: 'Lámpara LED Escritorio', descripcion: 'Lámpara con luz LED regulable y USB', precio_compra: 20.00, precio_venta: 49.90, stock_actual: 18, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 0 },
-  { codigo: 'HER-002', nombre: 'Organizador de Escritorio', descripcion: 'Organizador múltiple de bambú', precio_compra: 15.00, precio_venta: 38.00, stock_actual: 5, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 2 },
+  // Artículos de Escritorio (cat 7)
+  { codigo: 'HER-001', nombre: 'Lámpara LED Escritorio', descripcion: 'Lámpara con luz LED regulable y USB', precio_compra: 20.00, precio_venta: 49.90, stock_actual: 18, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 7, proveedor_idx: 0 },
+  { codigo: 'HER-002', nombre: 'Organizador de Escritorio', descripcion: 'Organizador múltiple de bambú', precio_compra: 15.00, precio_venta: 38.00, stock_actual: 5, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 7, proveedor_idx: 2 },
 
   // Hogar (cat 4)
   { codigo: 'HOG-001', nombre: 'Cojín Decorativo 45cm', descripcion: 'Cojín de felpa suave para sala', precio_compra: 10.00, precio_venta: 28.00, stock_actual: 35, stock_minimo: 12, unidad_medida: 'unidad', categoria_idx: 4, proveedor_idx: 3 },

@@ -132,6 +132,7 @@ export default function ProductosPage() {
   const totalPages = Math.ceil(total / limit)
 
   const productosPorCategoria = useMemo(() => {
+    if (!Array.isArray(productos)) return {}
     return productos.reduce((acc, p) => {
       const cat = p.categoria || 'Sin categoría'
       if (!acc[cat]) acc[cat] = []
@@ -217,65 +218,70 @@ export default function ProductosPage() {
       {/* Products grouped by category */}
       {!loading && !error && productos.length > 0 && (
         <>
-          <div className="space-y-8 mb-10">
-            {Object.entries(productosPorCategoria).map(([cat, prods]) => (
-              <div key={cat} className="bg-white/95 dark:bg-slate-950/90 backdrop-blur-md rounded-xl border border-slate-200/60 dark:border-slate-800/50 shadow-sm overflow-hidden mb-4">
-                <div className="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-                  <Tags size={16} className="text-blue-600 dark:text-blue-400" />
-                  <span className="text-base font-bold text-gray-900 dark:text-white capitalize">{cat}</span>
-                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-blue-600 text-white shadow-sm">
-                    {prods.length} {prods.length === 1 ? 'artículo' : 'artículos'}
+          <div className="space-y-10 mb-10">
+            {Object.entries(productosPorCategoria).map(([categoria, listaDeProductos]) => (
+              <div key={categoria} className="bg-slate-900/40 dark:bg-slate-950/70 border border-slate-800/60 dark:border-slate-800 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <h3 className="text-white font-bold text-base tracking-wide capitalize">{categoria}</h3>
+                  <span className="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full font-medium">
+                    {listaDeProductos.length} {listaDeProductos.length === 1 ? 'artículo' : 'artículos'}
                   </span>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
-                        <th className="text-left py-3 px-4 font-bold uppercase text-xs tracking-wider">Código</th>
-                        <th className="text-left py-3 px-4 font-bold uppercase text-xs tracking-wider">Nombre</th>
-                        <th className="text-right py-3 px-4 font-bold uppercase text-xs tracking-wider">Stock</th>
-                        <th className="text-right py-3 px-4 font-bold uppercase text-xs tracking-wider hidden sm:table-cell">P. Venta</th>
-                        <th className="text-center py-3 px-4 font-bold uppercase text-xs tracking-wider">Acciones</th>
+                <div className="overflow-x-auto rounded-lg border border-slate-800/60">
+                  <table className="w-full text-left text-sm text-slate-300">
+                    <thead className="bg-slate-950/80 text-slate-400 text-xs uppercase font-semibold">
+                      <tr>
+                        <th className="p-3">Código</th>
+                        <th className="p-3">Nombre</th>
+                        <th className="p-3">Stock</th>
+                        <th className="p-3">P. Venta</th>
+                        <th className="p-3 text-center">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-slate-900">
-                      {prods.map((p) => (
-                        <tr key={p.id || p.codigo} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
-                          <td className="py-3 px-4 font-mono text-xs text-gray-600 dark:text-white/60">{p.codigo || p.id}</td>
-                          <td className="py-3 px-4">
-                            <p className="text-gray-900 dark:text-white font-medium">{p.nombre}</p>
-                            {Number(p.stock_actual || p.stock || 0) <= Number(p.stock_minimo || 5) && (
-                              <span className="px-2.5 py-1 text-xs font-black rounded-full bg-red-600 text-white shadow-sm mt-1 inline-block">Stock bajo</span>
-                            )}
-                          </td>
-                          <td className={`py-3 px-4 text-right font-semibold ${
-                            Number(p.stock_actual || p.stock || 0) <= Number(p.stock_minimo || 5) ? 'text-red-600 font-black' : 'text-gray-900 dark:text-white'
-                          }`}>
-                            {p.stock_actual ?? p.stock ?? 0}
-                          </td>
-                          <td className="py-3 px-4 text-right text-gray-900 dark:text-white hidden sm:table-cell text-sm font-bold">
-                            S/ {Number(p.precio_venta || p.precio || 0).toFixed(2)}
-                          </td>
-                          <td className="py-3 px-4 text-center">
-                            <div className="flex items-center justify-center gap-1">
-                              <button
-                                onClick={() => openEdit(p)}
-                                className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                                title="Editar"
-                              >
-                                <Pencil size={15} />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(p)}
-                                className="p-1.5 rounded-lg text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                                title="Eliminar"
-                              >
-                                <Trash2 size={15} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                    <tbody className="divide-y divide-slate-800/40 bg-slate-900/10">
+                      {listaDeProductos.map((prod) => {
+                        const stock = Number(prod.stock ?? prod.stock_actual ?? 0)
+                        const stockBajo = stock <= 5
+                        return (
+                          <tr key={prod.id || prod.codigo} className="hover:bg-slate-800/30 transition-colors">
+                            <td className="p-3 font-mono text-xs text-slate-400">{prod.codigo || prod.id}</td>
+                            <td className="p-3 font-medium text-white">
+                              <div className="flex flex-col gap-1">
+                                {prod.nombre}
+                                {stockBajo && (
+                                  <span className="w-fit text-[10px] bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full font-bold">
+                                    Stock bajo
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className={`p-3 font-bold ${stockBajo ? 'text-red-500' : 'text-slate-300'}`}>
+                              {stock}
+                            </td>
+                            <td className="p-3 font-medium">
+                              S/ {Number(prod.precio_venta || prod.precio || 0).toFixed(2)}
+                            </td>
+                            <td className="p-3 text-center">
+                              <div className="flex items-center justify-center gap-1">
+                                <button
+                                  onClick={() => openEdit(prod)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                                  title="Editar"
+                                >
+                                  <Pencil size={15} />
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(prod)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                                  title="Eliminar"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
