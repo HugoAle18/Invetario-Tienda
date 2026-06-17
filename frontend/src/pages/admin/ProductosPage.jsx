@@ -133,7 +133,7 @@ export default function ProductosPage() {
 
   const productosPorCategoria = useMemo(() => {
     return productos.reduce((acc, p) => {
-      const cat = p.categorias?.nombre || 'Sin categoría'
+      const cat = p.categorias?.nombre || p.categoria || 'Sin categoría'
       if (!acc[cat]) acc[cat] = []
       acc[cat].push(p)
       return acc

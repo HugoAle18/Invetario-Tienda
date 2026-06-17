@@ -13,13 +13,9 @@ const CATEGORIAS = [
   { nombre: 'Electrónica', descripcion: 'Dispositivos electrónicos y accesorios' },
   { nombre: 'Ropa y Accesorios', descripcion: 'Prendas de vestir y complementos' },
   { nombre: 'Alimentos y Bebidas', descripcion: 'Productos alimenticios y bebidas' },
-  { nombre: 'Hogar y Muebles', descripcion: 'Artículos para el hogar y mobiliario' },
-  { nombre: 'Salud y Belleza', descripcion: 'Productos de cuidado personal' },
-  { nombre: 'Deportes', descripcion: 'Artículos deportivos y recreación' },
-  { nombre: 'Juguetes', descripcion: 'Juegos y juguetes' },
-  { nombre: 'Papelería', descripcion: 'Útiles escolares y de oficina' },
   { nombre: 'Herramientas', descripcion: 'Herramientas y ferretería' },
-  { nombre: 'Automotriz', descripcion: 'Partes y accesorios para vehículos' },
+  { nombre: 'Hogar', descripcion: 'Artículos para el hogar y decoración' },
+  { nombre: 'Salud y Belleza', descripcion: 'Productos de cuidado personal' },
 ]
 
 const PROVEEDORES = [
@@ -34,44 +30,36 @@ const PROVEEDORES = [
 ]
 
 const PRODUCTOS = [
-  // Electrónica (cat 1)
-  { codigo: 'ELE-001', nombre: 'Auriculares Bluetooth Pro', descripcion: 'Auriculares inalámbricos con cancelación de ruido', precio_compra: 45.00, precio_venta: 89.90, stock_actual: 50, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 0 },
+  // Electrónica (cat 0)
+  { codigo: 'ELE-001', nombre: 'mouse', descripcion: 'Mouse óptico inalámbrico', precio_compra: 15.00, precio_venta: 40.00, stock_actual: 47, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 0 },
   { codigo: 'ELE-002', nombre: 'Cargador USB-C 65W', descripcion: 'Cargador rápido para laptops y tablets', precio_compra: 22.00, precio_venta: 45.00, stock_actual: 30, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 1 },
   { codigo: 'ELE-003', nombre: 'Teclado Mecánico RGB', descripcion: 'Teclado mecánico gaming con switches Cherry MX', precio_compra: 55.00, precio_venta: 120.00, stock_actual: 0, stock_minimo: 5, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 0 },
   { codigo: 'ELE-004', nombre: 'Monitor 27" 4K', descripcion: 'Monitor IPS 4K UHD para diseño profesional', precio_compra: 280.00, precio_venta: 520.00, stock_actual: 8, stock_minimo: 3, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 2 },
   { codigo: 'ELE-005', nombre: 'Webcam HD 1080p', descripcion: 'Cámara web con micrófono integrado', precio_compra: 25.00, precio_venta: 59.90, stock_actual: 20, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 1 },
 
-  // Ropa (cat 2)
-  { codigo: 'ROP-001', nombre: 'Camiseta Algodón Premium', descripcion: 'Camiseta de manga corta 100% algodón orgánico', precio_compra: 12.00, precio_venta: 35.00, stock_actual: 100, stock_minimo: 30, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
-  { codigo: 'ROP-002', nombre: 'Chaqueta Impermeable', descripcion: 'Chaqueta con membrana impermeable y transpirable', precio_compra: 45.00, precio_venta: 120.00, stock_actual: 15, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 4 },
-  { codigo: 'ROP-003', nombre: 'Jeans Clásico', descripcion: 'Pantalón jeans de corte recto', precio_compra: 28.00, precio_venta: 79.90, stock_actual: 40, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
-  { codigo: 'ROP-004', nombre: 'Zapatillas Running', descripcion: 'Zapatillas deportivas con amortiguación', precio_compra: 55.00, precio_venta: 150.00, stock_actual: 2, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 5 },
+  // Ropa y Accesorios (cat 1)
+  { codigo: 'ROP-001', nombre: 'Zapatillas Running', descripcion: 'Zapatillas deportivas con amortiguación', precio_compra: 55.00, precio_venta: 150.00, stock_actual: 2, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 5 },
+  { codigo: 'ROP-002', nombre: 'Camiseta Algodón Premium', descripcion: 'Camiseta de manga corta 100% algodón orgánico', precio_compra: 12.00, precio_venta: 35.00, stock_actual: 100, stock_minimo: 30, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
+  { codigo: 'ROP-003', nombre: 'Chaqueta Impermeable', descripcion: 'Chaqueta con membrana impermeable y transpirable', precio_compra: 45.00, precio_venta: 120.00, stock_actual: 15, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 4 },
+  { codigo: 'ROP-004', nombre: 'Jeans Clásico', descripcion: 'Pantalón jeans de corte recto', precio_compra: 28.00, precio_venta: 79.90, stock_actual: 40, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
 
-  // Alimentos (cat 3)
+  // Alimentos y Bebidas (cat 2)
   { codigo: 'ALI-001', nombre: 'Café Orgánico 500g', descripcion: 'Café molido 100% orgánico de altura', precio_compra: 18.00, precio_venta: 38.00, stock_actual: 60, stock_minimo: 20, unidad_medida: 'kg', categoria_idx: 2, proveedor_idx: 6 },
   { codigo: 'ALI-002', nombre: 'Aceite de Oliva Extra 1L', descripcion: 'Aceite de oliva virgen extra', precio_compra: 25.00, precio_venta: 55.00, stock_actual: 25, stock_minimo: 10, unidad_medida: 'litro', categoria_idx: 2, proveedor_idx: 6 },
   { codigo: 'ALI-003', nombre: 'Chocolate Artesanal 200g', descripcion: 'Chocolate negro 70% cacao artesanal', precio_compra: 8.50, precio_venta: 22.00, stock_actual: 80, stock_minimo: 25, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
   { codigo: 'ALI-004', nombre: 'Agua Mineral 2L', descripcion: 'Agua mineral natural sin gas', precio_compra: 1.50, precio_venta: 4.50, stock_actual: 200, stock_minimo: 50, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
 
-  // Hogar (cat 3, index 3)
-  { codigo: 'HOG-001', nombre: 'Lámpara LED Escritorio', descripcion: 'Lámpara con luz LED regulable y USB', precio_compra: 20.00, precio_venta: 49.90, stock_actual: 18, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 0 },
-  { codigo: 'HOG-002', nombre: 'Organizador de Escritorio', descripcion: 'Organizador múltiple de bambú', precio_compra: 15.00, precio_venta: 38.00, stock_actual: 5, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 2 },
-  { codigo: 'HOG-003', nombre: 'Cojín Decorativo 45cm', descripcion: 'Cojín de felpa suave para sala', precio_compra: 10.00, precio_venta: 28.00, stock_actual: 35, stock_minimo: 12, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 3 },
+  // Herramientas (cat 3)
+  { codigo: 'HER-001', nombre: 'Lámpara LED Escritorio', descripcion: 'Lámpara con luz LED regulable y USB', precio_compra: 20.00, precio_venta: 49.90, stock_actual: 18, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 0 },
+  { codigo: 'HER-002', nombre: 'Organizador de Escritorio', descripcion: 'Organizador múltiple de bambú', precio_compra: 15.00, precio_venta: 38.00, stock_actual: 5, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 2 },
 
-  // Salud (cat 4, index 4)
-  { codigo: 'SAL-001', nombre: 'Crema Hidratante 250ml', descripcion: 'Crema corporal con aloe vera y vitamina E', precio_compra: 9.00, precio_venta: 24.90, stock_actual: 45, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 4, proveedor_idx: 5 },
-  { codigo: 'SAL-002', nombre: 'Protector Solar SPF50', descripcion: 'Protector solar facial resistente al agua', precio_compra: 14.00, precio_venta: 35.00, stock_actual: 12, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 4, proveedor_idx: 5 },
-  { codigo: 'SAL-003', nombre: 'Shampoo Natural 500ml', descripcion: 'Shampoo con keratina y aceites naturales', precio_compra: 11.00, precio_venta: 29.00, stock_actual: 0, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 4, proveedor_idx: 4 },
+  // Hogar (cat 4)
+  { codigo: 'HOG-001', nombre: 'Cojín Decorativo 45cm', descripcion: 'Cojín de felpa suave para sala', precio_compra: 10.00, precio_venta: 28.00, stock_actual: 35, stock_minimo: 12, unidad_medida: 'unidad', categoria_idx: 4, proveedor_idx: 3 },
 
-  // Deportes (cat 5, index 5)
-  { codigo: 'DEP-001', nombre: 'Yoga Mat 6mm', descripcion: 'Colchoneta de yoga con alineación grabada', precio_compra: 16.00, precio_venta: 42.00, stock_actual: 22, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
-  { codigo: 'DEP-002', nombre: 'Pesas 2x5kg', descripcion: 'Set de pesas de neopreno', precio_compra: 30.00, precio_venta: 69.90, stock_actual: 10, stock_minimo: 5, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 2 },
-  { codigo: 'DEP-003', nombre: 'Cuerda para Saltar', descripcion: 'Cuerda de velocidad ajustable con rodamientos', precio_compra: 5.00, precio_venta: 15.00, stock_actual: 50, stock_minimo: 20, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 0 },
-
-  // Papelería (cat 6, index 7)
-  { codigo: 'PAP-001', nombre: 'Cuaderno A5 Rayado', descripcion: 'Cuaderno tapa dura con 200 hojas', precio_compra: 3.50, precio_venta: 9.90, stock_actual: 150, stock_minimo: 40, unidad_medida: 'unidad', categoria_idx: 7, proveedor_idx: 6 },
-  { codigo: 'PAP-002', nombre: 'Bolígrafo Gel 0.7mm', descripcion: 'Bolígrafo de gel borrable', precio_compra: 1.20, precio_venta: 4.50, stock_actual: 300, stock_minimo: 50, unidad_medida: 'unidad', categoria_idx: 7, proveedor_idx: 6 },
-  { codigo: 'PAP-003', nombre: 'Mochila Ejecutiva 15.6"', descripcion: 'Mochila para laptop con puerto USB', precio_compra: 22.00, precio_venta: 59.00, stock_actual: 0, stock_minimo: 5, unidad_medida: 'unidad', categoria_idx: 7, proveedor_idx: 1 },
+  // Salud y Belleza (cat 5)
+  { codigo: 'SAL-001', nombre: 'Crema Hidratante 250ml', descripcion: 'Crema corporal con aloe vera y vitamina E', precio_compra: 9.00, precio_venta: 24.90, stock_actual: 45, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
+  { codigo: 'SAL-002', nombre: 'Protector Solar SPF50', descripcion: 'Protector solar facial resistente al agua', precio_compra: 14.00, precio_venta: 35.00, stock_actual: 12, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
+  { codigo: 'SAL-003', nombre: 'Shampoo Natural 500ml', descripcion: 'Shampoo con keratina y aceites naturales', precio_compra: 11.00, precio_venta: 29.00, stock_actual: 0, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 4 },
 ]
 
 const MOVIMIENTOS_BASE = [
