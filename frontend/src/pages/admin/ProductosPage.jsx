@@ -217,61 +217,79 @@ export default function ProductosPage() {
       {/* Grouped blocks by category */}
       {!loading && !error && productos.length > 0 && (
         <>
-          {Object.entries(productosPorCategoria).map(([categoria, prods]) => (
-            <div key={categoria} className="bg-[#111827]/40 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-              <div className="bg-slate-950 px-4 py-3 border-b border-slate-800">
-                <h3 className="text-slate-200 font-semibold text-sm flex items-center gap-2">
+          {Object.entries(productosPorCategoria).map(([categoria, prods]) => {
+            const esAdmin = user?.rol === 'admin'
+            return (
+            <div key={categoria} className="bg-white dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-md dark:shadow-xl">
+              <div className="bg-slate-50 dark:bg-slate-950 px-4 py-3 border-b border-slate-200 dark:border-slate-800">
+                <h3 className="text-slate-700 dark:text-slate-200 font-semibold text-sm flex items-center gap-2">
                   <Tags size={14} className="text-brand" />
                   {categoria}
-                  <span className="text-xs text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full">{prods.length}</span>
+                  <span className="text-xs text-slate-500 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded-full">{prods.length}</span>
                 </h3>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-300">
-                  <thead className="bg-slate-950/50 text-slate-500 text-xs uppercase font-semibold">
+                <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+                  <thead className="bg-slate-50 dark:bg-slate-950/50 text-slate-500 text-xs uppercase font-semibold">
                     <tr>
-                      <th className="p-3">Código</th>
-                      <th className="p-3">Nombre</th>
-                      <th className="p-3">Stock</th>
-                      <th className="p-3">P. Venta</th>
-                      <th className="p-3 text-center">Acciones</th>
+                      <th className="p-4 pl-6">Código</th>
+                      <th className="p-4">Nombre</th>
+                      <th className="p-4 text-center">Stock</th>
+                      <th className="p-4 text-right">P. Venta</th>
+                      {esAdmin && <th className="p-4 text-center pr-6">Acciones</th>}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                     {prods.map((prod) => {
                       const stock = Number(prod.stock ?? prod.stock_actual ?? 0)
                       const stockBajo = stock <= 5
                       return (
-                        <tr key={prod.codigo || prod.id} className="hover:bg-slate-800/20 transition-colors">
-                          <td className="p-3 font-mono text-xs text-slate-400">{prod.codigo || prod.id}</td>
-                          <td className="p-3 font-medium text-white">
+                        <tr key={prod.codigo || prod.id} className="bg-white dark:bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+                          <td className="p-4 pl-6 font-mono text-xs text-slate-400 dark:text-slate-500">{prod.codigo || prod.id}</td>
+                          <td className="p-4 font-medium text-slate-900 dark:text-white">
                             <div className="flex flex-col gap-1">
                               {prod.nombre}
                               {stockBajo && (
-                                <span className="w-fit text-[10px] bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full font-bold">
+                                <span className="w-fit text-[10px] bg-red-500/10 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full font-bold border border-red-500/20">
                                   Stock bajo
                                 </span>
                               )}
                             </div>
                           </td>
-                          <td className={`p-3 font-bold ${stockBajo ? 'text-red-500' : 'text-slate-300'}`}>{stock}</td>
-                          <td className="p-3 font-medium">S/ {Number(prod.precio_venta || prod.precio || 0).toFixed(2)}</td>
-                          <td className="p-3 text-center">
-                            <button
-                              onClick={() => openEdit(prod)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer mx-1.5"
-                              title="Editar"
-                            >
-                              <Pencil size={15} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(prod)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors cursor-pointer mx-1.5"
-                              title="Eliminar"
-                            >
-                              <Trash2 size={15} />
-                            </button>
+                          <td className="p-4 text-center">
+                            <span className={`font-semibold ${
+                              stock === 0
+                                ? 'text-red-600 dark:text-red-400 font-bold'
+                                : stockBajo
+                                ? 'text-amber-600 dark:text-amber-400'
+                                : 'text-slate-800 dark:text-slate-200'
+                            }`}>
+                              {stock}
+                            </span>
                           </td>
+                          <td className="p-4 text-right font-medium text-slate-900 dark:text-slate-100">
+                            S/ {Number(prod.precio_venta || prod.precio || 0).toFixed(2)}
+                          </td>
+                          {esAdmin && (
+                            <td className="p-4 text-center pr-6">
+                              <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => openEdit(prod)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                                  title="Editar"
+                                >
+                                  <Pencil size={15} />
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(prod)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                                  title="Eliminar"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
+                              </div>
+                            </td>
+                          )}
                         </tr>
                       )
                     })}
@@ -279,7 +297,7 @@ export default function ProductosPage() {
                 </table>
               </div>
             </div>
-          ))}
+            )})}
 
           {/* Pagination */}
           {totalPages > 1 && (
