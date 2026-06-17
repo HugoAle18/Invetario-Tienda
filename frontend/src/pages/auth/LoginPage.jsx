@@ -27,6 +27,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -109,6 +110,43 @@ export default function LoginPage() {
             {submitting && <Loader2 size={18} className="animate-spin" />}
             {submitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </button>
+
+          {/* Quick Login — Demo Credentials */}
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-center">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-3 tracking-wide uppercase">
+              Acceso Rápido (Evaluación)
+            </p>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setValue('email', 'admin@inventex.com')
+                  setValue('password', 'admin123')
+                }}
+                className="flex flex-col items-center justify-center p-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/40 text-blue-600 dark:text-blue-400 transition-all active:scale-95 text-xs cursor-pointer"
+              >
+                <span className="font-bold">🔑 Administrador</span>
+                <span className="text-[10px] text-slate-500 font-mono mt-0.5">admin@inventex.com</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setValue('email', 'empleado@inventex.com')
+                  setValue('password', 'empleado123')
+                }}
+                className="flex flex-col items-center justify-center p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/40 text-emerald-600 dark:text-emerald-400 transition-all active:scale-95 text-xs cursor-pointer"
+              >
+                <span className="font-bold">💼 Empleado</span>
+                <span className="text-[10px] text-slate-500 font-mono mt-0.5">empleado@inventex.com</span>
+              </button>
+            </div>
+
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-3 italic">
+              * Haz clic en un rol para autorrellenar el formulario.
+            </p>
+          </div>
         </form>
       </div>
     </div>
