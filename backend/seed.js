@@ -18,6 +18,9 @@ const CATEGORIAS = [
   { nombre: 'Salud y Belleza', descripcion: 'Productos de cuidado personal' },
   { nombre: 'Deportes', descripcion: 'Artículos y accesorios deportivos' },
   { nombre: 'Artículos de Escritorio', descripcion: 'Útiles y accesorios de oficina' },
+  { nombre: 'Papelería', descripcion: 'Material de oficina y papelería' },
+  { nombre: 'Automotriz', descripcion: 'Productos y accesorios automotrices' },
+  { nombre: 'Juguetes', descripcion: 'Juguetes y juegos recreativos' },
 ]
 
 const PROVEEDORES = [
@@ -46,8 +49,8 @@ const PRODUCTOS = [
   { codigo: 'ROP-004', nombre: 'Jeans Clásico', descripcion: 'Pantalón jeans de corte recto', precio_compra: 28.00, precio_venta: 79.90, stock_actual: 40, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
 
   // Alimentos y Bebidas (cat 2)
-  { codigo: 'ALI-001', nombre: 'Café Orgánico 500g', descripcion: 'Café molido 100% orgánico de altura', precio_compra: 18.00, precio_venta: 38.00, stock_actual: 60, stock_minimo: 20, unidad_medida: 'kg', categoria_idx: 2, proveedor_idx: 6 },
-  { codigo: 'ALI-002', nombre: 'Aceite de Oliva Extra 1L', descripcion: 'Aceite de oliva virgen extra', precio_compra: 25.00, precio_venta: 55.00, stock_actual: 25, stock_minimo: 10, unidad_medida: 'litro', categoria_idx: 2, proveedor_idx: 6 },
+  { codigo: 'ALI-001', nombre: 'Café Orgánico 500g', descripcion: 'Café molido 100% orgánico de altura', precio_compra: 18.00, precio_venta: 38.00, stock_actual: 120, stock_minimo: 20, unidad_medida: 'kg', categoria_idx: 2, proveedor_idx: 6 },
+  { codigo: 'ALI-002', nombre: 'Aceite de Oliva Extra 1L', descripcion: 'Aceite de oliva virgen extra', precio_compra: 25.00, precio_venta: 55.00, stock_actual: 13, stock_minimo: 10, unidad_medida: 'litro', categoria_idx: 2, proveedor_idx: 6 },
   { codigo: 'ALI-003', nombre: 'Chocolate Artesanal 200g', descripcion: 'Chocolate negro 70% cacao artesanal', precio_compra: 8.50, precio_venta: 22.00, stock_actual: 80, stock_minimo: 25, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
   { codigo: 'ALI-004', nombre: 'Agua Mineral 2L', descripcion: 'Agua mineral natural sin gas', precio_compra: 1.50, precio_venta: 4.50, stock_actual: 200, stock_minimo: 50, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
 
@@ -61,10 +64,44 @@ const PRODUCTOS = [
   // Salud y Belleza (cat 5)
   { codigo: 'SAL-001', nombre: 'Crema Hidratante 250ml', descripcion: 'Crema corporal con aloe vera y vitamina E', precio_compra: 9.00, precio_venta: 24.90, stock_actual: 45, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
   { codigo: 'SAL-002', nombre: 'Protector Solar SPF50', descripcion: 'Protector solar facial resistente al agua', precio_compra: 14.00, precio_venta: 35.00, stock_actual: 12, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
-  { codigo: 'SAL-003', nombre: 'Shampoo Natural 500ml', descripcion: 'Shampoo con keratina y aceites naturales', precio_compra: 11.00, precio_venta: 29.00, stock_actual: 0, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 4 },
+  { codigo: 'SAL-003', nombre: 'Shampoo Natural 500ml', descripcion: 'Shampoo con keratina y aceites naturales', precio_compra: 11.00, precio_venta: 29.00, stock_actual: 50, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 4 },
 
   // Deportes (cat 6)
   { codigo: 'DEP-001', nombre: 'Yoga Mat 6mm', descripcion: 'Mat de yoga antideslizante de 6mm de grosor', precio_compra: 25.00, precio_venta: 65.00, stock_actual: 30, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 6, proveedor_idx: 4 },
+
+  // Electrónica (cat 0) — nuevos
+  { codigo: 'ELE-006', nombre: 'Audífonos Inalámbricos Pro', descripcion: 'Audífonos Bluetooth con cancelación de ruido activa', precio_compra: 85.00, precio_venta: 189.90, stock_actual: 40, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 1 },
+
+  // Ropa y Accesorios (cat 1) — nuevos
+  { codigo: 'ROP-005', nombre: 'Polos Deportivos Dry-Fit', descripcion: 'Polos transpirables para actividad física', precio_compra: 22.00, precio_venta: 45.00, stock_actual: 50, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 5 },
+
+  // Alimentos y Bebidas (cat 2) — nuevos
+  { codigo: 'ALI-005', nombre: 'Snack de Frutos Secos 250g', descripcion: 'Mezcla de frutos secos y pasas', precio_compra: 7.00, precio_venta: 12.50, stock_actual: 120, stock_minimo: 30, unidad_medida: 'unidad', categoria_idx: 2, proveedor_idx: 7 },
+
+  // Herramientas (cat 3) — nuevos
+  { codigo: 'HER-003', nombre: 'Set de Destornilladores 12 en 1', descripcion: 'Set de destornilladores de precisión con punta magnética', precio_compra: 18.00, precio_venta: 35.50, stock_actual: 34, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 3, proveedor_idx: 2 },
+
+  // Papelería (cat 8)
+  { codigo: 'PAP-004', nombre: 'Cuaderno Anillado A4', descripcion: 'Cuaderno universitario con anillado metálico', precio_compra: 8.00, precio_venta: 14.90, stock_actual: 85, stock_minimo: 20, unidad_medida: 'unidad', categoria_idx: 8, proveedor_idx: 0 },
+
+  // Automotriz (cat 9)
+  { codigo: 'AUT-002', nombre: 'Líquido de Freno Hidráulico', descripcion: 'Líquido de frenos DOT 4 para vehículos', precio_compra: 15.00, precio_venta: 28.00, stock_actual: 19, stock_minimo: 5, unidad_medida: 'litro', categoria_idx: 9, proveedor_idx: 2 },
+
+  // Juguetes (cat 10)
+  { codigo: 'JUG-002', nombre: 'Bloques de Construcción (Lego)', descripcion: 'Set de bloques de construcción 500 piezas', precio_compra: 55.00, precio_venta: 110.00, stock_actual: 8, stock_minimo: 5, unidad_medida: 'unidad', categoria_idx: 10, proveedor_idx: 5 },
+]
+
+const MOVIMIENTOS_HISTORICOS = [
+  { codigo_producto: 'ALI-001', tipo: 'entrada', cantidad: 100, motivo: 'Compra a proveedor', days_ago: 3 },
+  { codigo_producto: 'ALI-001', tipo: 'salida', cantidad: 40, motivo: 'Venta registrada', days_ago: 2 },
+  { codigo_producto: 'ELE-003', tipo: 'salida', cantidad: 15, motivo: 'Venta registrada (Stock agotado)', days_ago: 2 },
+  { codigo_producto: 'ROP-001', tipo: 'salida', cantidad: 18, motivo: 'Venta registrada (Alerta stock bajo)', days_ago: 1 },
+  { codigo_producto: 'HER-002', tipo: 'salida', cantidad: 20, motivo: 'Venta corporativa', days_ago: 1 },
+  { codigo_producto: 'SAL-003', tipo: 'entrada', cantidad: 50, motivo: 'Reabastecimiento urgente de almacén', days_ago: 0 },
+  { codigo_producto: 'ELE-006', tipo: 'salida', cantidad: 5, motivo: 'Venta mostrador', days_ago: 0 },
+  { codigo_producto: 'ALI-002', tipo: 'salida', cantidad: 12, motivo: 'Venta web', days_ago: 0 },
+  { codigo_producto: 'ROP-005', tipo: 'salida', cantidad: 15, motivo: 'Venta mostrador', days_ago: 0 },
+  { codigo_producto: 'HER-003', tipo: 'entrada', cantidad: 20, motivo: 'Ingreso por reposición de merma', days_ago: 0 },
 ]
 
 const MOVIMIENTOS_BASE = [
@@ -168,7 +205,25 @@ async function seed() {
   if (errProd) throw new Error(`Productos: ${errProd.message}`)
   console.log(`✅ ${prods.length} productos creados`)
 
-  // 7. Movimientos (distribuidos en los últimos 30 días)
+  // 7. Movimientos históricos específicos (fechas determinadas)
+  const historicosData = MOVIMIENTOS_HISTORICOS.map(m => {
+    const prod = prods.find(p => p.codigo === m.codigo_producto)
+    if (!prod) return null
+    return {
+      producto_id: prod.id,
+      usuario_id: users[0].id,
+      tipo: m.tipo,
+      cantidad: m.cantidad,
+      motivo: m.motivo,
+      created_at: daysAgo(m.days_ago),
+    }
+  }).filter(Boolean)
+
+  const { error: errHist } = await supabase.from('movimientos').insert(historicosData)
+  if (errHist) throw new Error(`Movimientos históricos: ${errHist.message}`)
+  console.log(`✅ ${historicosData.length} movimientos históricos creados`)
+
+  // 8. Movimientos aleatorios (distribuidos en los últimos 30 días)
   const movimientosData = []
   let movIdx = 0
   for (const prod of prods) {
@@ -181,8 +236,6 @@ async function seed() {
         tipo: base.tipo,
         cantidad: base.cantidad,
         motivo: base.motivo,
-        stock_anterior: 0,
-        stock_nuevo: 0,
         created_at: daysAgo(randomInt(1, 28)),
       })
       movIdx++
@@ -190,8 +243,8 @@ async function seed() {
   }
 
   const { error: errMov } = await supabase.from('movimientos').insert(movimientosData)
-  if (errMov) throw new Error(`Movimientos: ${errMov.message}`)
-  console.log(`✅ ${movimientosData.length} movimientos creados`)
+  if (errMov) throw new Error(`Movimientos aleatorios: ${errMov.message}`)
+  console.log(`✅ ${movimientosData.length} movimientos aleatorios creados`)
 
   // 8. Resumen
   console.log('\n═══════════════════════════════════════')
@@ -200,7 +253,7 @@ async function seed() {
   console.log(`   Categorías:    ${cats.length}`)
   console.log(`   Proveedores:   ${provs.length}`)
   console.log(`   Productos:     ${prods.length}`)
-  console.log(`   Movimientos:   ${movimientosData.length}`)
+  console.log(`   Movimientos:   ${historicosData.length + movimientosData.length}`)
   console.log(`   Usuarios:      2`)
   console.log('')
   console.log('   🔑 Admin:     admin@inventex.com / Admin123!')

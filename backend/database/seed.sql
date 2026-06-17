@@ -1,5 +1,5 @@
 -- ============================================================
--- INVENTEX — Seed Data (categorias, proveedores, productos)
+-- INVENTEX — Seed Data (categorias, proveedores, productos, movimientos)
 -- Ejecutar en el SQL Editor de Supabase
 -- ============================================================
 
@@ -11,7 +11,7 @@ TRUNCATE TABLE productos CASCADE;
 TRUNCATE TABLE proveedores CASCADE;
 TRUNCATE TABLE categorias CASCADE;
 
--- 2. Categorías (8 oficiales)
+-- 2. Categorías (11)
 INSERT INTO categorias (nombre, descripcion) VALUES
   ('Electrónica',           'Dispositivos electrónicos y accesorios'),
   ('Ropa y Accesorios',     'Prendas de vestir y complementos'),
@@ -20,7 +20,10 @@ INSERT INTO categorias (nombre, descripcion) VALUES
   ('Hogar y Muebles',       'Artículos para el hogar y decoración'),
   ('Salud y Belleza',       'Productos de cuidado personal'),
   ('Deportes',              'Artículos y accesorios deportivos'),
-  ('Artículos de Escritorio','Útiles y accesorios de oficina');
+  ('Artículos de Escritorio','Útiles y accesorios de oficina'),
+  ('Papelería',             'Material de oficina y papelería'),
+  ('Automotriz',            'Productos y accesorios automotrices'),
+  ('Juguetes',              'Juguetes y juegos recreativos');
 
 -- 3. Proveedores (8)
 INSERT INTO proveedores (nombre, contacto, telefono, email, direccion) VALUES
@@ -42,7 +45,7 @@ INSERT INTO usuarios (nombre, email, password, rol)
 SELECT 'Empleado Demo', 'empleado@inventex.com', crypt('Empleado123!', gen_salt('bf')), 'empleado'
 WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE email = 'empleado@inventex.com');
 
--- 5. Productos (20)
+-- 5. Productos (27)
 INSERT INTO productos (codigo, nombre, descripcion, precio_compra, precio_venta, stock_minimo, stock_actual, categoria_id, proveedor_id, activo) VALUES
 
 -- Electrónica
@@ -51,18 +54,24 @@ INSERT INTO productos (codigo, nombre, descripcion, precio_compra, precio_venta,
 ('ELE-003', 'Teclado Mecánico RGB',   'Teclado mecánico gaming con switches Cherry MX',   55.00, 120.00, 5,  0,  (SELECT id FROM categorias WHERE nombre='Electrónica'),            (SELECT id FROM proveedores WHERE nombre='Distribuidora ABC'),   true),
 ('ELE-004', 'Monitor 27" 4K',         'Monitor IPS 4K UHD para diseño profesional',        280.00,520.00, 3,  8,  (SELECT id FROM categorias WHERE nombre='Electrónica'),            (SELECT id FROM proveedores WHERE nombre='Comercial Norte'),     true),
 ('ELE-005', 'Webcam HD 1080p',        'Cámara web con micrófono integrado',               25.00, 59.90,  10, 20, (SELECT id FROM categorias WHERE nombre='Electrónica'),            (SELECT id FROM proveedores WHERE nombre='Importadora del Sur'), true),
+('ELE-006', 'Audífonos Inalámbricos Pro','Audífonos Bluetooth con cancelación de ruido',  85.00, 189.90, 10, 40, (SELECT id FROM categorias WHERE nombre='Electrónica'),            (SELECT id FROM proveedores WHERE nombre='Importadora del Sur'), true),
 
 -- Ropa y Accesorios
 ('ROP-001', 'Zapatillas Running',      'Zapatillas deportivas con amortiguación',          55.00, 150.00, 10, 2,  (SELECT id FROM categorias WHERE nombre='Ropa y Accesorios'),      (SELECT id FROM proveedores WHERE nombre='Mayorista El Sol'),    true),
 ('ROP-002', 'Camiseta Algodón Premium','Camiseta de manga corta 100% algodón orgánico',    12.00, 35.00,  30, 100,(SELECT id FROM categorias WHERE nombre='Ropa y Accesorios'),      (SELECT id FROM proveedores WHERE nombre='Proveedora XYZ'),      true),
 ('ROP-003', 'Chaqueta Impermeable',    'Chaqueta con membrana impermeable y transpirable', 45.00, 120.00, 8,  15, (SELECT id FROM categorias WHERE nombre='Ropa y Accesorios'),      (SELECT id FROM proveedores WHERE nombre='Grupo Importex'),      true),
 ('ROP-004', 'Jeans Clásico',           'Pantalón jeans de corte recto',                    28.00, 79.90,  15, 40, (SELECT id FROM categorias WHERE nombre='Ropa y Accesorios'),      (SELECT id FROM proveedores WHERE nombre='Proveedora XYZ'),      true),
+('ROP-005', 'Polos Deportivos Dry-Fit','Polos transpirables para actividad física',        22.00, 45.00,  15, 50, (SELECT id FROM categorias WHERE nombre='Ropa y Accesorios'),      (SELECT id FROM proveedores WHERE nombre='Mayorista El Sol'),    true),
 
 -- Alimentos y Bebidas
-('ALI-001', 'Café Orgánico 500g',      'Café molido 100% orgánico de altura',              18.00, 38.00,  20, 60, (SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Distribuciones Perú'), true),
-('ALI-002', 'Aceite de Oliva Extra 1L','Aceite de oliva virgen extra',                    25.00, 55.00,  10, 25, (SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Distribuciones Perú'), true),
+('ALI-001', 'Café Orgánico 500g',      'Café molido 100% orgánico de altura',              18.00, 38.00,  20, 120,(SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Distribuciones Perú'), true),
+('ALI-002', 'Aceite de Oliva Extra 1L','Aceite de oliva virgen extra',                    25.00, 55.00,  10, 13, (SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Distribuciones Perú'), true),
 ('ALI-003', 'Chocolate Artesanal 200g','Chocolate negro 70% cacao artesanal',              8.50, 22.00,  25, 80, (SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Proveedora del Centro'),true),
 ('ALI-004', 'Agua Mineral 2L',         'Agua mineral natural sin gas',                     1.50, 4.50,   50, 200,(SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Proveedora del Centro'),true),
+('ALI-005', 'Snack de Frutos Secos 250g','Mezcla de frutos secos y pasas',                 7.00, 12.50,  30, 120,(SELECT id FROM categorias WHERE nombre='Alimentos y Bebidas'),    (SELECT id FROM proveedores WHERE nombre='Proveedora del Centro'),true),
+
+-- Herramientas
+('HER-003', 'Set de Destornilladores 12 en 1','Set de destornilladores de precisión',     18.00, 35.50,  8,  34, (SELECT id FROM categorias WHERE nombre='Herramientas'),           (SELECT id FROM proveedores WHERE nombre='Comercial Norte'),     true),
 
 -- Artículos de Escritorio
 ('HER-001', 'Lámpara LED Escritorio',  'Lámpara con luz LED regulable y USB',              20.00, 49.90,  8,  18, (SELECT id FROM categorias WHERE nombre='Artículos de Escritorio'),(SELECT id FROM proveedores WHERE nombre='Distribuidora ABC'),   true),
@@ -74,9 +83,31 @@ INSERT INTO productos (codigo, nombre, descripcion, precio_compra, precio_venta,
 -- Salud y Belleza
 ('SAL-001', 'Crema Hidratante 250ml',  'Crema corporal con aloe vera y vitamina E',        9.00, 24.90,  15, 45, (SELECT id FROM categorias WHERE nombre='Salud y Belleza'),       (SELECT id FROM proveedores WHERE nombre='Mayorista El Sol'),    true),
 ('SAL-002', 'Protector Solar SPF50',   'Protector solar facial resistente al agua',        14.00, 35.00,  10, 12, (SELECT id FROM categorias WHERE nombre='Salud y Belleza'),       (SELECT id FROM proveedores WHERE nombre='Mayorista El Sol'),    true),
-('SAL-003', 'Shampoo Natural 500ml',   'Shampoo con keratina y aceites naturales',         11.00, 29.00,  10, 0,  (SELECT id FROM categorias WHERE nombre='Salud y Belleza'),       (SELECT id FROM proveedores WHERE nombre='Grupo Importex'),      true),
+('SAL-003', 'Shampoo Natural 500ml',   'Shampoo con keratina y aceites naturales',         11.00, 29.00,  10, 50, (SELECT id FROM categorias WHERE nombre='Salud y Belleza'),       (SELECT id FROM proveedores WHERE nombre='Grupo Importex'),      true),
 
 -- Deportes
-('DEP-001', 'Yoga Mat 6mm',            'Mat de yoga antideslizante de 6mm de grosor',      25.00, 65.00,  10, 30, (SELECT id FROM categorias WHERE nombre='Deportes'),              (SELECT id FROM proveedores WHERE nombre='Grupo Importex'),      true);
+('DEP-001', 'Yoga Mat 6mm',            'Mat de yoga antideslizante de 6mm de grosor',      25.00, 65.00,  10, 30, (SELECT id FROM categorias WHERE nombre='Deportes'),              (SELECT id FROM proveedores WHERE nombre='Grupo Importex'),      true),
+
+-- Papelería
+('PAP-004', 'Cuaderno Anillado A4',    'Cuaderno universitario con anillado metálico',     8.00, 14.90,  20, 85, (SELECT id FROM categorias WHERE nombre='Papelería'),             (SELECT id FROM proveedores WHERE nombre='Distribuidora ABC'),   true),
+
+-- Automotriz
+('AUT-002', 'Líquido de Freno Hidráulico','Líquido de frenos DOT 4 para vehículos',       15.00, 28.00,  5,  19, (SELECT id FROM categorias WHERE nombre='Automotriz'),            (SELECT id FROM proveedores WHERE nombre='Comercial Norte'),     true),
+
+-- Juguetes
+('JUG-002', 'Bloques de Construcción (Lego)','Set de bloques de construcción 500 piezas', 55.00, 110.00, 5,  8,  (SELECT id FROM categorias WHERE nombre='Juguetes'),              (SELECT id FROM proveedores WHERE nombre='Mayorista El Sol'),    true);
+
+-- 6. Movimientos históricos (entradas y salidas con fechas determinadas)
+INSERT INTO movimientos (producto_id, usuario_id, tipo, cantidad, motivo, created_at) VALUES
+  ((SELECT id FROM productos WHERE codigo='ALI-001'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'entrada', 100, 'Compra a proveedor',                          NOW() - INTERVAL '3 days'),
+  ((SELECT id FROM productos WHERE codigo='ALI-001'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  40,  'Venta registrada',                              NOW() - INTERVAL '2 days'),
+  ((SELECT id FROM productos WHERE codigo='ELE-003'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  15,  'Venta registrada (Stock agotado)',              NOW() - INTERVAL '2 days'),
+  ((SELECT id FROM productos WHERE codigo='ROP-001'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  18,  'Venta registrada (Alerta stock bajo)',          NOW() - INTERVAL '1 day'),
+  ((SELECT id FROM productos WHERE codigo='HER-002'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  20,  'Venta corporativa',                             NOW() - INTERVAL '1 day'),
+  ((SELECT id FROM productos WHERE codigo='SAL-003'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'entrada', 50,  'Reabastecimiento urgente de almacén',           NOW()),
+  ((SELECT id FROM productos WHERE codigo='ELE-006'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  5,   'Venta mostrador',                               NOW()),
+  ((SELECT id FROM productos WHERE codigo='ALI-002'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  12,  'Venta web',                                     NOW()),
+  ((SELECT id FROM productos WHERE codigo='ROP-005'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'salida',  15,  'Venta mostrador',                               NOW()),
+  ((SELECT id FROM productos WHERE codigo='HER-003'), (SELECT id FROM usuarios WHERE email='admin@inventex.com'), 'entrada', 20,  'Ingreso por reposición de merma',               NOW());
 
 COMMIT;
