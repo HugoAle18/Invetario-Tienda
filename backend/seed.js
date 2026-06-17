@@ -127,7 +127,7 @@ async function seed() {
   console.log(`✅ ${provs.length} proveedores creados`)
 
   // 4. Usuario admin por defecto
-  const passwordHash = await bcrypt.hash('admin123', 10)
+  const passwordHash = await bcrypt.hash('Admin123!', 10)
   const { data: users, error: errUser } = await supabase.from('usuarios').insert({
     nombre: 'Admin Principal',
     email: 'admin@inventex.com',
@@ -136,10 +136,10 @@ async function seed() {
     activo: true,
   }).select()
   if (errUser) throw new Error(`Usuario admin: ${errUser.message}`)
-  console.log(`✅ Usuario admin creado: admin@inventex.com / admin123`)
+  console.log(`✅ Usuario admin creado: admin@inventex.com / Admin123!`)
 
   // 5. Usuario empleado
-  const empPass = await bcrypt.hash('empleado123', 10)
+  const empPass = await bcrypt.hash('Empleado123!', 10)
   const { data: empUser, error: errEmp } = await supabase.from('usuarios').insert({
     nombre: 'Empleado Demo',
     email: 'empleado@inventex.com',
@@ -148,7 +148,7 @@ async function seed() {
     activo: true,
   }).select()
   if (errEmp) throw new Error(`Usuario empleado: ${errEmp.message}`)
-  console.log(`✅ Usuario empleado creado: empleado@inventex.com / empleado123`)
+  console.log(`✅ Usuario empleado creado: empleado@inventex.com / Empleado123!`)
 
   // 6. Productos (mapear índices a IDs reales)
   const productosData = PRODUCTOS.map(p => ({
@@ -203,8 +203,8 @@ async function seed() {
   console.log(`   Movimientos:   ${movimientosData.length}`)
   console.log(`   Usuarios:      2`)
   console.log('')
-  console.log('   🔑 Admin:     admin@inventex.com / admin123')
-  console.log('   🔑 Empleado:  empleado@inventex.com / empleado123')
+  console.log('   🔑 Admin:     admin@inventex.com / Admin123!')
+  console.log('   🔑 Empleado:  empleado@inventex.com / Empleado123!')
   console.log('═══════════════════════════════════════\n')
 }
 

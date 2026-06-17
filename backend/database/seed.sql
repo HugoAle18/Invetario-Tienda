@@ -35,11 +35,11 @@ INSERT INTO proveedores (nombre, contacto, telefono, email, direccion) VALUES
 
 -- 4. Usuarios por defecto (solo si no existen)
 INSERT INTO usuarios (nombre, email, password, rol)
-SELECT 'Admin Principal', 'admin@inventex.com', crypt('admin123', gen_salt('bf')), 'administrador'
+SELECT 'Admin Principal', 'admin@inventex.com', crypt('Admin123!', gen_salt('bf')), 'administrador'
 WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE email = 'admin@inventex.com');
 
 INSERT INTO usuarios (nombre, email, password, rol)
-SELECT 'Empleado Demo', 'empleado@inventex.com', crypt('empleado123', gen_salt('bf')), 'empleado'
+SELECT 'Empleado Demo', 'empleado@inventex.com', crypt('Empleado123!', gen_salt('bf')), 'empleado'
 WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE email = 'empleado@inventex.com');
 
 -- 5. Productos (20)

@@ -122,7 +122,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => {
                   setValue('email', 'admin@inventex.com')
-                  setValue('password', 'admin123')
+                  setValue('password', 'Admin123!')
                 }}
                 className="flex flex-col items-center justify-center p-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/40 text-blue-600 dark:text-blue-400 transition-all active:scale-95 text-xs cursor-pointer"
               >
@@ -134,7 +134,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => {
                   setValue('email', 'empleado@inventex.com')
-                  setValue('password', 'empleado123')
+                  setValue('password', 'Empleado123!')
                 }}
                 className="flex flex-col items-center justify-center p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/40 text-emerald-600 dark:text-emerald-400 transition-all active:scale-95 text-xs cursor-pointer"
               >
