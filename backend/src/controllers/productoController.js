@@ -1,14 +1,22 @@
 import * as productoModel from '../models/productoModel.js'
 
+function aplanarCategoria(producto) {
+  if (!producto) return producto
+  return {
+    ...producto,
+    categoria: producto.categorias?.nombre || 'Sin categoría',
+  }
+}
+
 function sanitizarParaEmpleado(producto) {
   if (!producto) return producto
   if (Array.isArray(producto)) {
     return producto.map((p) => {
-      const { precio_compra, ...rest } = p
+      const { precio_compra, ...rest } = aplanarCategoria(p)
       return rest
     })
   }
-  const { precio_compra, ...rest } = producto
+  const { precio_compra, ...rest } = aplanarCategoria(producto)
   return rest
 }
 
@@ -23,6 +31,8 @@ export async function listar(req, res) {
     })
     if (req.user.rol === 'empleado') {
       result.data = sanitizarParaEmpleado(result.data)
+    } else {
+      result.data = result.data.map(aplanarCategoria)
     }
     res.json(result)
   } catch (error) {
@@ -39,7 +49,7 @@ export async function obtener(req, res) {
     if (req.user.rol === 'empleado') {
       return res.json(sanitizarParaEmpleado(data))
     }
-    res.json(data)
+    res.json(aplanarCategoria(data))
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener producto' })
   }
@@ -48,7 +58,7 @@ export async function obtener(req, res) {
 export async function crear(req, res) {
   try {
     const producto = await productoModel.crear(req.body)
-    res.status(201).json(producto)
+    res.status(201).json(aplanarCategoria(producto))
   } catch (error) {
     if (error.code === '23505') {
       return res.status(400).json({ error: 'El código ya existe' })
@@ -60,7 +70,7 @@ export async function crear(req, res) {
 export async function actualizar(req, res) {
   try {
     const producto = await productoModel.actualizar(req.params.id, req.body)
-    res.json(producto)
+    res.json(aplanarCategoria(producto))
   } catch (error) {
     if (error.code === '23505') {
       return res.status(400).json({ error: 'El código ya existe' })
