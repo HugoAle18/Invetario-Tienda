@@ -14,9 +14,9 @@ const CATEGORIAS = [
   { nombre: 'Ropa y Accesorios', descripcion: 'Prendas de vestir y complementos' },
   { nombre: 'Alimentos y Bebidas', descripcion: 'Productos alimenticios y bebidas' },
   { nombre: 'Herramientas', descripcion: 'Herramientas y ferretería' },
-  { nombre: 'Hogar', descripcion: 'Artículos para el hogar y decoración' },
+  { nombre: 'Hogar y Muebles', descripcion: 'Artículos para el hogar y decoración' },
   { nombre: 'Salud y Belleza', descripcion: 'Productos de cuidado personal' },
-  { nombre: 'Equipamiento Deportivo', descripcion: 'Artículos y accesorios deportivos' },
+  { nombre: 'Deportes', descripcion: 'Artículos y accesorios deportivos' },
   { nombre: 'Artículos de Escritorio', descripcion: 'Útiles y accesorios de oficina' },
 ]
 
@@ -40,7 +40,7 @@ const PRODUCTOS = [
   { codigo: 'ELE-005', nombre: 'Webcam HD 1080p', descripcion: 'Cámara web con micrófono integrado', precio_compra: 25.00, precio_venta: 59.90, stock_actual: 20, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 0, proveedor_idx: 1 },
 
   // Ropa y Accesorios (cat 1)
-  { codigo: 'ROP-001', nombre: 'Zapatillas Running', descripcion: 'Zapatillas deportivas con amortiguación', precio_compra: 55.00, precio_venta: 150.00, stock_actual: 2, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 6, proveedor_idx: 5 },
+  { codigo: 'ROP-001', nombre: 'Zapatillas Running', descripcion: 'Zapatillas deportivas con amortiguación', precio_compra: 55.00, precio_venta: 150.00, stock_actual: 2, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 5 },
   { codigo: 'ROP-002', nombre: 'Camiseta Algodón Premium', descripcion: 'Camiseta de manga corta 100% algodón orgánico', precio_compra: 12.00, precio_venta: 35.00, stock_actual: 100, stock_minimo: 30, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
   { codigo: 'ROP-003', nombre: 'Chaqueta Impermeable', descripcion: 'Chaqueta con membrana impermeable y transpirable', precio_compra: 45.00, precio_venta: 120.00, stock_actual: 15, stock_minimo: 8, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 4 },
   { codigo: 'ROP-004', nombre: 'Jeans Clásico', descripcion: 'Pantalón jeans de corte recto', precio_compra: 28.00, precio_venta: 79.90, stock_actual: 40, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 1, proveedor_idx: 3 },
@@ -62,6 +62,9 @@ const PRODUCTOS = [
   { codigo: 'SAL-001', nombre: 'Crema Hidratante 250ml', descripcion: 'Crema corporal con aloe vera y vitamina E', precio_compra: 9.00, precio_venta: 24.90, stock_actual: 45, stock_minimo: 15, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
   { codigo: 'SAL-002', nombre: 'Protector Solar SPF50', descripcion: 'Protector solar facial resistente al agua', precio_compra: 14.00, precio_venta: 35.00, stock_actual: 12, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 5 },
   { codigo: 'SAL-003', nombre: 'Shampoo Natural 500ml', descripcion: 'Shampoo con keratina y aceites naturales', precio_compra: 11.00, precio_venta: 29.00, stock_actual: 0, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 5, proveedor_idx: 4 },
+
+  // Deportes (cat 6)
+  { codigo: 'DEP-001', nombre: 'Yoga Mat 6mm', descripcion: 'Mat de yoga antideslizante de 6mm de grosor', precio_compra: 25.00, precio_venta: 65.00, stock_actual: 30, stock_minimo: 10, unidad_medida: 'unidad', categoria_idx: 6, proveedor_idx: 4 },
 ]
 
 const MOVIMIENTOS_BASE = [

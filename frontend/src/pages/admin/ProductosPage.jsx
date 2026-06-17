@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { productosApi } from '@/api/productos'
 import { categoriasApi } from '@/api/categorias'
 import { proveedoresApi } from '@/api/proveedores'
@@ -129,20 +129,16 @@ export default function ProductosPage() {
     }
   }
 
-  const totalPages = Math.ceil(total / limit)
+  const productosPorCategoria = useMemo(() => {
+    return productos.reduce((acc, prod) => {
+      const cat = prod.categoria || 'General'
+      if (!acc[cat]) acc[cat] = []
+      acc[cat].push(prod)
+      return acc
+    }, {})
+  }, [productos])
 
-  const hardcodeCategoria = (prod) => {
-    const mapa = {
-      'Zapatillas Running': 'Ropa y Accesorios',
-      'Café Orgánico 500g': 'Alimentos y Bebidas',
-      'Aceite de Oliva Extra 1L': 'Alimentos y Bebidas',
-      'Chocolate Artesanal 200g': 'Alimentos y Bebidas',
-      'Agua Mineral 2L': 'Alimentos y Bebidas',
-      'Lámpara LED Escritorio': 'Artículos de Escritorio',
-      'Organizador de Escritorio': 'Artículos de Escritorio',
-    }
-    return mapa[prod.nombre] || prod.categoria || 'General'
-  }
+  const totalPages = Math.ceil(total / limit)
 
   return (
     <div className="space-y-4">
@@ -218,65 +214,72 @@ export default function ProductosPage() {
         </div>
       )}
 
-      {/* Single global table */}
+      {/* Grouped blocks by category */}
       {!loading && !error && productos.length > 0 && (
         <>
-          <div className="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-300">
-                <thead className="bg-slate-950 text-slate-400 text-xs uppercase font-semibold">
-                  <tr>
-                    <th className="p-4">Código</th>
-                    <th className="p-4">Nombre</th>
-                    <th className="p-4">Categoría</th>
-                    <th className="p-4">Stock</th>
-                    <th className="p-4">P. Venta</th>
-                    <th className="p-4 text-center">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60">
-                  {productos.map((prod) => {
-                    const stock = Number(prod.stock ?? prod.stock_actual ?? 0)
-                    const stockBajo = stock <= 5
-                    return (
-                      <tr key={prod.id || prod.codigo} className="hover:bg-slate-800/20 transition-colors">
-                        <td className="p-4 font-mono text-xs text-slate-400">{prod.codigo || prod.id}</td>
-                        <td className="p-4 font-medium text-white">
-                          <div className="flex flex-col gap-1">
-                            {prod.nombre}
-                            {stockBajo && (
-                              <span className="w-fit text-[10px] bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full font-bold">
-                                Stock bajo
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4 text-slate-400 font-medium">{hardcodeCategoria(prod)}</td>
-                        <td className={`p-4 font-bold ${stockBajo ? 'text-red-500' : 'text-slate-300'}`}>{stock}</td>
-                        <td className="p-4 font-medium">S/ {Number(prod.precio_venta || prod.precio || 0).toFixed(2)}</td>
-                        <td className="p-4 text-center">
-                          <button
-                            onClick={() => openEdit(prod)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer mx-1.5"
-                            title="Editar"
-                          >
-                            <Pencil size={15} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(prod)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors cursor-pointer mx-1.5"
-                            title="Eliminar"
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+          {Object.entries(productosPorCategoria).map(([categoria, prods]) => (
+            <div key={categoria} className="bg-[#111827]/40 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+              <div className="bg-slate-950 px-4 py-3 border-b border-slate-800">
+                <h3 className="text-slate-200 font-semibold text-sm flex items-center gap-2">
+                  <Tags size={14} className="text-brand" />
+                  {categoria}
+                  <span className="text-xs text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full">{prods.length}</span>
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-slate-300">
+                  <thead className="bg-slate-950/50 text-slate-500 text-xs uppercase font-semibold">
+                    <tr>
+                      <th className="p-3">Código</th>
+                      <th className="p-3">Nombre</th>
+                      <th className="p-3">Stock</th>
+                      <th className="p-3">P. Venta</th>
+                      <th className="p-3 text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {prods.map((prod) => {
+                      const stock = Number(prod.stock ?? prod.stock_actual ?? 0)
+                      const stockBajo = stock <= 5
+                      return (
+                        <tr key={prod.codigo || prod.id} className="hover:bg-slate-800/20 transition-colors">
+                          <td className="p-3 font-mono text-xs text-slate-400">{prod.codigo || prod.id}</td>
+                          <td className="p-3 font-medium text-white">
+                            <div className="flex flex-col gap-1">
+                              {prod.nombre}
+                              {stockBajo && (
+                                <span className="w-fit text-[10px] bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full font-bold">
+                                  Stock bajo
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className={`p-3 font-bold ${stockBajo ? 'text-red-500' : 'text-slate-300'}`}>{stock}</td>
+                          <td className="p-3 font-medium">S/ {Number(prod.precio_venta || prod.precio || 0).toFixed(2)}</td>
+                          <td className="p-3 text-center">
+                            <button
+                              onClick={() => openEdit(prod)}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer mx-1.5"
+                              title="Editar"
+                            >
+                              <Pencil size={15} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(prod)}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors cursor-pointer mx-1.5"
+                              title="Eliminar"
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          ))}
 
           {/* Pagination */}
           {totalPages > 1 && (
