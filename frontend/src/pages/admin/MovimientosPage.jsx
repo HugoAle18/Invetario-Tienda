@@ -108,16 +108,21 @@ export default function MovimientosPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-3">
+      <div className="relative inline-block text-left">
         <select
           value={tipoFiltro}
           onChange={(e) => { setTipoFiltro(e.target.value); setPage(1) }}
-          className="px-3 py-2 bg-gray-100 dark:bg-white/[0.04] border border-gray-200 dark:border-white/[0.06] rounded-lg text-gray-900 dark:text-white focus:border-brand focus:ring-1 focus:ring-brand outline-none text-sm"
+          className="appearance-none bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors hover:bg-slate-800"
         >
-          <option value="">Todos</option>
-          <option value="entrada">Entradas</option>
-          <option value="salida">Salidas</option>
+          <option value="" className="bg-slate-950 text-white py-2">📦 Todos los movimientos</option>
+          <option value="entrada" className="bg-slate-950 text-emerald-400 py-2">🟩 Entradas</option>
+          <option value="salida" className="bg-slate-950 text-red-400 py-2">🟥 Salidas</option>
         </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+          </svg>
+        </div>
       </div>
 
       {error && (
@@ -148,37 +153,45 @@ export default function MovimientosPage() {
 
       {!loading && !error && movimientos.length > 0 && (
         <>
-          <div className="w-full bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md mb-10 flex flex-col justify-between overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gradient-to-r from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-gray-200 dark:border-slate-800 text-gray-700 dark:text-gray-300">
-                  <th className="text-left py-3 px-4 font-bold">Producto</th>
-                  <th className="text-left py-3 px-4 font-bold">Tipo</th>
-                  <th className="text-right py-3 px-4 font-bold">Cantidad</th>
-                  <th className="text-left py-3 px-4 font-bold hidden md:table-cell">Motivo</th>
-                  <th className="text-left py-3 px-4 font-bold hidden sm:table-cell">Usuario</th>
-                  <th className="text-right py-3 px-4 font-bold hidden lg:table-cell">Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                {movimientos.map((m) => (
-                  <tr key={m.id} className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
-                    <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">{m.productos?.nombre}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2.5 py-1 text-xs font-bold rounded-full text-white shadow-sm ${m.tipo === 'entrada' ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-rose-600 dark:bg-rose-500'}`}>
-                        {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-right font-semibold text-gray-900 dark:text-white">{m.cantidad}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-white/60 hidden md:table-cell max-w-[200px] truncate">{m.motivo}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-white/60 hidden sm:table-cell">{m.usuarios?.nombre}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-white/60 text-right hidden lg:table-cell whitespace-nowrap">
-                      {new Date(m.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </td>
+          <div className="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden shadow-xl mt-4">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm text-slate-300">
+                <thead className="bg-slate-950/80 text-slate-400 text-xs uppercase font-semibold">
+                  <tr>
+                    <th className="p-4 pl-6">Producto</th>
+                    <th className="p-4">Tipo</th>
+                    <th className="p-4 text-right">Cantidad</th>
+                    <th className="p-4 hidden md:table-cell">Motivo</th>
+                    <th className="p-4 hidden sm:table-cell">Usuario</th>
+                    <th className="p-4 text-right pr-6 hidden lg:table-cell">Fecha</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-800/40">
+                  {movimientos.map((m) => (
+                    <tr key={m.id} className="hover:bg-slate-800/10 transition-colors">
+                      <td className="p-4 pl-6 font-medium text-white">{m.productos?.nombre}</td>
+                      <td className="p-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          m.tipo === 'entrada'
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                        }`}>
+                          {m.tipo === 'entrada' ? 'Entrada' : 'Salida'}
+                        </span>
+                      </td>
+                      <td className={`p-4 text-right font-bold ${m.tipo === 'entrada' ? 'text-emerald-400' : 'text-slate-300'}`}>
+                        {m.tipo === 'entrada' ? `+${m.cantidad}` : `-${m.cantidad}`}
+                      </td>
+                      <td className="p-4 text-slate-400 max-w-xs truncate hidden md:table-cell">{m.motivo}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden sm:table-cell">{m.usuarios?.nombre || 'Admin Principal'}</td>
+                      <td className="p-4 text-right pr-6 font-mono text-xs text-slate-500 hidden lg:table-cell whitespace-nowrap">
+                        {new Date(m.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {totalPages > 1 && (
