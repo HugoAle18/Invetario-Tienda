@@ -29,7 +29,7 @@ function procesarConsulta(consulta, ctx) {
   const { productos, categorias, proveedores, ultimos_movimientos, fecha_actual } = ctx
 
   if (SALUDOS.includes(texto)) {
-    return `¡Hola! Soy el Agente Residente de INVENTEX. Puedes preguntarme sobre productos, stock, categorías, proveedores o movimientos. ¿En qué te ayudo?`
+    return `¡Hola! Soy MARCEL, tu asistente de IA para INVENTEX. Pregúntame sobre productos, stock, categorías, proveedores o movimientos. ¿En qué te ayudo?`
   }
 
   if (texto === 'ayuda' || texto === 'help' || texto === 'que puedes hacer' || texto === 'comandos') {
@@ -155,7 +155,7 @@ function procesarConsulta(consulta, ctx) {
 
 const VentanaChat = ({ onClose, sistemaContexto }) => {
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'bot', text: '¡Hola! Soy tu Agente de IA de INVENTEX. Pregúntame sobre productos, stock, categorías o proveedores.' }
+    { id: 1, sender: 'bot', text: '¡Hola! Soy MARCEL, tu asistente de IA para INVENTEX. He analizado el inventario actual. Pregúntame sobre el stock de un artículo, qué productos están bajos o cuándo comprar mercancía.' }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -191,8 +191,8 @@ const VentanaChat = ({ onClose, sistemaContexto }) => {
           <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse" />
             <div>
-              <h3 className="font-bold text-sm tracking-wide">Agente Residente IA</h3>
-              <p className="text-[10px] text-blue-100">Analista de Inventario</p>
+              <h3 className="font-bold text-sm tracking-wide">MARCEL AI</h3>
+              <p className="text-[10px] text-blue-100">Analista de Inventario Inteligente</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/10 text-white/80 cursor-pointer">
