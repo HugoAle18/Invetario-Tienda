@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { marcelApi } from '@/api/marcel'
+import ChatErrorBoundary from '@/components/ui/ChatErrorBoundary'
 
 const SUGERENCIAS = [
   '¿Qué productos tienen stock bajo?',
@@ -40,7 +41,7 @@ const VentanaChat = ({ onClose }) => {
   }
 
   const handleSugerencia = async (texto) => {
-    setMessages(prev => [...prev, { id: Date.now(), sender: 'user', text }])
+    setMessages(prev => [...prev, { id: Date.now(), sender: 'user', text: texto }])
     setIsLoading(true)
     try {
       const { respuesta } = await marcelApi.chat(texto)
@@ -147,9 +148,11 @@ export const AiAgentWidget = () => {
       </button>
 
       {isOpen && (
-        <VentanaChat
-          onClose={() => setIsOpen(false)}
-        />
+        <ChatErrorBoundary>
+          <VentanaChat
+            onClose={() => setIsOpen(false)}
+          />
+        </ChatErrorBoundary>
       )}
     </>
   )
