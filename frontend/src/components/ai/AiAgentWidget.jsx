@@ -1,159 +1,14 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { marcelApi } from '@/api/marcel'
 
-const SALUDOS = ['hola', 'buen dia', 'buenas', 'que tal', 'buenos dias', 'buenas tardes', 'buenas noches']
+const SUGERENCIAS = [
+  '¿Qué productos tienen stock bajo?',
+  '¿Cuánto vale mi inventario?',
+  'Dame un resumen general',
+  '¿Qué entró hoy?',
+]
 
-function extraerContexto(productos, categorias, proveedores, movimientos) {
-  return {
-    fecha_actual: new Date().toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }),
-    productos: productos.map(p => ({
-      codigo: p.codigo,
-      nombre: p.nombre,
-      categoria: p.categoria || 'Sin categoría',
-      stock: p.stock ?? p.stock_actual ?? 0,
-      precio: p.precio_venta || p.precio || 0,
-    })),
-    categorias: categorias.map(c => c.nombre),
-    proveedores: proveedores.map(pr => pr.nombre),
-    ultimos_movimientos: movimientos.slice(0, 20).map(m => ({
-      producto: m.producto || m.productos?.nombre,
-      tipo: m.tipo,
-      cantidad: m.cantidad,
-      motivo: m.motivo,
-      fecha: m.created_at ? new Date(m.created_at).toLocaleDateString('es-PE') : '',
-    })),
-  }
-}
-
-function procesarConsulta(consulta, ctx) {
-  const texto = consulta.toLowerCase().trim()
-  const { productos, categorias, proveedores, ultimos_movimientos, fecha_actual } = ctx
-
-  if (SALUDOS.includes(texto)) {
-    return `¡Hola! Soy MARCEL, tu asistente de IA para INVENTEX. Pregúntame sobre productos, stock, categorías, proveedores o movimientos. ¿En qué te ayudo?`
-  }
-
-  if (texto === 'ayuda' || texto === 'help' || texto === 'que puedes hacer' || texto === 'comandos') {
-    return (
-      '**Comandos disponibles:**\n\n' +
-      '• "resumen del inventario" — estadísticas generales\n' +
-      '• "stock bajo" o "alertas" — productos que necesitan reabastecimiento\n' +
-      '• "categorías" — listar todas las categorías\n' +
-      '• "proveedores" — listar todos los proveedores\n' +
-      '• "últimos movimientos" — ver actividad reciente\n' +
-      '• Nombre de un producto — consultar su stock y precio\n' +
-      '• "productos de [categoría]" — filtrar por categoría\n' +
-      '• "stock de [producto]" — cantidad exacta en almacén'
-    )
-  }
-
-  if (texto === 'resumen del inventario' || texto === 'resumen' || texto.includes('analiza') || texto.includes('inventario') && !texto.includes('producto') && !texto.includes('categoria')) {
-    if (productos.length === 0) return 'No hay productos registrados en el sistema actual.'
-
-    const totalProductos = productos.length
-    const valorTotal = productos.reduce((acc, p) => acc + (p.stock * p.precio), 0)
-    const stockBajo = productos.filter(p => p.stock <= 5)
-    const sinStock = productos.filter(p => p.stock === 0)
-    const porCategoria = {}
-    productos.forEach(p => {
-      porCategoria[p.categoria] = (porCategoria[p.categoria] || 0) + 1
-    })
-
-    let res = `**Resumen del Inventario — ${fecha_actual}**\n\n`
-    res += `• **Total de productos:** ${totalProductos}\n`
-    res += `• **Valor del almacén:** S/ ${valorTotal.toFixed(2)}\n`
-    res += `• **Productos con stock bajo:** ${stockBajo.length}\n`
-    res += `• **Productos sin stock:** ${sinStock.length}\n\n`
-    res += `**Productos por categoría:**\n`
-    Object.entries(porCategoria).forEach(([cat, count]) => {
-      res += `  • ${cat}: ${count}\n`
-    })
-    return res
-  }
-
-  if (texto === 'categorias' || texto === 'categorías' || texto === 'listar categorias' || texto === 'que categorias hay' || texto.includes('categoria')) {
-    if (categorias.length === 0) return 'No hay categorías registradas en el sistema.'
-    let res = `**Categorías del sistema (${categorias.length}):**\n`
-    categorias.forEach(c => { res += `  • ${c}\n` })
-    return res
-  }
-
-  if (texto === 'proveedores' || texto === 'listar proveedores' || texto.includes('proveedor')) {
-    if (proveedores.length === 0) return 'No hay proveedores registrados en el sistema.'
-    let res = `**Proveedores registrados (${proveedores.length}):**\n`
-    proveedores.forEach(p => { res += `  • ${p}\n` })
-    return res
-  }
-
-  if (texto.includes('ultimos movimientos') || texto.includes('últimos movimientos') || texto.includes('movimientos recientes') || texto === 'movimientos') {
-    if (ultimos_movimientos.length === 0) return 'No hay movimientos registrados.'
-    let res = `**Últimos ${ultimos_movimientos.length} movimientos:**\n\n`
-    ultimos_movimientos.forEach(m => {
-      res += `• ${m.tipo === 'entrada' ? '📥 Entrada' : '📤 Salida'} — ${m.producto || 'N/A'} (${m.cantidad} und) — ${m.motivo}\n`
-    })
-    return res
-  }
-
-  if (texto.includes('stock bajo') || texto.includes('alerta') || texto.includes('reabastecer') || texto.includes('comprar stock') || texto.includes('que comprar') || texto.includes('que debo comprar')) {
-    const criticos = productos.filter(p => p.stock <= 5)
-    if (criticos.length === 0) return 'Todos los productos tienen stock saludable. No se necesita reabastecimiento urgente.'
-    let res = `**⚠️ Productos que requieren reabastecimiento (${criticos.length}):**\n\n`
-    criticos.forEach(p => {
-      res += `• **${p.nombre}** — ${p.stock} unidades (mínimo sugerido: 5)\n`
-    })
-    return res
-  }
-
-  const matchCategoria = texto.match(/productos de (.+)/) || texto.match(/productos en (.+)/)
-  if (matchCategoria) {
-    const catBuscada = matchCategoria[1].toLowerCase().trim()
-    const prodsCat = productos.filter(p => p.categoria.toLowerCase().includes(catBuscada))
-    if (prodsCat.length === 0) return `No encuentro productos en la categoría "${matchCategoria[1]}" en el sistema actual.`
-    let res = `**Productos en ${prodsCat[0].categoria} (${prodsCat.length}):**\n\n`
-    prodsCat.forEach(p => {
-      res += `• **${p.nombre}** — S/ ${p.precio.toFixed(2)} — Stock: ${p.stock}\n`
-    })
-    return res
-  }
-
-  if (texto.includes('stock de ') || texto.includes('cuantos ') || texto.includes('cuantas ') || texto.includes('cuanto ') || texto.includes('stock del ')) {
-    const palabrasExcluir = ['stock', 'de', 'del', 'cuanto', 'cuantos', 'cuantas', 'hay', 'tiene', 'tienen', 'en', 'el', 'la', 'los', 'las', 'un', 'una']
-    const palabras = texto.split(' ').filter(w => w.length > 2 && !palabrasExcluir.includes(w))
-    const encontrado = productos.find(p =>
-      palabras.some(palabra => p.nombre.toLowerCase().includes(palabra))
-    )
-    if (encontrado) {
-      return `**${encontrado.nombre}** — Stock actual: **${encontrado.stock} unidades** — Precio: S/ ${encontrado.precio.toFixed(2)}`
-    }
-  }
-
-  const palabrasExcluir = ['stock', 'de', 'del', 'precio', 'categoria', 'producto', 'hay', 'tiene', 'tienen', 'sobre', 'para', 'esta', 'como', 'que', 'con', 'por', 'los', 'las', 'en', 'el', 'la', 'un', 'una', 'cuanto', 'cuantos', 'informacion', 'dame', 'muestrame', 'buscar']
-  const palabrasClave = texto.split(' ').filter(w => w.length > 2 && !palabrasExcluir.includes(w))
-
-  if (palabrasClave.length > 0) {
-    const encontrados = productos.filter(p =>
-      palabrasClave.some(palabra =>
-        p.nombre.toLowerCase().includes(palabra) ||
-        (p.codigo && p.codigo.toLowerCase() === palabra)
-      )
-    )
-
-    if (encontrados.length > 0) {
-      let res = ''
-      encontrados.forEach(p => {
-        const estado = p.stock <= 5 ? '🔴 Stock bajo' : '🟢 Normal'
-        res += `**${p.nombre}** (${p.codigo})\n`
-        res += `  • Categoría: ${p.categoria}\n`
-        res += `  • Stock: ${p.stock} — ${estado}\n`
-        res += `  • Precio: S/ ${p.precio.toFixed(2)}\n\n`
-      })
-      return res.trim()
-    }
-  }
-
-  return 'No encuentro registros de ese artículo en el sistema actual. Consulta por nombre de producto, categoría, o escribe "ayuda" para ver los comandos disponibles.'
-}
-
-const VentanaChat = ({ onClose, sistemaContexto }) => {
+const VentanaChat = ({ onClose }) => {
   const [messages, setMessages] = useState([
     { id: 1, sender: 'bot', text: '¡Hola! Soy MARCEL, tu asistente de IA para INVENTEX. He analizado el inventario actual. Pregúntame sobre el stock de un artículo, qué productos están bajos o cuándo comprar mercancía.' }
   ])
@@ -165,7 +20,7 @@ const VentanaChat = ({ onClose, sistemaContexto }) => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault()
     if (!input.trim()) return
 
@@ -174,11 +29,27 @@ const VentanaChat = ({ onClose, sistemaContexto }) => {
     setInput('')
     setIsLoading(true)
 
-    setTimeout(() => {
-      const respuesta = procesarConsulta(mensajeUsuario, sistemaContexto)
+    try {
+      const { respuesta } = await marcelApi.chat(mensajeUsuario)
       setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: respuesta }])
+    } catch {
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: 'Tuve un problema procesando tu consulta. Intenta reformularla.' }])
+    } finally {
       setIsLoading(false)
-    }, 400)
+    }
+  }
+
+  const handleSugerencia = async (texto) => {
+    setMessages(prev => [...prev, { id: Date.now(), sender: 'user', text }])
+    setIsLoading(true)
+    try {
+      const { respuesta } = await marcelApi.chat(texto)
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: respuesta }])
+    } catch {
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: 'Tuve un problema procesando tu consulta. Intenta reformularla.' }])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -216,12 +87,26 @@ const VentanaChat = ({ onClose, sistemaContexto }) => {
               </div>
             </div>
           ))}
+          {messages.length === 1 && (
+            <div className="flex flex-wrap gap-2 px-1">
+              {SUGERENCIAS.map((texto) => (
+                <button
+                  key={texto}
+                  onClick={() => handleSugerencia(texto)}
+                  className="text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-full hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:border-indigo-200 dark:hover:border-indigo-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all cursor-pointer"
+                >
+                  {texto}
+                </button>
+              ))}
+            </div>
+          )}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none border border-slate-200/50 dark:border-slate-700/50 flex items-center gap-1">
+              <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none border border-slate-200/50 dark:border-slate-700/50 flex items-center gap-2 text-xs text-slate-400">
                 <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                 <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className="ml-1">MARCEL está pensando...</span>
               </div>
             </div>
           )}
@@ -247,13 +132,8 @@ const VentanaChat = ({ onClose, sistemaContexto }) => {
   )
 }
 
-export const AiAgentWidget = ({ productos = [], categorias = [], proveedores = [], movimientos = [] }) => {
+export const AiAgentWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
-
-  const sistemaContexto = useMemo(() =>
-    extraerContexto(productos, categorias, proveedores, movimientos),
-    [productos, categorias, proveedores, movimientos]
-  )
 
   return (
     <>
@@ -269,7 +149,6 @@ export const AiAgentWidget = ({ productos = [], categorias = [], proveedores = [
       {isOpen && (
         <VentanaChat
           onClose={() => setIsOpen(false)}
-          sistemaContexto={sistemaContexto}
         />
       )}
     </>

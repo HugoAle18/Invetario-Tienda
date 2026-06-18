@@ -1,42 +1,13 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import { AiAgentWidget } from '@/components/ai/AiAgentWidget'
 import { useAuth } from '@/context/AuthContext'
-import { productosApi } from '@/api/productos'
-import { categoriasApi } from '@/api/categorias'
-import { proveedoresApi } from '@/api/proveedores'
-import { movimientosApi } from '@/api/movimientos'
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [productos, setProductos] = useState([])
-  const [categorias, setCategorias] = useState([])
-  const [proveedores, setProveedores] = useState([])
-  const [movimientos, setMovimientos] = useState([])
   const { user } = useAuth()
-
-  const fetchData = useCallback(async () => {
-    try {
-      const [prodRes, catRes, provRes, movRes] = await Promise.all([
-        productosApi.listar({ limit: 200 }),
-        categoriasApi.listar(),
-        proveedoresApi.listar(),
-        movimientosApi.listar({ limit: 200 }),
-      ])
-      setProductos(prodRes.data.data || [])
-      setCategorias(catRes.data || [])
-      setProveedores(provRes.data || [])
-      setMovimientos(movRes.data.data || [])
-    } catch {
-      console.error('Error cargando datos para el agente IA')
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
 
   return (
     <div className="min-h-screen w-full flex bg-gradient-to-br from-slate-50 via-slate-100 to-blue-100/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-all duration-500">
@@ -57,12 +28,7 @@ export default function AppLayout() {
         </main>
       </div>
 
-      <AiAgentWidget
-        productos={productos}
-        categorias={categorias}
-        proveedores={proveedores}
-        movimientos={movimientos}
-      />
+      <AiAgentWidget />
     </div>
   )
 }
